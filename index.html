@@ -21,7 +21,6 @@
         
         .container { max-width: 1400px; margin: auto; }
         
-        /* Header */
         .header {
             background: rgba(2, 6, 23, 0.85);
             backdrop-filter: blur(10px);
@@ -41,14 +40,12 @@
         .lang-btn { background: #1e293b; border: 1px solid #334155; padding: 8px 20px; border-radius: 40px; cursor: pointer; transition: 0.2s; }
         .lang-btn.active { background: #10b981; color: #0f172a; border-color: #10b981; }
         
-        /* Pestañas */
         .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .tab-btn { background: #1e293b; border: none; padding: 12px 24px; border-radius: 60px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .tab-btn.active { background: #3b82f6; color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Tarjetas */
         .card { background: rgba(30, 41, 59, 0.92); backdrop-filter: blur(8px); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid rgba(51, 65, 85, 0.5); }
         .license-panel { background: rgba(15, 23, 42, 0.96); border-radius: 1rem; padding: 1.2rem; margin-bottom: 20px; border: 1px solid #f59e0b; }
         .flex-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
@@ -58,13 +55,13 @@
         button { background: #10b981; cursor: pointer; font-weight: bold; transition: 0.2s; }
         button:hover { background: #059669; transform: scale(0.98); }
         .btn-outline { background: transparent; border: 1px solid #10b981; color: #10b981; }
-        .btn-outline:hover { background: #10b98120; }
-        .btn-warning { background: #f59e0b; color: #0f172a; }
         
         .pallet-item { background: #0f172a; border-radius: 1rem; padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
         .stat-card { background: #0f172a; padding: 10px; border-radius: 1rem; text-align: center; }
-        canvas { background: #0f172a; border-radius: 1rem; width: 100%; height: auto; margin-top: 12px; border: 2px solid #334155; }
+        
+        canvas { background: #1a1f2e; border-radius: 1rem; width: 100%; height: auto; margin-top: 12px; border: 2px solid #3b82f6; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
         .badge { background: #10b981; color: #0f172a; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; display: inline-block; }
         .danger { color: #f87171; }
         .warning { color: #fbbf24; }
@@ -72,7 +69,7 @@
         .result-panel { background: #0f172a; padding: 12px; border-radius: 1rem; font-family: monospace; font-size: 0.85rem; margin-top: 12px; }
         .locked { filter: blur(4px); pointer-events: none; user-select: none; opacity: 0.7; }
         
-        /* Panel de administrador flotante (oculto por defecto) */
+        /* Panel administrador flotante */
         .admin-float {
             position: fixed;
             top: 50%;
@@ -103,9 +100,8 @@
             align-items: center;
             justify-content: center;
         }
-        .admin-float h3 { margin-bottom: 15px; }
         
-        /* Indicadores para montacarguista */
+        /* Instrucciones operador */
         .operator-instructions {
             background: #0f172a;
             border-radius: 1rem;
@@ -113,17 +109,21 @@
             margin-top: 15px;
             border-left: 5px solid #f59e0b;
         }
-        .operator-instructions h4 { color: #f59e0b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .instruction-step { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.9rem; }
         .step-icon { font-size: 1.5rem; }
         
-        /* Tabla de ejes simplificada */
+        /* Tabla ejes */
         .axle-table { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; justify-content: center; }
         .axle-item { background: #0f172a; border-radius: 1rem; padding: 12px; text-align: center; min-width: 100px; }
         .axle-status { width: 20px; height: 20px; border-radius: 20px; margin: 5px auto; }
         .axle-status.verde { background: #4ade80; box-shadow: 0 0 5px #4ade80; }
         .axle-status.amarillo { background: #fbbf24; box-shadow: 0 0 5px #fbbf24; }
         .axle-status.rojo { background: #f87171; box-shadow: 0 0 5px #f87171; }
+        
+        /* Leyenda de colores */
+        .color-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; background: #0f172a; padding: 4px 10px; border-radius: 40px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
         
         @media (max-width: 700px) { body { padding: 12px; } .flex-row { flex-direction: column; align-items: stretch; } }
     </style>
@@ -132,11 +132,10 @@
 </head>
 <body>
 <div class="container">
-    <!-- Header -->
     <div class="header">
         <div class="logo">
             <h1>🚛 LOGISTICS PRO</h1>
-            <p id="subtitleTag">Optimización profesional de carga · Instrucciones para operador</p>
+            <p id="subtitleTag">Cada pallet tiene su color · Acomodo visual en remolque</p>
         </div>
         <div class="lang-selector">
             <button class="lang-btn active" data-lang="es">🇪🇸 Español</button>
@@ -144,10 +143,9 @@
         </div>
     </div>
 
-    <!-- Pestañas -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="app">📊 Planificador</button>
-        <button class="tab-btn" data-tab="operator">👷 Instrucciones para operador</button>
+        <button class="tab-btn" data-tab="operator">👷 Instrucciones operador</button>
         <button class="tab-btn" data-tab="help">❓ Ayuda</button>
     </div>
 
@@ -163,7 +161,6 @@
             <div id="expiryInfo" style="margin-top: 8px; font-size: 0.85rem;"></div>
         </div>
 
-        <!-- Aplicación principal (bloqueada hasta activar) -->
         <div id="appContent" class="locked">
             <div class="grid-2">
                 <div class="card">
@@ -205,21 +202,25 @@
             </div>
 
             <div class="card">
-                <h3 id="resultsTitle">📊 Resultados del análisis</h3>
+                <h3 id="resultsTitle">📊 Visualización del remolque - Vista superior</h3>
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <span class="badge" id="tetrisHint">Vista superior del trailer (acomodo tipo Tetris)</span>
+                    <span class="badge" id="tetrisHint">Cada color = un pallet diferente | Los números muestran el peso en libras</span>
                 </div>
-                <canvas id="packCanvas" width="800" height="400" style="width:100%; height:auto; background:#0f172a;"></canvas>
+                
+                <!-- Leyenda de colores -->
+                <div class="color-legend" id="colorLegend"></div>
+                
+                <canvas id="packCanvas" width="900" height="450" style="width:100%; height:auto; background:#0f172a;"></canvas>
+                
                 <div class="stats">
                     <div class="stat-card"><strong id="statTotalLabel">Peso total</strong><br><span id="totalWeight">0 lbs</span></div>
                     <div class="stat-card"><strong id="statHeightLabel">Altura máxima</strong><br><span id="maxHeight">0 in</span></div>
                     <div class="stat-card"><strong id="statCOGLabel">Centro gravedad</strong><br><span id="cog">0 in</span></div>
                     <div class="stat-card"><strong id="statSpaceLabel">Espacio usado</strong><br><span id="spaceUsed">0%</span></div>
                 </div>
+                
                 <div id="packDetails" class="result-panel"></div>
                 <div id="heightInfo" class="result-panel"></div>
-                
-                <!-- Tabla de ejes simplificada para el operador -->
                 <div id="axleInfoSimple" style="margin-top: 15px;"></div>
                 
                 <div class="flex-row" style="margin-top: 15px;">
@@ -235,54 +236,23 @@
         </div>
     </div>
 
-    <!-- Pestaña Instrucciones para operador (montacarguista) -->
+    <!-- Pestaña Instrucciones Operador -->
     <div id="operatorTab" class="tab-content">
         <div class="card">
             <h2>👷 INSTRUCCIONES PARA EL OPERADOR / MONTACARGUISTA</h2>
             <div class="operator-instructions">
-                <h4>📋 CÓMO CARGAR EL REMOLQUE SEGÚN EL PLAN</h4>
-                
-                <div class="instruction-step">
-                    <div class="step-icon">1️⃣</div>
-                    <div><strong>MIRA EL DIBUJO DE ARRIBA</strong> — Muestra cómo van colocados los pallets dentro del trailer (vista desde arriba). Cada color es un grupo de pallets apilados.</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">2️⃣</div>
-                    <div><strong>RESPETA EL ORDEN</strong> — Los números y pesos en cada rectángulo te indican qué pallet va en cada posición.</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">3️⃣</div>
-                    <div><strong>APILAMIENTO</strong> — Si dice "Apilable", puedes poner hasta 2 o más pallets uno encima del otro. La altura total NO debe superar la altura del trailer.</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">4️⃣</div>
-                    <div><strong>VERIFICA LOS EJES</strong> — Abajo verás una tabla con colores: 🟢 VERDE = peso correcto, 🟡 AMARILLO = cerca del límite, 🔴 ROJO = EXCESO DE PESO (no cargar así).</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">5️⃣</div>
-                    <div><strong>ADVERTENCIAS</strong> — Si ves algún mensaje en ROJO, consulta al supervisor ANTES de mover el trailer.</div>
-                </div>
+                <h4>📋 CÓMO LEER EL PLAN DE CARGA</h4>
+                <div class="instruction-step"><div class="step-icon">1️⃣</div><div><strong>CADA COLOR ES UN PALLET</strong> — En el dibujo del remolque, cada color representa un pallet diferente. Los números dentro indican el peso en libras.</div></div>
+                <div class="instruction-step"><div class="step-icon">2️⃣</div><div><strong>POSICIÓN EXACTA</strong> — Coloca cada pallet en el lugar que muestra el dibujo, respetando el orden de izquierda a derecha (desde la parte delantera del trailer).</div></div>
+                <div class="instruction-step"><div class="step-icon">3️⃣</div><div><strong>APILAMIENTO</strong> — Si un pallet es apilable, puedes poner hasta el número máximo indicado (ej: 2 niveles). La altura total NO debe superar la altura del trailer.</div></div>
+                <div class="instruction-step"><div class="step-icon">4️⃣</div><div><strong>VERIFICA LOS EJES</strong> — Abajo verás una tabla con colores: 🟢 VERDE = peso correcto, 🟡 AMARILLO = cerca del límite, 🔴 ROJO = EXCESO DE PESO (no cargar así).</div></div>
+                <div class="instruction-step"><div class="step-icon">5️⃣</div><div><strong>LEE LAS ADVERTENCIAS</strong> — Si ves algún mensaje en ROJO, consulta al supervisor ANTES de mover el trailer.</div></div>
             </div>
-            
             <div class="operator-instructions" style="margin-top: 15px; border-left-color: #10b981;">
                 <h4>⚠️ PUNTOS CRÍTICOS</h4>
-                <div class="instruction-step">
-                    <div class="step-icon">🔴</div>
-                    <div><strong>EXCESO DE ALTURA</strong> — Si la altura máxima es mayor que la altura del trailer, NO se puede cargar. Usa un trailer más alto o reduce el apilamiento.</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">🔴</div>
-                    <div><strong>SOBREPESO EN EJES</strong> — Si algún eje aparece en ROJO, la carga es ILEGAL según normas FMCSA. Reubica los pallets más pesados hacia el centro.</div>
-                </div>
-                <div class="instruction-step">
-                    <div class="step-icon">✅</div>
-                    <div><strong>CARGA CORRECTA</strong> — Cuando todos los ejes estén en VERDE y no haya advertencias, puedes cargar con confianza.</div>
-                </div>
-            </div>
-            
-            <div class="operator-instructions" style="margin-top: 15px; background: #1e293b;">
-                <h4>📞 ¿DUDAS?</h4>
-                <p>Consulta al planificador o supervisor antes de cargar. Nunca excedas los límites de peso por eje.</p>
+                <div class="instruction-step"><div class="step-icon">🔴</div><div><strong>EXCESO DE ALTURA</strong> — Si la altura máxima es mayor que la altura del trailer, NO se puede cargar.</div></div>
+                <div class="instruction-step"><div class="step-icon">🔴</div><div><strong>SOBREPESO EN EJES</strong> — Si algún eje aparece en ROJO, la carga es ILEGAL según normas FMCSA.</div></div>
+                <div class="instruction-step"><div class="step-icon">✅</div><div><strong>CARGA CORRECTA</strong> — Cuando todos los ejes estén en VERDE, puedes cargar con confianza.</div></div>
             </div>
         </div>
     </div>
@@ -291,28 +261,15 @@
     <div id="helpTab" class="tab-content">
         <div class="card">
             <h2>❓ Centro de ayuda</h2>
-            <p>Aprende a usar Logistics PRO para optimizar tus cargas</p>
-            <div class="operator-instructions" style="margin-top: 15px;">
-                <h4>🔐 Para activar la licencia</h4>
-                <p>Ingresa la clave que recibiste en el panel superior. Formato: RENT-30-xxxxxxxx (30, 180 o 365 días).</p>
-            </div>
-            <div class="operator-instructions" style="margin-top: 15px;">
-                <h4>📦 Para agregar pallets</h4>
-                <p>Define dimensiones (pulgadas), peso (libras) y si son apilables. Presiona "Agregar".</p>
-            </div>
-            <div class="operator-instructions" style="margin-top: 15px;">
-                <h4>🚛 Para optimizar</h4>
-                <p>Selecciona el tipo de remolque y presiona "OPTIMIZAR CARGA". El sistema calculará el acomodo tipo Tetris.</p>
-            </div>
-            <div class="operator-instructions" style="margin-top: 15px;">
-                <h4>📄 Para exportar</h4>
-                <p>Presiona "Descargar PDF" para obtener un informe técnico.</p>
-            </div>
+            <div class="operator-instructions"><h4>🔐 Activar licencia</h4><p>Ingresa la clave en el panel superior. Formato: RENT-30-xxxxxxxx</p></div>
+            <div class="operator-instructions"><h4>📦 Agregar pallets</h4><p>Define dimensiones, peso y si son apilables. Presiona "Agregar".</p></div>
+            <div class="operator-instructions"><h4>🚛 Optimizar</h4><p>Selecciona el remolque y presiona "OPTIMIZAR CARGA".</p></div>
+            <div class="operator-instructions"><h4>🔑 Administrador</h4><p>Presiona <strong>Ctrl+Shift+A</strong> para abrir el generador de licencias.</p></div>
         </div>
     </div>
 </div>
 
-<!-- Panel flotante de administrador (oculto, se activa con Ctrl+Shift+A) -->
+<!-- Panel flotante administrador (Ctrl+Shift+A) -->
 <div id="adminFloat" class="admin-float">
     <button id="closeAdminBtn" class="close-btn" title="Cerrar">✕</button>
     <h3>🛠️ Generador de licencias</h3>
@@ -324,448 +281,67 @@
     </select>
     <button id="adminGenerateBtn" style="margin-top: 15px; width: 100%;">Generar clave</button>
     <div id="adminGeneratedKey" style="margin-top: 15px; background: #0f172a; padding: 10px; border-radius: 1rem; word-break: break-all;"></div>
-    <p style="font-size: 0.7rem; margin-top: 10px;">📋 Copie la clave y entréguela al cliente</p>
 </div>
 
 <script>
     // ==================== TRADUCCIONES ====================
     const translations = {
-        es: {
-            subtitleTag: "Optimización profesional de carga · Instrucciones para operador",
-            licenseTitle: "🔑 Activar licencia",
-            palletsTitle: "📦 Pallets / unidades",
-            stackableLabel: "Apilable",
-            trailerTitle: "🚛 Remolque y ejes",
-            resultsTitle: "📊 Resultados del análisis",
-            tetrisHint: "Vista superior del trailer (acomodo tipo Tetris)",
-            statTotalLabel: "Peso total",
-            statHeightLabel: "Altura máxima",
-            statCOGLabel: "Centro gravedad",
-            statSpaceLabel: "Espacio usado",
-            historyTitle: "📜 Historial de optimizaciones"
-        },
-        en: {
-            subtitleTag: "Professional Load Optimization · Operator Instructions",
-            licenseTitle: "🔑 Activate License",
-            palletsTitle: "📦 Pallets / Units",
-            stackableLabel: "Stackable",
-            trailerTitle: "🚛 Trailer & Axles",
-            resultsTitle: "📊 Analysis Results",
-            tetrisHint: "Trailer top view (Tetris-style packing)",
-            statTotalLabel: "Total Weight",
-            statHeightLabel: "Max Height",
-            statCOGLabel: "Center of Gravity",
-            statSpaceLabel: "Space Used",
-            historyTitle: "📜 Optimization History"
-        }
+        es: { subtitleTag: "Cada pallet tiene su color · Acomodo visual en remolque", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Pallets / unidades", stackableLabel: "Apilable", trailerTitle: "🚛 Remolque y ejes", resultsTitle: "📊 Visualización del remolque - Vista superior", tetrisHint: "Cada color = un pallet diferente | Los números muestran el peso en libras", statTotalLabel: "Peso total", statHeightLabel: "Altura máxima", statCOGLabel: "Centro gravedad", statSpaceLabel: "Espacio usado", historyTitle: "📜 Historial de optimizaciones" },
+        en: { subtitleTag: "Each pallet has its color · Visual loading in trailer", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Pallets / Units", stackableLabel: "Stackable", trailerTitle: "🚛 Trailer & Axles", resultsTitle: "📊 Trailer Visualization - Top View", tetrisHint: "Each color = a different pallet | Numbers show weight in lbs", statTotalLabel: "Total Weight", statHeightLabel: "Max Height", statCOGLabel: "Center of Gravity", statSpaceLabel: "Space Used", historyTitle: "📜 Optimization History" }
     };
-    
     let currentLang = 'es';
+    function updateLanguage() { const t = translations[currentLang]; for(let id in t) { let el = document.getElementById(id); if(el) el.innerText = t[id]; } }
+    document.querySelectorAll(".lang-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentLang = btn.dataset.lang; updateLanguage(); }); });
+    document.querySelectorAll(".tab-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active")); document.getElementById(btn.dataset.tab + "Tab").classList.add("active"); }); });
     
-    function updateLanguage() {
-        const t = translations[currentLang];
-        document.getElementById("subtitleTag").innerText = t.subtitleTag;
-        document.getElementById("licenseTitle").innerText = t.licenseTitle;
-        document.getElementById("palletsTitle").innerText = t.palletsTitle;
-        document.getElementById("stackableLabel").innerText = t.stackableLabel;
-        document.getElementById("trailerTitle").innerText = t.trailerTitle;
-        document.getElementById("resultsTitle").innerText = t.resultsTitle;
-        document.getElementById("tetrisHint").innerText = t.tetrisHint;
-        document.getElementById("statTotalLabel").innerText = t.statTotalLabel;
-        document.getElementById("statHeightLabel").innerText = t.statHeightLabel;
-        document.getElementById("statCOGLabel").innerText = t.statCOGLabel;
-        document.getElementById("statSpaceLabel").innerText = t.statSpaceLabel;
-        document.getElementById("historyTitle").innerText = t.historyTitle;
-        
-        // Placeholders
-        document.getElementById("palLargo").placeholder = currentLang === 'es' ? "Largo (in)" : "Length (in)";
-        document.getElementById("palAncho").placeholder = currentLang === 'es' ? "Ancho (in)" : "Width (in)";
-        document.getElementById("palAlto").placeholder = currentLang === 'es' ? "Alto (in)" : "Height (in)";
-        document.getElementById("palPeso").placeholder = currentLang === 'es' ? "Peso (lbs)" : "Weight (lbs)";
-        document.getElementById("extraCap").placeholder = currentLang === 'es' ? "Capacidad extra (lbs)" : "Extra capacity (lbs)";
-        document.getElementById("axlesCount").placeholder = currentLang === 'es' ? "N° ejes" : "Axles #";
-        document.getElementById("rentalKey").placeholder = currentLang === 'es' ? "Ingrese su clave (ej: RENT-30-xxxxxxxx)" : "Enter your key (e.g., RENT-30-xxxxxxxx)";
-    }
-    
-    document.querySelectorAll(".lang-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            currentLang = btn.dataset.lang;
-            updateLanguage();
-        });
-    });
-    
-    // Pestañas
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-            document.getElementById(btn.dataset.tab + "Tab").classList.add("active");
-        });
-    });
-    
-    // ==================== SISTEMA DE LICENCIA ====================
+    // ==================== LICENCIA RENTAL ====================
     const RENTAL_SALT = "RentalLog2025SecretKey";
-    let rentalValid = false;
-    let rentalExpiry = null;
-    
-    async function getServerTime() {
-        try {
-            const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
-            const data = await res.json();
-            return new Date(data.utc_datetime);
-        } catch(e) { return new Date(); }
-    }
-    
-    function validateRentalKey(key) {
-        const parts = key.split('-');
-        if (parts.length !== 3 || parts[0] !== 'RENT') return null;
-        const days = parseInt(parts[1]);
-        if (![30, 180, 365].includes(days)) return null;
-        const expectedHash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
-        if (parts[2] !== expectedHash) return null;
-        return { days };
-    }
-    
-    async function activateLicense(key) {
-        const validation = validateRentalKey(key);
-        if (!validation) return { success: false, reason: "Clave inválida" };
-        const serverTime = await getServerTime();
-        const expiry = new Date(serverTime);
-        expiry.setDate(expiry.getDate() + validation.days);
-        localStorage.setItem("rental_license", JSON.stringify({ key, expiry: expiry.toISOString(), days: validation.days }));
-        return { success: true, expiry };
-    }
-    
-    async function checkLicense() {
-        const stored = localStorage.getItem("rental_license");
-        if (!stored) return false;
-        try {
-            const data = JSON.parse(stored);
-            const serverTime = await getServerTime();
-            const expiry = new Date(data.expiry);
-            if (expiry > serverTime) {
-                rentalValid = true;
-                rentalExpiry = expiry;
-                return true;
-            } else {
-                localStorage.removeItem("rental_license");
-                rentalValid = false;
-                return false;
-            }
-        } catch(e) { return false; }
-    }
-    
-    async function updateLicenseUI() {
-        const statusDiv = document.getElementById("licenseStatus");
-        const expiryDiv = document.getElementById("expiryInfo");
-        const appDiv = document.getElementById("appContent");
-        if (rentalValid && rentalExpiry) {
-            const serverTime = await getServerTime();
-            const daysLeft = Math.ceil((rentalExpiry - serverTime) / (1000*3600*24));
-            statusDiv.innerHTML = `<span style="color:#10b981;">✅ Licencia activa hasta ${rentalExpiry.toLocaleDateString()}</span>`;
-            expiryDiv.innerHTML = `⏳ Días restantes: ${daysLeft}`;
-            appDiv.classList.remove("locked");
-        } else {
-            statusDiv.innerHTML = `<span style="color:#ef4444;">❌ Sin licencia válida. Ingrese su clave.</span>`;
-            expiryDiv.innerHTML = "";
-            appDiv.classList.add("locked");
-        }
-    }
-    
-    document.getElementById("activateBtn").onclick = async () => {
-        const key = document.getElementById("rentalKey").value.trim();
-        const result = await activateLicense(key);
-        if (result.success) {
-            alert(`¡Licencia activada! Válida hasta ${result.expiry.toLocaleDateString()}`);
-            await checkLicense();
-            await updateLicenseUI();
-        } else {
-            alert("Error: " + result.reason);
-        }
-    };
+    let rentalValid = false, rentalExpiry = null;
+    async function getServerTime() { try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } catch(e) { return new Date(); } }
+    function validateRentalKey(key) { const parts = key.split('-'); if (parts.length !== 3 || parts[0] !== 'RENT') return null; const days = parseInt(parts[1]); if (![30,180,365].includes(days)) return null; const expectedHash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); if (parts[2] !== expectedHash) return null; return { days }; }
+    async function activateLicense(key) { const validation = validateRentalKey(key); if (!validation) return { success: false, reason: "Clave inválida" }; const serverTime = await getServerTime(); const expiry = new Date(serverTime); expiry.setDate(expiry.getDate() + validation.days); localStorage.setItem("rental_license", JSON.stringify({ key, expiry: expiry.toISOString(), days: validation.days })); return { success: true, expiry }; }
+    async function checkLicense() { const stored = localStorage.getItem("rental_license"); if (!stored) return false; try { const data = JSON.parse(stored); const serverTime = await getServerTime(); const expiry = new Date(data.expiry); if (expiry > serverTime) { rentalValid = true; rentalExpiry = expiry; return true; } else { localStorage.removeItem("rental_license"); rentalValid = false; return false; } } catch(e) { return false; } }
+    async function updateLicenseUI() { const statusDiv = document.getElementById("licenseStatus"); const expiryDiv = document.getElementById("expiryInfo"); const appDiv = document.getElementById("appContent"); if (rentalValid && rentalExpiry) { const serverTime = await getServerTime(); const daysLeft = Math.ceil((rentalExpiry - serverTime) / (1000*3600*24)); statusDiv.innerHTML = `<span style="color:#10b981;">✅ Licencia activa hasta ${rentalExpiry.toLocaleDateString()}</span>`; expiryDiv.innerHTML = `⏳ Días restantes: ${daysLeft}`; appDiv.classList.remove("locked"); } else { statusDiv.innerHTML = `<span style="color:#ef4444;">❌ Sin licencia válida. Ingrese su clave.</span>`; expiryDiv.innerHTML = ""; appDiv.classList.add("locked"); } }
+    document.getElementById("activateBtn").onclick = async () => { const key = document.getElementById("rentalKey").value.trim(); const result = await activateLicense(key); if (result.success) { alert(`¡Licencia activada! Válida hasta ${result.expiry.toLocaleDateString()}`); await checkLicense(); await updateLicenseUI(); } else { alert("Error: " + result.reason); } };
     
     // ==================== ADMINISTRADOR OCULTO (Ctrl+Shift+A) ====================
-    function generateLicense(days) {
-        const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
-        return `RENT-${days}-${hash}`;
-    }
-    
-    // Detectar combinación de teclas Ctrl+Shift+A
-    let ctrlPressed = false, shiftPressed = false;
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Control') ctrlPressed = true;
-        if (e.key === 'Shift') shiftPressed = true;
-        if (e.key === 'A' && ctrlPressed && shiftPressed) {
-            e.preventDefault();
-            document.getElementById("adminFloat").style.display = "block";
-        }
-    });
-    document.addEventListener('keyup', (e) => {
-        if (e.key === 'Control') ctrlPressed = false;
-        if (e.key === 'Shift') shiftPressed = false;
-    });
-    
-    document.getElementById("closeAdminBtn").onclick = () => {
-        document.getElementById("adminFloat").style.display = "none";
-    };
-    
-    document.getElementById("adminGenerateBtn").onclick = () => {
-        const days = parseInt(document.getElementById("adminDaysSelect").value);
-        const license = generateLicense(days);
-        document.getElementById("adminGeneratedKey").innerHTML = `<strong>Clave generada:</strong><br><code style="background:#000; padding:8px; display:block; border-radius:8px;">${license}</code><br><button id="copyAdminBtn" style="background:#3b82f6;">Copiar</button>`;
-        document.getElementById("copyAdminBtn").onclick = () => {
-            navigator.clipboard.writeText(license);
-            alert("¡Clave copiada!");
-        };
-    };
+    function generateLicense(days) { const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); return `RENT-${days}-${hash}`; }
+    let ctrlPressed=false, shiftPressed=false;
+    document.addEventListener('keydown', (e) => { if (e.key === 'Control') ctrlPressed = true; if (e.key === 'Shift') shiftPressed = true; if (e.key === 'A' && ctrlPressed && shiftPressed) { e.preventDefault(); document.getElementById("adminFloat").style.display = "block"; } });
+    document.addEventListener('keyup', (e) => { if (e.key === 'Control') ctrlPressed = false; if (e.key === 'Shift') shiftPressed = false; });
+    document.getElementById("closeAdminBtn").onclick = () => { document.getElementById("adminFloat").style.display = "none"; };
+    document.getElementById("adminGenerateBtn").onclick = () => { const days = parseInt(document.getElementById("adminDaysSelect").value); const license = generateLicense(days); document.getElementById("adminGeneratedKey").innerHTML = `<strong>Clave generada:</strong><br><code style="background:#000; padding:8px; display:block; border-radius:8px;">${license}</code><br><button id="copyAdminBtn" style="background:#3b82f6;">Copiar</button>`; document.getElementById("copyAdminBtn").onclick = () => { navigator.clipboard.writeText(license); alert("¡Clave copiada!"); }; };
     
     // ==================== MOTOR DE OPTIMIZACIÓN ====================
-    const TRAILERS = {
-        dryvan: { name: "Dry Van 53'", length: 636, width: 102, height: 110, maxWeight: 45000 },
-        flatbed: { name: "Flatbed 48'", length: 576, width: 102, height: 96, maxWeight: 48000 },
-        stepdeck: { name: "Step Deck 48'", length: 576, width: 102, height: 120, maxWeight: 48000 },
-        container40: { name: "Container 40'", length: 474, width: 92, height: 96, maxWeight: 44000 }
-    };
+    const TRAILERS = { dryvan: { name: "Dry Van 53'", length: 636, width: 102, height: 110, maxWeight: 45000 }, flatbed: { name: "Flatbed 48'", length: 576, width: 102, height: 96, maxWeight: 48000 }, stepdeck: { name: "Step Deck 48'", length: 576, width: 102, height: 120, maxWeight: 48000 }, container40: { name: "Container 40'", length: 474, width: 92, height: 96, maxWeight: 44000 } };
+    let pallets = []; let lastResult = null;
     
-    let pallets = [];
-    let lastResult = null;
+    // Generar colores únicos para cada pallet (basado en índice)
+    function getPalletColor(index) { const hue = (index * 37) % 360; return `hsl(${hue}, 70%, 55%)`; }
     
-    function renderPallets() {
-        const div = document.getElementById("palletsList");
-        if (pallets.length === 0) { div.innerHTML = "<div style='padding:20px;text-align:center'>📭 No hay pallets</div>"; return; }
-        div.innerHTML = pallets.map((p, i) => `
-            <div class="pallet-item">
-                <span>📦 ${p.length}" x ${p.width}" x ${p.height}" | ${p.weight} lbs | ${p.stackable ? `Apilable (max ${p.maxStacks})` : "No apilable"}</span>
-                <button class="delPallet" data-idx="${i}" style="background:#ef4444; padding:5px 12px;">X</button>
-            </div>
-        `).join("");
-        document.querySelectorAll(".delPallet").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                pallets.splice(parseInt(btn.dataset.idx), 1);
-                renderPallets();
-                clearResults();
-            });
-        });
-    }
+    function renderPallets() { const div = document.getElementById("palletsList"); if (pallets.length === 0) { div.innerHTML = "<div style='padding:20px;text-align:center'>📭 No hay pallets</div>"; return; } div.innerHTML = pallets.map((p, i) => `<div class="pallet-item"><span style="display:flex; align-items:center; gap:8px;"><span style="display:inline-block; width:20px; height:20px; border-radius:4px; background:${getPalletColor(i)};"></span>📦 ${p.length}" x ${p.width}" x ${p.height}" | ${p.weight} lbs | ${p.stackable ? `Apilable (max ${p.maxStacks})` : "No apilable"}</span><button class="delPallet" data-idx="${i}" style="background:#ef4444; padding:5px 12px;">X</button></div>`).join(""); document.querySelectorAll(".delPallet").forEach(btn => { btn.addEventListener("click", (e) => { pallets.splice(parseInt(btn.dataset.idx), 1); renderPallets(); clearResults(); }); }); }
     
-    function buildStacks(palletsList) {
-        const groups = new Map();
-        for (let p of palletsList) {
-            const key = `${p.length}x${p.width}_${p.stackable}_${p.maxStacks}`;
-            if (!groups.has(key)) groups.set(key, { ...p, count: 0 });
-            groups.get(key).count++;
-        }
-        let stacks = [];
-        for (let [_, g] of groups.entries()) {
-            const maxPerStack = g.stackable ? g.maxStacks : 1;
-            const numStacks = Math.ceil(g.count / maxPerStack);
-            const perStack = Math.min(maxPerStack, g.count);
-            for (let i = 0; i < numStacks; i++) {
-                const cnt = (i === numStacks-1) ? g.count - (i * perStack) : perStack;
-                stacks.push({ length: g.length, width: g.width, height: cnt * g.height, weight: cnt * g.weight, palletCount: cnt });
-            }
-        }
-        return stacks;
-    }
+    function buildStacks(palletsList) { const groups = new Map(); for (let p of palletsList) { const key = `${p.length}x${p.width}_${p.stackable}_${p.maxStacks}`; if (!groups.has(key)) groups.set(key, { ...p, count: 0 }); groups.get(key).count++; } let stacks = []; for (let [_, g] of groups.entries()) { const maxPerStack = g.stackable ? g.maxStacks : 1; const numStacks = Math.ceil(g.count / maxPerStack); const perStack = Math.min(maxPerStack, g.count); for (let i = 0; i < numStacks; i++) { const cnt = (i === numStacks-1) ? g.count - (i * perStack) : perStack; stacks.push({ length: g.length, width: g.width, height: cnt * g.height, weight: cnt * g.weight, palletCount: cnt, originalIndex: g.originalIndex || 0 }); } } return stacks; }
     
-    function optimize() {
-        if (pallets.length === 0) { alert("Agregue al menos un pallet"); return; }
-        const trailerId = document.getElementById("trailerSelect").value;
-        const trailer = TRAILERS[trailerId];
-        const extraCap = parseFloat(document.getElementById("extraCap").value) || 0;
-        const axlesCount = parseInt(document.getElementById("axlesCount").value) || 5;
-        const maxCapacity = trailer.maxWeight + extraCap;
-        
-        let stacks = buildStacks(pallets).filter(s => s.height <= trailer.height);
-        if (stacks.length === 0) { document.getElementById("packDetails").innerHTML = "❌ Todos los stacks exceden la altura del trailer"; return; }
-        
-        stacks.sort((a, b) => (b.length * b.width) - (a.length * a.width));
-        let placed = [], currentX = 0;
-        for (let s of stacks) {
-            if (currentX + s.length > trailer.length) break;
-            placed.push({ ...s, startX: currentX, centerX: currentX + s.length/2 });
-            currentX += s.length;
-        }
-        
-        const totalWeight = placed.reduce((s,p) => s + p.weight, 0);
-        const totalPalletUnits = placed.reduce((s,p) => s + p.palletCount, 0);
-        const cog = totalWeight > 0 ? placed.reduce((s,p) => s + p.weight * p.centerX, 0) / totalWeight : 0;
-        const maxHeight = Math.max(...placed.map(p => p.height), 0);
-        const spacePercent = (currentX / trailer.length) * 100;
-        
-        let axlePositions = [];
-        for (let i = 0; i < axlesCount; i++) {
-            let pos = trailer.length - (i+1) * (trailer.length / (axlesCount+1));
-            axlePositions.push(Math.max(0, Math.min(trailer.length, pos)));
-        }
-        let axleLoads = new Array(axlesCount).fill(0);
-        for (let p of placed) {
-            for (let a = 0; a < axlesCount; a++) {
-                axleLoads[a] += p.weight / (Math.abs(p.centerX - axlePositions[a]) + 20);
-            }
-        }
-        let sumInv = axleLoads.reduce((a,b) => a+b, 0);
-        if (sumInv > 0) axleLoads = axleLoads.map(v => (v / sumInv) * totalWeight);
-        
-        const SIMPLE_LIMIT = 20000, TANDEM_LIMIT = 34000;
-        let warnings = [];
-        for (let i = 0; i < axlesCount; i++) if (axleLoads[i] > SIMPLE_LIMIT) warnings.push(`Eje ${i+1}: ${axleLoads[i].toFixed(0)} lbs > 20,000 lbs`);
-        for (let i = 0; i < axlesCount-1; i+=2) { let tandem = axleLoads[i] + (axleLoads[i+1]||0); if (tandem > TANDEM_LIMIT) warnings.push(`Tándem ${i+1}-${i+2}: ${tandem.toFixed(0)} lbs > 34,000 lbs`); }
-        if (maxHeight > trailer.height) warnings.push(`Altura ${maxHeight} in > trailer ${trailer.height} in`);
-        if (totalWeight > maxCapacity) warnings.push(`Peso ${totalWeight.toFixed(0)} lbs > capacidad ${maxCapacity} lbs`);
-        
-        lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount };
-        drawResults();
-        saveHistory();
-    }
+    function optimize() { if (pallets.length === 0) { alert("Agregue al menos un pallet"); return; } const trailerId = document.getElementById("trailerSelect").value; const trailer = TRAILERS[trailerId]; const extraCap = parseFloat(document.getElementById("extraCap").value) || 0; const axlesCount = parseInt(document.getElementById("axlesCount").value) || 5; const maxCapacity = trailer.maxWeight + extraCap; let stacks = buildStacks(pallets).filter(s => s.height <= trailer.height); if (stacks.length === 0) { document.getElementById("packDetails").innerHTML = "❌ Todos los stacks exceden la altura del trailer"; return; } stacks.sort((a, b) => (b.length * b.width) - (a.length * a.width)); let placed = [], currentX = 0; for (let s of stacks) { if (currentX + s.length > trailer.length) break; placed.push({ ...s, startX: currentX, centerX: currentX + s.length/2 }); currentX += s.length; } const totalWeight = placed.reduce((s,p) => s + p.weight, 0); const totalPalletUnits = placed.reduce((s,p) => s + p.palletCount, 0); const cog = totalWeight > 0 ? placed.reduce((s,p) => s + p.weight * p.centerX, 0) / totalWeight : 0; const maxHeight = Math.max(...placed.map(p => p.height), 0); const spacePercent = (currentX / trailer.length) * 100; let axlePositions = []; for (let i = 0; i < axlesCount; i++) { let pos = trailer.length - (i+1) * (trailer.length / (axlesCount+1)); axlePositions.push(Math.max(0, Math.min(trailer.length, pos))); } let axleLoads = new Array(axlesCount).fill(0); for (let p of placed) { for (let a = 0; a < axlesCount; a++) { axleLoads[a] += p.weight / (Math.abs(p.centerX - axlePositions[a]) + 20); } } let sumInv = axleLoads.reduce((a,b) => a+b, 0); if (sumInv > 0) axleLoads = axleLoads.map(v => (v / sumInv) * totalWeight); const SIMPLE_LIMIT = 20000, TANDEM_LIMIT = 34000; let warnings = []; for (let i = 0; i < axlesCount; i++) if (axleLoads[i] > SIMPLE_LIMIT) warnings.push(`Eje ${i+1}: ${axleLoads[i].toFixed(0)} lbs > 20,000 lbs`); for (let i = 0; i < axlesCount-1; i+=2) { let tandem = axleLoads[i] + (axleLoads[i+1]||0); if (tandem > TANDEM_LIMIT) warnings.push(`Tándem ${i+1}-${i+2}: ${tandem.toFixed(0)} lbs > 34,000 lbs`); } if (maxHeight > trailer.height) warnings.push(`Altura ${maxHeight} in > trailer ${trailer.height} in`); if (totalWeight > maxCapacity) warnings.push(`Peso ${totalWeight.toFixed(0)} lbs > capacidad ${maxCapacity} lbs`); lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount }; drawResults(); saveHistory(); }
     
-    function drawResults() {
-        if (!lastResult) return;
-        document.getElementById("totalWeight").innerText = `${lastResult.totalWeight.toFixed(0)} lbs`;
-        document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`;
-        document.getElementById("cog").innerText = `${lastResult.cog.toFixed(1)} in`;
-        document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`;
-        
-        // Dibujar canvas Tetris
-        const canvas = document.getElementById("packCanvas");
-        canvas.width = 800; canvas.height = 400;
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, 800, 400);
-        
-        const sx = (canvas.width - 60) / lastResult.trailerLength;
-        const sy = (canvas.height - 60) / lastResult.trailerWidth;
-        const offX = 30, offY = 30;
-        
-        ctx.strokeStyle = "#5b6e8c";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy);
-        ctx.fillStyle = "#1e2a3e";
-        ctx.fillRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy);
-        
-        for (let i = 0; i < lastResult.placed.length; i++) {
-            const p = lastResult.placed[i];
-            const x = offX + p.startX * sx;
-            const y = offY;
-            const w = p.length * sx;
-            const h = p.width * sy;
-            ctx.fillStyle = `hsl(${i * 37 % 360}, 70%, 55%)`;
-            ctx.fillRect(x, y, w, h);
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(x, y, w, h);
-            ctx.fillStyle = "white";
-            ctx.font = "bold 10px monospace";
-            ctx.fillText(`${p.weight} lbs`, x + 3, y + 16);
-            ctx.fillStyle = "#ccc";
-            ctx.font = "8px monospace";
-            ctx.fillText(`${p.palletCount} p`, x + 3, y + 28);
-        }
-        
-        // Detalle de stacks
-        let stacksHtml = `<strong>📦 Stacks colocados (${lastResult.placed.length}):</strong><br>`;
-        lastResult.placed.forEach(s => stacksHtml += `📐 ${s.length}" x ${s.width}" | altura ${s.height}" | ${s.weight} lbs (${s.palletCount} pcs)<br>`);
-        document.getElementById("packDetails").innerHTML = stacksHtml;
-        
-        let heightHtml = `<strong>📏 Altura máxima:</strong> ${lastResult.maxHeight} in / ${lastResult.trailerHeight} in (${((lastResult.maxHeight/lastResult.trailerHeight)*100).toFixed(0)}%)`;
-        heightHtml += lastResult.maxHeight > lastResult.trailerHeight ? `<span class="danger"> ⚠️ EXCEDE</span>` : `<span class="badge"> ✅ Válido</span>`;
-        document.getElementById("heightInfo").innerHTML = heightHtml;
-        
-        // Tabla de ejes simplificada (para el operador)
-        let axleHtml = `<h4 style="margin-bottom: 10px;">⚖️ CARGA POR EJES - VERIFICA COLORES</h4><div class="axle-table">`;
-        for (let i = 0; i < lastResult.axleLoads.length; i++) {
-            const load = lastResult.axleLoads[i];
-            const limit = 20000;
-            let status = "verde";
-            let statusText = "Dentro del límite";
-            if (load > limit) { status = "rojo"; statusText = "EXCEDE - PELIGRO"; }
-            else if (load > limit * 0.9) { status = "amarillo"; statusText = "Cerca del límite"; }
-            axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span style="font-size:1.3rem; font-weight:bold;">${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`;
-        }
-        axleHtml += `</div>`;
-        if (lastResult.warnings.length) {
-            axleHtml += `<div style="margin-top: 15px; background: #7f1d1d; padding: 10px; border-radius: 1rem;"><span class="danger">⚠️ ADVERTENCIAS:</span><br>${lastResult.warnings.join("<br>")}</div>`;
-        } else {
-            axleHtml += `<div style="margin-top: 15px;" class="badge">✅ Todos los ejes dentro de límites FMCSA</div>`;
-        }
-        document.getElementById("axleInfoSimple").innerHTML = axleHtml;
-    }
+    function drawResults() { if (!lastResult) return; document.getElementById("totalWeight").innerText = `${lastResult.totalWeight.toFixed(0)} lbs`; document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`; document.getElementById("cog").innerText = `${lastResult.cog.toFixed(1)} in`; document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`; const canvas = document.getElementById("packCanvas"); canvas.width = 900; canvas.height = 450; const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 900, 450); const sx = (canvas.width - 80) / lastResult.trailerLength; const sy = (canvas.height - 100) / lastResult.trailerWidth; const offX = 40, offY = 50; ctx.strokeStyle = "#5b6e8c"; ctx.lineWidth = 3; ctx.strokeRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); ctx.fillStyle = "#1a2538"; ctx.fillRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); // Dibujar cada stack con su color único for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const x = offX + p.startX * sx; const y = offY; const w = p.length * sx; const h = p.width * sy; ctx.fillStyle = getPalletColor(i); ctx.fillRect(x, y, w, h); ctx.strokeStyle = "white"; ctx.lineWidth = 1.5; ctx.strokeRect(x, y, w, h); ctx.fillStyle = "white"; ctx.font = "bold 11px monospace"; ctx.fillText(`${p.weight} lbs`, x + 5, y + 18); ctx.fillStyle = "#ddd"; ctx.font = "9px monospace"; ctx.fillText(`${p.length}"x${p.width}"`, x + 5, y + 32); if (p.palletCount > 1) { ctx.fillStyle = "#fbbf24"; ctx.fillText(`x${p.palletCount}`, x + 5, y + 46); } } // Etiquetas de dimensiones ctx.fillStyle = "#94a3b8"; ctx.font = "10px monospace"; ctx.fillText(`Largo trailer: ${lastResult.trailerLength}"`, offX, offY - 8); ctx.fillText(`Ancho: ${lastResult.trailerWidth}"`, offX + 200, offY - 8); // Leyenda de colores en la UI const legendDiv = document.getElementById("colorLegend"); let legendHtml = `<div class="legend-item"><span class="legend-color" style="background:#1a2538;"></span><span>Fondo trailer</span></div>`; for (let i = 0; i < lastResult.placed.length; i++) { legendHtml += `<div class="legend-item"><span class="legend-color" style="background:${getPalletColor(i)};"></span><span>Stack ${i+1}: ${lastResult.placed[i].weight} lbs</span></div>`; } legendDiv.innerHTML = legendHtml; // Detalle stacks let stacksHtml = `<strong>📦 Stacks colocados (${lastResult.placed.length}):</strong><br>`; lastResult.placed.forEach((s, i) => stacksHtml += `<span style="display:inline-block; width:12px; height:12px; background:${getPalletColor(i)}; border-radius:2px; margin-right:5px;"></span> Stack ${i+1}: ${s.length}" x ${s.width}" | altura ${s.height}" | ${s.weight} lbs (${s.palletCount} pcs)<br>`); document.getElementById("packDetails").innerHTML = stacksHtml; let heightHtml = `<strong>📏 Altura máxima:</strong> ${lastResult.maxHeight} in / ${lastResult.trailerHeight} in (${((lastResult.maxHeight/lastResult.trailerHeight)*100).toFixed(0)}%)`; heightHtml += lastResult.maxHeight > lastResult.trailerHeight ? `<span class="danger"> ⚠️ EXCEDE</span>` : `<span class="badge"> ✅ Válido</span>`; document.getElementById("heightInfo").innerHTML = heightHtml; let axleHtml = `<h4 style="margin-bottom: 10px;">⚖️ CARGA POR EJES - VERIFICA COLORES</h4><div class="axle-table">`; for (let i = 0; i < lastResult.axleLoads.length; i++) { const load = lastResult.axleLoads[i]; const limit = 20000; let status = "verde", statusText = "Dentro del límite"; if (load > limit) { status = "rojo"; statusText = "EXCEDE - PELIGRO"; } else if (load > limit * 0.9) { status = "amarillo"; statusText = "Cerca del límite"; } axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span style="font-size:1.3rem; font-weight:bold;">${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`; } axleHtml += `</div>`; if (lastResult.warnings.length) { axleHtml += `<div style="margin-top: 15px; background: #7f1d1d; padding: 10px; border-radius: 1rem;"><span class="danger">⚠️ ADVERTENCIAS:</span><br>${lastResult.warnings.join("<br>")}</div>`; } else { axleHtml += `<div style="margin-top: 15px;" class="badge">✅ Todos los ejes dentro de límites FMCSA</div>`; } document.getElementById("axleInfoSimple").innerHTML = axleHtml; }
     
-    function clearResults() { 
-        lastResult = null; 
-        document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR CARGA' para comenzar";
-        document.getElementById("heightInfo").innerHTML = "";
-        document.getElementById("axleInfoSimple").innerHTML = "";
-        document.getElementById("totalWeight").innerText = "0 lbs";
-        document.getElementById("maxHeight").innerText = "0 in";
-        document.getElementById("cog").innerText = "0 in";
-        document.getElementById("spaceUsed").innerText = "0%";
-        const canvas = document.getElementById("packCanvas");
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-    
-    function saveHistory() { 
-        if (!lastResult) return;
-        let h = JSON.parse(localStorage.getItem("rental_history")) || []; 
-        h.unshift({ fecha: new Date().toLocaleString(), total: lastResult.totalWeight, placed: lastResult.totalPalletUnits }); 
-        if(h.length>10) h.pop(); 
-        localStorage.setItem("rental_history", JSON.stringify(h)); 
-        renderHistory(); 
-    }
-    
-    function renderHistory() { 
-        let h = JSON.parse(localStorage.getItem("rental_history")) || []; 
-        document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item" style="justify-content:space-between;"><span>📅 ${hh.fecha}</span><span>⚖️ ${hh.total.toFixed(0)} lbs</span><span>📦 ${hh.placed} pallets</span></div>`).join("") : "<p>Sin historial</p>"; 
-    }
-    
-    function generatePDF() { 
-        if(!lastResult) { alert("Primero optimice una carga"); return; } 
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF(); 
-        doc.setFontSize(18);
-        doc.text("LOGISTICS PRO - INFORME TÉCNICO", 15, 20); 
-        doc.setFontSize(10);
-        doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 32); 
-        doc.text(`Peso total: ${lastResult.totalWeight.toFixed(0)} lbs`, 15, 44); 
-        doc.text(`Altura máxima: ${lastResult.maxHeight} in`, 15, 54); 
-        doc.text(`Centro de gravedad: ${lastResult.cog.toFixed(1)} in`, 15, 64); 
-        doc.text(`Espacio utilizado: ${lastResult.spacePercent.toFixed(1)}%`, 15, 74); 
-        doc.text("Stacks colocados:", 15, 86);
-        let y = 96;
-        lastResult.placed.forEach((p,i) => {
-            if(y>270){ doc.addPage(); y=20; }
-            doc.text(`${i+1}. ${p.length}x${p.width} in, ${p.weight} lbs (${p.palletCount} pcs)`, 15, y);
-            y+=6;
-        });
-        doc.save(`logistics_pro_${Date.now()}.pdf`); 
-    }
+    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR CARGA' para comenzar"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("totalWeight").innerText = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerText = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; const canvas = document.getElementById("packCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function saveHistory() { if (!lastResult) return; let h = JSON.parse(localStorage.getItem("rental_history")) || []; h.unshift({ fecha: new Date().toLocaleString(), total: lastResult.totalWeight, placed: lastResult.totalPalletUnits }); if(h.length>10) h.pop(); localStorage.setItem("rental_history", JSON.stringify(h)); renderHistory(); }
+    function renderHistory() { let h = JSON.parse(localStorage.getItem("rental_history")) || []; document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item" style="justify-content:space-between;"><span>📅 ${hh.fecha}</span><span>⚖️ ${hh.total.toFixed(0)} lbs</span><span>📦 ${hh.placed} pallets</span></div>`).join("") : "<p>Sin historial</p>"; }
+    function generatePDF() { if(!lastResult) { alert("Primero optimice una carga"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME TÉCNICO", 15, 20); doc.setFontSize(10); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 32); doc.text(`Peso total: ${lastResult.totalWeight.toFixed(0)} lbs`, 15, 44); doc.text(`Altura máxima: ${lastResult.maxHeight} in`, 15, 54); doc.text(`Centro de gravedad: ${lastResult.cog.toFixed(1)} in`, 15, 64); doc.text(`Espacio utilizado: ${lastResult.spacePercent.toFixed(1)}%`, 15, 74); doc.text("Stacks colocados:", 15, 86); let y = 96; lastResult.placed.forEach((p,i) => { if(y>270){ doc.addPage(); y=20; } doc.text(`${i+1}. ${p.length}x${p.width} in, ${p.weight} lbs (${p.palletCount} pcs)`, 15, y); y+=6; }); doc.save(`logistics_pro_${Date.now()}.pdf`); }
     
     // Eventos UI
-    document.getElementById("addPalletBtn").onclick = () => {
-        let l=parseInt(document.getElementById("palLargo").value), w=parseInt(document.getElementById("palAncho").value), h=parseInt(document.getElementById("palAlto").value), peso=parseInt(document.getElementById("palPeso").value), stackable=document.getElementById("stackable").checked, maxStacks=parseInt(document.getElementById("maxStacks").value);
-        if(isNaN(l)||isNaN(w)||isNaN(h)||isNaN(peso)) { alert("Valores válidos"); return; }
-        pallets.push({length:l,width:w,height:h,weight:peso,stackable,maxStacks:stackable?maxStacks:1});
-        renderPallets(); clearResults();
-    };
+    document.getElementById("addPalletBtn").onclick = () => { let l=parseInt(document.getElementById("palLargo").value), w=parseInt(document.getElementById("palAncho").value), h=parseInt(document.getElementById("palAlto").value), peso=parseInt(document.getElementById("palPeso").value), stackable=document.getElementById("stackable").checked, maxStacks=parseInt(document.getElementById("maxStacks").value); if(isNaN(l)||isNaN(w)||isNaN(h)||isNaN(peso)) { alert("Valores válidos"); return; } pallets.push({length:l,width:w,height:h,weight:peso,stackable,maxStacks:stackable?maxStacks:1}); renderPallets(); clearResults(); };
     document.getElementById("clearPalletsBtn").onclick = () => { pallets=[]; renderPallets(); clearResults(); };
-    document.getElementById("exampleBtn").onclick = () => { 
-        pallets = [
-            {length:48,width:40,height:48,weight:1800,stackable:true,maxStacks:2},
-            {length:48,width:40,height:48,weight:1800,stackable:true,maxStacks:2},
-            {length:42,width:42,height:50,weight:2200,stackable:false,maxStacks:1}
-        ]; 
-        renderPallets(); clearResults(); 
-    };
+    document.getElementById("exampleBtn").onclick = () => { pallets = [ {length:48,width:40,height:48,weight:1800,stackable:true,maxStacks:2}, {length:48,width:40,height:48,weight:1800,stackable:true,maxStacks:2}, {length:42,width:42,height:50,weight:2200,stackable:false,maxStacks:1}, {length:36,width:36,height:40,weight:1200,stackable:true,maxStacks:3} ]; renderPallets(); clearResults(); };
     document.getElementById("optimizeBtn").onclick = optimize;
     document.getElementById("resetBtn").onclick = clearResults;
     document.getElementById("pdfBtn").onclick = generatePDF;
     
     // Inicialización
-    renderPallets(); 
-    renderHistory();
-    updateLanguage();
+    renderPallets(); renderHistory(); updateLanguage();
     (async () => { await checkLicense(); await updateLicenseUI(); })();
 </script>
 </body>
