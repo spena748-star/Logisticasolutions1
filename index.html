@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Logistics PRO | Optimización profesional de carga</title>
+    <title>Logistics PRO | Visualización 3D de carga + Todos los transportes</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -15,7 +15,7 @@
             padding: 20px;
         }
         
-        .container { max-width: 1400px; margin: auto; }
+        .container { max-width: 1600px; margin: auto; }
         
         .header {
             background: rgba(2, 6, 23, 0.9);
@@ -46,6 +46,7 @@
         .license-panel { background: rgba(15, 23, 42, 0.96); border-radius: 1rem; padding: 1.2rem; margin-bottom: 20px; border: 1px solid #f59e0b; }
         .flex-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
         
         input, select, button { padding: 10px 16px; border-radius: 60px; border: none; background: #0f172a; color: white; border: 1px solid #334155; }
         button { background: #10b981; cursor: pointer; font-weight: bold; transition: 0.2s; }
@@ -56,7 +57,18 @@
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
         .stat-card { background: #0f172a; padding: 10px; border-radius: 1rem; text-align: center; }
         
-        canvas { background: #0f172a; border-radius: 1rem; width: 100%; height: auto; margin-top: 12px; border: 2px solid #3b82f6; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .view-options { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+        .view-btn { background: #1e293b; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
+        .view-btn.active { background: #3b82f6; }
+        
+        .canvas-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .canvas-2d, .canvas-3d { background: #0f172a; border-radius: 1rem; border: 2px solid #3b82f6; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
+        .transport-icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; }
+        .transport-icon { background: #1e293b; border-radius: 1rem; padding: 8px 12px; cursor: pointer; text-align: center; transition: 0.2s; border: 1px solid #334155; }
+        .transport-icon:hover { background: #3b82f6; transform: scale(1.05); }
+        .transport-icon.selected { background: #10b981; border-color: #10b981; }
+        .transport-icon img { font-size: 24px; }
         
         .badge { background: #10b981; color: #0f172a; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; display: inline-block; }
         .danger { color: #f87171; }
@@ -64,7 +76,6 @@
         .result-panel { background: #0f172a; padding: 12px; border-radius: 1rem; font-family: monospace; font-size: 0.85rem; margin-top: 12px; }
         .locked { filter: blur(4px); pointer-events: none; user-select: none; opacity: 0.7; }
         
-        /* Panel administrador flotante */
         .admin-float {
             position: fixed;
             top: 50%;
@@ -99,7 +110,6 @@
         .operator-instructions { background: #0f172a; border-radius: 1rem; padding: 20px; margin-top: 15px; border-left: 5px solid #f59e0b; }
         .instruction-step { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; font-size: 0.95rem; }
         .step-number { background: #3b82f6; width: 28px; height: 28px; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
-        .step-icon { font-size: 1.5rem; flex-shrink: 0; }
         
         .axle-table { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; justify-content: center; }
         .axle-item { background: #0f172a; border-radius: 1rem; padding: 12px; text-align: center; min-width: 100px; }
@@ -112,8 +122,7 @@
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; background: #0f172a; padding: 4px 10px; border-radius: 40px; }
         .legend-color { width: 16px; height: 16px; border-radius: 4px; }
         
-        .loading-instructions { background: #1e293b; border-radius: 1rem; padding: 15px; margin-top: 15px; border: 1px solid #10b981; }
-        @media (max-width: 700px) { body { padding: 12px; } .flex-row { flex-direction: column; align-items: stretch; } }
+        @media (max-width: 800px) { body { padding: 12px; } .flex-row { flex-direction: column; align-items: stretch; } .canvas-2d, .canvas-3d { width: 100%; height: auto; } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -123,7 +132,7 @@
     <div class="header">
         <div class="logo">
             <h1>🚛 LOGISTICS PRO</h1>
-            <p id="subtitleTag">Instrucciones profesionales para operador de montacargas</p>
+            <p id="subtitleTag">Visualización 3D de carga · Todos los transportes</p>
         </div>
         <div class="lang-selector">
             <button class="lang-btn active" data-lang="es">🇪🇸 Español</button>
@@ -133,7 +142,7 @@
 
     <div class="tabs">
         <button class="tab-btn active" data-tab="app">📊 Planificador</button>
-        <button class="tab-btn" data-tab="operator">👷 INSTRUCCIONES PARA OPERADOR</button>
+        <button class="tab-btn" data-tab="operator">👷 Instrucciones operador</button>
         <button class="tab-btn" data-tab="help">❓ Ayuda</button>
     </div>
 
@@ -173,21 +182,26 @@
                     <div id="palletsList" style="max-height: 250px; overflow-y: auto; margin-top: 15px;"></div>
                     <div class="flex-row" style="margin-top: 10px;">
                         <button id="clearPalletsBtn" class="btn-outline">Vaciar todo</button>
-                        <button id="exampleBtn" class="btn-outline">📦 Ejemplo mixto (Americano + Euro)</button>
+                        <button id="exampleBtn" class="btn-outline">📦 Ejemplo mixto</button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 id="trailerTitle">🚛 Remolque y ejes</h3>
-                    <div class="flex-row">
-                        <select id="trailerSelect">
-                            <option value="dryvan">Dry Van 53' (636x102x110 in)</option>
-                            <option value="flatbed">Flatbed 48' (576x102x96 in)</option>
-                            <option value="stepdeck">Step Deck 48' (576x102x120 in)</option>
-                            <option value="container40">Container 40' (474x92x96 in)</option>
-                        </select>
+                    <h3 id="trailerTitle">🚛 Tipo de transporte</h3>
+                    <div class="transport-icons" id="transportIcons">
+                        <div class="transport-icon selected" data-trailer="dryvan">🚛 Dry Van 53'</div>
+                        <div class="transport-icon" data-trailer="reefer">❄️ Reefer 53'</div>
+                        <div class="transport-icon" data-trailer="flatbed">📦 Flatbed 48'</div>
+                        <div class="transport-icon" data-trailer="stepdeck">📐 Step Deck 48'</div>
+                        <div class="transport-icon" data-trailer="container20">📦 Container 20'</div>
+                        <div class="transport-icon" data-trailer="container40">📦 Container 40'</div>
+                        <div class="transport-icon" data-trailer="boxtruck">🚚 Box Truck 26'</div>
+                        <div class="transport-icon" data-trailer="sprinter">🚐 Sprinter Van</div>
+                        <div class="transport-icon" data-trailer="carcarrier">🚗 Car Carrier</div>
+                        <div class="transport-icon" data-trailer="tanker">⛽ Tanker</div>
+                        <div class="transport-icon" data-trailer="dump">⛏️ Dump Truck</div>
                     </div>
-                    <div class="flex-row">
+                    <div class="flex-row" style="margin-top: 15px;">
                         <input type="number" id="extraCap" placeholder="Capacidad extra (lbs)" value="0">
                         <input type="number" id="axlesCount" placeholder="N° ejes" value="5">
                     </div>
@@ -196,25 +210,33 @@
             </div>
 
             <div class="card">
-                <h3 id="resultsTitle">📊 Visualización del remolque - Vista superior</h3>
-                <div style="text-align: center; margin-bottom: 10px;">
-                    <span class="badge" id="tetrisHint">Cada color = un grupo de pallets | Los números muestran el peso en libras</span>
+                <h3 id="resultsTitle">📊 Visualización de carga</h3>
+                
+                <div class="view-options">
+                    <span class="view-btn active" data-view="both">🔄 Vista 2D + 3D</span>
+                    <span class="view-btn" data-view="2d">📐 Solo vista superior</span>
+                    <span class="view-btn" data-view="3d">🎨 Solo vista 3D</span>
+                </div>
+                
+                <div class="canvas-container">
+                    <div id="canvas2dContainer">
+                        <canvas id="packCanvas2D" width="800" height="400" class="canvas-2d" style="background:#0f172a;"></canvas>
+                        <p style="text-align:center; font-size:0.7rem; margin-top:5px;">📍 VISTA SUPERIOR (desde arriba) - Cada rectángulo = 1 pallet o grupo apilado</p>
+                    </div>
+                    <div id="canvas3dContainer">
+                        <canvas id="packCanvas3D" width="800" height="450" class="canvas-3d" style="background:#0f172a;"></canvas>
+                        <p style="text-align:center; font-size:0.7rem; margin-top:5px;">🎨 VISTA 3D ISOMÉTRICA - Altura y apilamiento visibles</p>
+                    </div>
                 </div>
                 
                 <div class="color-legend" id="colorLegend"></div>
-                
-                <canvas id="packCanvas" width="900" height="450" style="width:100%; height:auto; background:#0f172a;"></canvas>
-                
-                <div class="loading-instructions" id="loadingInstructions">
-                    <h4 style="color: #f59e0b; margin-bottom: 12px;">📋 INSTRUCCIONES DE CARGA PARA OPERADOR</h4>
-                    <div id="stepByStepInstructions"></div>
-                </div>
                 
                 <div class="stats">
                     <div class="stat-card"><strong id="statTotalLabel">Peso total</strong><br><span id="totalWeight">0 lbs</span></div>
                     <div class="stat-card"><strong id="statHeightLabel">Altura máxima</strong><br><span id="maxHeight">0 in</span></div>
                     <div class="stat-card"><strong id="statCOGLabel">Centro gravedad</strong><br><span id="cog">0 in</span></div>
                     <div class="stat-card"><strong id="statSpaceLabel">Espacio usado</strong><br><span id="spaceUsed">0%</span></div>
+                    <div class="stat-card"><strong id="statStacksLabel">Pallets totales</strong><br><span id="totalPallets">0</span></div>
                 </div>
                 
                 <div id="packDetails" class="result-panel"></div>
@@ -236,22 +258,18 @@
 
     <div id="operatorTab" class="tab-content">
         <div class="card">
-            <h2>👷 MANUAL DE CARGA PARA OPERADOR DE MONTACARGAS</h2>
-            <p style="margin-bottom: 20px;">Siga estas instrucciones paso a paso para cargar correctamente el remolque</p>
-            
+            <h2>👷 MANUAL DE CARGA PARA OPERADOR</h2>
             <div class="operator-instructions">
-                <h4 style="color: #f59e0b; margin-bottom: 15px;">📋 PASO A PASO</h4>
-                <div class="instruction-step"><div class="step-number">1</div><div><strong>MIRA EL DIBUJO DEL REMOLQUE</strong> — En la pestaña "Planificador" verás un dibujo del trailer con rectángulos de colores. Cada color representa un grupo de pallets.</div></div>
-                <div class="instruction-step"><div class="step-number">2</div><div><strong>IDENTIFICA LOS PESOS</strong> — Dentro de cada rectángulo verás el peso en libras (lbs). Los pallets MÁS PESADOS deben ir ADELANTE (parte izquierda del dibujo, cerca de la cabina).</div></div>
-                <div class="instruction-step"><div class="step-number">3</div><div><strong>RESPETA EL ORDEN</strong> — Carga los pallets de izquierda a derecha siguiendo el orden del dibujo.</div></div>
-                <div class="instruction-step"><div class="step-number">4</div><div><strong>APILAMIENTO</strong> — Si un pallet tiene "x2" o "x3", apila esa cantidad uno encima del otro.</div></div>
-                <div class="instruction-step"><div class="step-number">5</div><div><strong>VERIFICA LOS EJES</strong> — En la tabla de abajo: 🟢 VERDE = bien, 🟡 AMARILLO = cerca del límite, 🔴 ROJO = EXCESO DE PESO.</div></div>
+                <h4>📋 CÓMO LEER LA VISUALIZACIÓN</h4>
+                <div class="instruction-step"><div class="step-number">1</div><div><strong>VISTA SUPERIOR (2D):</strong> Muestra la disposición desde arriba. Cada rectángulo de color es un pallet o grupo de pallets apilados. El número dentro es el peso en libras.</div></div>
+                <div class="instruction-step"><div class="step-number">2</div><div><strong>VISTA 3D ISOMÉTRICA:</strong> Muestra la altura real de cada pallet apilado. Si ves "x2" o "x3" significa que hay esa cantidad de pallets uno encima del otro.</div></div>
+                <div class="instruction-step"><div class="step-number">3</div><div><strong>ORDEN DE CARGA:</strong> Los colores más oscuros/rojos indican pallets más pesados. Van de ADELANTE (izquierda) hacia ATRÁS (derecha).</div></div>
+                <div class="instruction-step"><div class="step-number">4</div><div><strong>TIPOS DE TRANSPORTE:</strong> Selecciona el icono del camión/remolque que usarás. Cada uno tiene dimensiones y capacidad diferente.</div></div>
             </div>
-            
-            <div class="operator-instructions" style="margin-top: 15px; border-left-color: #10b981;">
-                <h4 style="color: #10b981;">⚠️ TIPOS DE PALLET</h4>
-                <div class="instruction-step"><div class="step-icon">🇺🇸</div><div><strong>Americano (48"x40")</strong> — Estándar EE.UU., ocupa más ancho.</div></div>
-                <div class="instruction-step"><div class="step-icon">🇪🇺</div><div><strong>Europalet (47"x31.5")</strong> — Más angosto. No mezclar en la misma columna.</div></div>
+            <div class="operator-instructions" style="margin-top:15px; border-left-color:#10b981;">
+                <h4>⚠️ TIPOS DE PALLET</h4>
+                <div class="instruction-step"><div class="step-icon">🇺🇸</div><div><strong>Americano (48"x40"):</strong> Estándar EE.UU.</div></div>
+                <div class="instruction-step"><div class="step-icon">🇪🇺</div><div><strong>Europalet (47"x31.5"):</strong> Más angosto, común en importaciones.</div></div>
             </div>
         </div>
     </div>
@@ -261,14 +279,14 @@
             <h2>❓ Centro de ayuda</h2>
             <div class="operator-instructions"><h4>🔐 Activar licencia</h4><p>Ingresa la clave en el panel superior. Formato: RENT-30-xxxxxxxx</p></div>
             <div class="operator-instructions"><h4>📦 Agregar pallets</h4><p>Selecciona tipo, dimensiones, peso y si son apilables.</p></div>
-            <div class="operator-instructions"><h4>🚛 Optimizar</h4><p>Selecciona remolque y presiona "OPTIMIZAR CARGA".</p></div>
-            <div class="operator-instructions"><h4>🔑 Administrador</h4><p>Presiona <strong>Ctrl+Alt+L</strong> para abrir el generador de licencias (solo personal autorizado).</p></div>
+            <div class="operator-instructions"><h4>🚛 Tipos de transporte</h4><p>Haz clic en los iconos de camiones para cambiar el remolque.</p></div>
+            <div class="operator-instructions"><h4>🔑 Administrador</h4><p>Presiona <strong>Ctrl+Alt+L</strong> para abrir el generador de licencias.</p></div>
         </div>
     </div>
 </div>
 
 <div id="adminFloat" class="admin-float">
-    <button id="closeAdminBtn" class="close-btn" title="Cerrar">✕</button>
+    <button id="closeAdminBtn" class="close-btn">✕</button>
     <h3>🛠️ Generador de licencias</h3>
     <label>Días de licencia:</label>
     <select id="adminDaysSelect">
@@ -277,21 +295,70 @@
         <option value="365">365 días</option>
     </select>
     <button id="adminGenerateBtn" style="margin-top: 15px; width: 100%;">Generar clave</button>
-    <div id="adminGeneratedKey" style="margin-top: 15px; background: #0f172a; padding: 10px; border-radius: 1rem; word-break: break-all;"></div>
+    <div id="adminGeneratedKey" style="margin-top: 15px; background: #0f172a; padding: 10px; border-radius: 1rem;"></div>
 </div>
 
 <script>
+    // ==================== TIPOS DE TRANSPORTE ====================
+    const TRANSPORTES = {
+        dryvan: { name: "Dry Van 53'", length: 636, width: 102, height: 110, maxWeight: 45000, icon: "🚛" },
+        reefer: { name: "Reefer 53'", length: 636, width: 102, height: 108, maxWeight: 44000, icon: "❄️" },
+        flatbed: { name: "Flatbed 48'", length: 576, width: 102, height: 96, maxWeight: 48000, icon: "📦" },
+        stepdeck: { name: "Step Deck 48'", length: 576, width: 102, height: 120, maxWeight: 48000, icon: "📐" },
+        container20: { name: "Container 20'", length: 232, width: 92, height: 96, maxWeight: 40000, icon: "📦" },
+        container40: { name: "Container 40'", length: 474, width: 92, height: 96, maxWeight: 44000, icon: "📦" },
+        boxtruck: { name: "Box Truck 26'", length: 312, width: 96, height: 96, maxWeight: 26000, icon: "🚚" },
+        sprinter: { name: "Sprinter Van", length: 168, width: 70, height: 72, maxWeight: 5500, icon: "🚐" },
+        carcarrier: { name: "Car Carrier", length: 480, width: 96, height: 80, maxWeight: 40000, icon: "🚗" },
+        tanker: { name: "Tanker", length: 480, width: 96, height: 96, maxWeight: 44000, icon: "⛽" },
+        dump: { name: "Dump Truck", length: 240, width: 96, height: 60, maxWeight: 35000, icon: "⛏️" }
+    };
+    
+    let currentTransporte = "dryvan";
+    let pallets = [];
+    let lastResult = null;
+    
     // ==================== TRADUCCIONES ====================
     const translations = {
-        es: { subtitleTag: "Instrucciones profesionales para operador de montacargas", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Pallets / unidades", stackableLabel: "Apilable", trailerTitle: "🚛 Remolque y ejes", resultsTitle: "📊 Visualización del remolque - Vista superior", tetrisHint: "Cada color = un grupo de pallets | Los números muestran el peso en libras", statTotalLabel: "Peso total", statHeightLabel: "Altura máxima", statCOGLabel: "Centro gravedad", statSpaceLabel: "Espacio usado", historyTitle: "📜 Historial de optimizaciones" },
-        en: { subtitleTag: "Professional forklift operator instructions", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Pallets / Units", stackableLabel: "Stackable", trailerTitle: "🚛 Trailer & Axles", resultsTitle: "📊 Trailer Visualization - Top View", tetrisHint: "Each color = a pallet group | Numbers show weight in lbs", statTotalLabel: "Total Weight", statHeightLabel: "Max Height", statCOGLabel: "Center of Gravity", statSpaceLabel: "Space Used", historyTitle: "📜 Optimization History" }
+        es: { subtitleTag: "Visualización 3D de carga · Todos los transportes", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Pallets / unidades", stackableLabel: "Apilable", trailerTitle: "🚛 Tipo de transporte", resultsTitle: "📊 Visualización de carga", statTotalLabel: "Peso total", statHeightLabel: "Altura máxima", statCOGLabel: "Centro gravedad", statSpaceLabel: "Espacio usado", statStacksLabel: "Pallets totales", historyTitle: "📜 Historial" },
+        en: { subtitleTag: "3D load visualization · All transport types", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Pallets / Units", stackableLabel: "Stackable", trailerTitle: "🚛 Transport type", resultsTitle: "📊 Load Visualization", statTotalLabel: "Total Weight", statHeightLabel: "Max Height", statCOGLabel: "Center of Gravity", statSpaceLabel: "Space Used", statStacksLabel: "Total Pallets", historyTitle: "📜 History" }
     };
     let currentLang = 'es';
     function updateLanguage() { const t = translations[currentLang]; for(let id in t) { let el = document.getElementById(id); if(el) el.innerText = t[id]; } }
     document.querySelectorAll(".lang-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentLang = btn.dataset.lang; updateLanguage(); }); });
     document.querySelectorAll(".tab-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active")); document.getElementById(btn.dataset.tab + "Tab").classList.add("active"); }); });
     
-    // ==================== LICENCIA RENTAL ====================
+    // Selector de transporte
+    document.querySelectorAll(".transport-icon").forEach(el => {
+        el.addEventListener("click", () => {
+            document.querySelectorAll(".transport-icon").forEach(e => e.classList.remove("selected"));
+            el.classList.add("selected");
+            currentTransporte = el.dataset.trailer;
+            if(lastResult) optimize();
+        });
+    });
+    
+    // Vista (2D/3D/ambas)
+    let currentView = "both";
+    document.querySelectorAll(".view-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentView = btn.dataset.view;
+            updateViewVisibility();
+            if(lastResult) drawResults();
+        });
+    });
+    
+    function updateViewVisibility() {
+        const container2d = document.getElementById("canvas2dContainer");
+        const container3d = document.getElementById("canvas3dContainer");
+        if(currentView === "2d") { container2d.style.display = "block"; container3d.style.display = "none"; }
+        else if(currentView === "3d") { container2d.style.display = "none"; container3d.style.display = "block"; }
+        else { container2d.style.display = "block"; container3d.style.display = "block"; }
+    }
+    
+    // ==================== LICENCIA ====================
     const RENTAL_SALT = "RentalLog2025SecretKey";
     let rentalValid = false, rentalExpiry = null;
     async function getServerTime() { try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } catch(e) { return new Date(); } }
@@ -301,28 +368,15 @@
     async function updateLicenseUI() { const statusDiv = document.getElementById("licenseStatus"); const expiryDiv = document.getElementById("expiryInfo"); const appDiv = document.getElementById("appContent"); if (rentalValid && rentalExpiry) { const serverTime = await getServerTime(); const daysLeft = Math.ceil((rentalExpiry - serverTime) / (1000*3600*24)); statusDiv.innerHTML = `<span style="color:#10b981;">✅ Licencia activa hasta ${rentalExpiry.toLocaleDateString()}</span>`; expiryDiv.innerHTML = `⏳ Días restantes: ${daysLeft}`; appDiv.classList.remove("locked"); } else { statusDiv.innerHTML = `<span style="color:#ef4444;">❌ Sin licencia válida. Ingrese su clave.</span>`; expiryDiv.innerHTML = ""; appDiv.classList.add("locked"); } }
     document.getElementById("activateBtn").onclick = async () => { const key = document.getElementById("rentalKey").value.trim(); const result = await activateLicense(key); if (result.success) { alert(`¡Licencia activada! Válida hasta ${result.expiry.toLocaleDateString()}`); await checkLicense(); await updateLicenseUI(); } else { alert("Error: " + result.reason); } };
     
-    // ==================== ADMINISTRADOR OCULTO con Ctrl+Alt+L ====================
+    // ADMINISTRADOR
     function generateLicense(days) { const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); return `RENT-${days}-${hash}`; }
-    let ctrlPressed = false, altPressed = false;
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Control') ctrlPressed = true;
-        if (e.key === 'Alt') altPressed = true;
-        if (e.key === 'l' && ctrlPressed && altPressed) {
-            e.preventDefault();
-            document.getElementById("adminFloat").style.display = "block";
-        }
-    });
-    document.addEventListener('keyup', (e) => {
-        if (e.key === 'Control') ctrlPressed = false;
-        if (e.key === 'Alt') altPressed = false;
-    });
+    let ctrlPressed=false, altPressed=false;
+    document.addEventListener('keydown', (e) => { if (e.key === 'Control') ctrlPressed = true; if (e.key === 'Alt') altPressed = true; if (e.key === 'l' && ctrlPressed && altPressed) { e.preventDefault(); document.getElementById("adminFloat").style.display = "block"; } });
+    document.addEventListener('keyup', (e) => { if (e.key === 'Control') ctrlPressed = false; if (e.key === 'Alt') altPressed = false; });
     document.getElementById("closeAdminBtn").onclick = () => { document.getElementById("adminFloat").style.display = "none"; };
     document.getElementById("adminGenerateBtn").onclick = () => { const days = parseInt(document.getElementById("adminDaysSelect").value); const license = generateLicense(days); document.getElementById("adminGeneratedKey").innerHTML = `<strong>Clave generada:</strong><br><code style="background:#000; padding:8px; display:block; border-radius:8px;">${license}</code><br><button id="copyAdminBtn" style="background:#3b82f6;">Copiar</button>`; document.getElementById("copyAdminBtn").onclick = () => { navigator.clipboard.writeText(license); alert("¡Clave copiada!"); }; };
     
     // ==================== MOTOR DE OPTIMIZACIÓN ====================
-    const TRAILERS = { dryvan: { name: "Dry Van 53'", length: 636, width: 102, height: 110, maxWeight: 45000 }, flatbed: { name: "Flatbed 48'", length: 576, width: 102, height: 96, maxWeight: 48000 }, stepdeck: { name: "Step Deck 48'", length: 576, width: 102, height: 120, maxWeight: 48000 }, container40: { name: "Container 40'", length: 474, width: 92, height: 96, maxWeight: 44000 } };
-    let pallets = []; let lastResult = null;
-    
     function getPalletColor(index) { const hue = (index * 37) % 360; return `hsl(${hue}, 70%, 55%)`; }
     function getPalletIcon(type) { return type === 'american' ? '🇺🇸' : (type === 'euro' ? '🇪🇺' : '📦'); }
     
@@ -332,14 +386,18 @@
     
     function buildStacks(palletsList) { const groups = new Map(); for (let p of palletsList) { const key = `${p.length}x${p.width}_${p.stackable}_${p.maxStacks}_${p.type}`; if (!groups.has(key)) groups.set(key, { ...p, count: 0 }); groups.get(key).count++; } let stacks = []; for (let [_, g] of groups.entries()) { const maxPerStack = g.stackable ? g.maxStacks : 1; const numStacks = Math.ceil(g.count / maxPerStack); const perStack = Math.min(maxPerStack, g.count); for (let i = 0; i < numStacks; i++) { const cnt = (i === numStacks-1) ? g.count - (i * perStack) : perStack; stacks.push({ length: g.length, width: g.width, height: cnt * g.height, weight: cnt * g.weight, palletCount: cnt, type: g.type }); } } return stacks; }
     
-    function optimize() { if (pallets.length === 0) { alert("Agregue al menos un pallet"); return; } const trailerId = document.getElementById("trailerSelect").value; const trailer = TRAILERS[trailerId]; const extraCap = parseFloat(document.getElementById("extraCap").value) || 0; const axlesCount = parseInt(document.getElementById("axlesCount").value) || 5; const maxCapacity = trailer.maxWeight + extraCap; let stacks = buildStacks(pallets).filter(s => s.height <= trailer.height); if (stacks.length === 0) { document.getElementById("packDetails").innerHTML = "❌ Todos los stacks exceden la altura del trailer"; return; } stacks.sort((a, b) => (b.length * b.width) - (a.length * a.width)); let placed = [], currentX = 0; for (let s of stacks) { if (currentX + s.length > trailer.length) break; placed.push({ ...s, startX: currentX, centerX: currentX + s.length/2 }); currentX += s.length; } const totalWeight = placed.reduce((s,p) => s + p.weight, 0); const totalPalletUnits = placed.reduce((s,p) => s + p.palletCount, 0); const cog = totalWeight > 0 ? placed.reduce((s,p) => s + p.weight * p.centerX, 0) / totalWeight : 0; const maxHeight = Math.max(...placed.map(p => p.height), 0); const spacePercent = (currentX / trailer.length) * 100; let axlePositions = []; for (let i = 0; i < axlesCount; i++) { let pos = trailer.length - (i+1) * (trailer.length / (axlesCount+1)); axlePositions.push(Math.max(0, Math.min(trailer.length, pos))); } let axleLoads = new Array(axlesCount).fill(0); for (let p of placed) { for (let a = 0; a < axlesCount; a++) { axleLoads[a] += p.weight / (Math.abs(p.centerX - axlePositions[a]) + 20); } } let sumInv = axleLoads.reduce((a,b) => a+b, 0); if (sumInv > 0) axleLoads = axleLoads.map(v => (v / sumInv) * totalWeight); const SIMPLE_LIMIT = 20000, TANDEM_LIMIT = 34000; let warnings = []; for (let i = 0; i < axlesCount; i++) if (axleLoads[i] > SIMPLE_LIMIT) warnings.push(`Eje ${i+1}: ${axleLoads[i].toFixed(0)} lbs > 20,000 lbs`); for (let i = 0; i < axlesCount-1; i+=2) { let tandem = axleLoads[i] + (axleLoads[i+1]||0); if (tandem > TANDEM_LIMIT) warnings.push(`Tándem ${i+1}-${i+2}: ${tandem.toFixed(0)} lbs > 34,000 lbs`); } if (maxHeight > trailer.height) warnings.push(`Altura ${maxHeight} in > trailer ${trailer.height} in`); if (totalWeight > maxCapacity) warnings.push(`Peso ${totalWeight.toFixed(0)} lbs > capacidad ${maxCapacity} lbs`); lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount }; drawResults(); saveHistory(); }
+    function optimize() { if (pallets.length === 0) { alert("Agregue al menos un pallet"); return; } const trailer = TRANSPORTES[currentTransporte]; const extraCap = parseFloat(document.getElementById("extraCap").value) || 0; const axlesCount = parseInt(document.getElementById("axlesCount").value) || 5; const maxCapacity = trailer.maxWeight + extraCap; let stacks = buildStacks(pallets).filter(s => s.height <= trailer.height); if (stacks.length === 0) { document.getElementById("packDetails").innerHTML = "❌ Todos los stacks exceden la altura del trailer"; return; } stacks.sort((a, b) => (b.weight) - (a.weight)); let placed = [], currentX = 0; for (let s of stacks) { if (currentX + s.length > trailer.length) break; placed.push({ ...s, startX: currentX, centerX: currentX + s.length/2 }); currentX += s.length; } const totalWeight = placed.reduce((s,p) => s + p.weight, 0); const totalPalletUnits = placed.reduce((s,p) => s + p.palletCount, 0); const cog = totalWeight > 0 ? placed.reduce((s,p) => s + p.weight * p.centerX, 0) / totalWeight : 0; const maxHeight = Math.max(...placed.map(p => p.height), 0); const spacePercent = (currentX / trailer.length) * 100; let axlePositions = []; for (let i = 0; i < axlesCount; i++) { let pos = trailer.length - (i+1) * (trailer.length / (axlesCount+1)); axlePositions.push(Math.max(0, Math.min(trailer.length, pos))); } let axleLoads = new Array(axlesCount).fill(0); for (let p of placed) { for (let a = 0; a < axlesCount; a++) { axleLoads[a] += p.weight / (Math.abs(p.centerX - axlePositions[a]) + 20); } } let sumInv = axleLoads.reduce((a,b) => a+b, 0); if (sumInv > 0) axleLoads = axleLoads.map(v => (v / sumInv) * totalWeight); const SIMPLE_LIMIT = 20000, TANDEM_LIMIT = 34000; let warnings = []; for (let i = 0; i < axlesCount; i++) if (axleLoads[i] > SIMPLE_LIMIT) warnings.push(`Eje ${i+1}: ${axleLoads[i].toFixed(0)} lbs > 20,000 lbs`); for (let i = 0; i < axlesCount-1; i+=2) { let tandem = axleLoads[i] + (axleLoads[i+1]||0); if (tandem > TANDEM_LIMIT) warnings.push(`Tándem ${i+1}-${i+2}: ${tandem.toFixed(0)} lbs > 34,000 lbs`); } if (maxHeight > trailer.height) warnings.push(`Altura ${maxHeight} in > trailer ${trailer.height} in`); if (totalWeight > maxCapacity) warnings.push(`Peso ${totalWeight.toFixed(0)} lbs > capacidad ${maxCapacity} lbs`); lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount, trailerName: trailer.name, trailerIcon: trailer.icon }; drawResults(); saveHistory(); }
     
-    function drawResults() { if (!lastResult) return; document.getElementById("totalWeight").innerText = `${lastResult.totalWeight.toFixed(0)} lbs`; document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`; document.getElementById("cog").innerText = `${lastResult.cog.toFixed(1)} in`; document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`; const canvas = document.getElementById("packCanvas"); canvas.width = 900; canvas.height = 450; const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 900, 450); const sx = (canvas.width - 80) / lastResult.trailerLength; const sy = (canvas.height - 100) / lastResult.trailerWidth; const offX = 40, offY = 50; ctx.strokeStyle = "#5b6e8c"; ctx.lineWidth = 3; ctx.strokeRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); ctx.fillStyle = "#1a2538"; ctx.fillRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const x = offX + p.startX * sx; const y = offY; const w = p.length * sx; const h = p.width * sy; ctx.fillStyle = getPalletColor(i); ctx.fillRect(x, y, w, h); ctx.strokeStyle = "white"; ctx.lineWidth = 1.5; ctx.strokeRect(x, y, w, h); ctx.fillStyle = "white"; ctx.font = "bold 12px monospace"; ctx.fillText(`${p.weight} lbs`, x + 5, y + 20); ctx.fillStyle = "#ddd"; ctx.font = "9px monospace"; ctx.fillText(`${p.length}"x${p.width}"`, x + 5, y + 36); if (p.palletCount > 1) { ctx.fillStyle = "#fbbf24"; ctx.fillText(`x${p.palletCount}`, x + 5, y + 52); } } ctx.fillStyle = "#94a3b8"; ctx.font = "10px monospace"; ctx.fillText(`Largo trailer: ${lastResult.trailerLength}"`, offX, offY - 8); ctx.fillText(`Ancho: ${lastResult.trailerWidth}"`, offX + 200, offY - 8); ctx.fillStyle = "#f59e0b"; ctx.fillText("⬅️ DELANTERO (Cabina)", offX, offY - 20); ctx.fillStyle = "#f59e0b"; ctx.fillText("TRASERO (Puertas) ➡️", offX + lastResult.trailerLength * sx - 150, offY - 20); const legendDiv = document.getElementById("colorLegend"); let legendHtml = `<div class="legend-item"><span class="legend-color" style="background:#1a2538;"></span><span>Fondo trailer</span></div>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const tipoIcon = p.type === 'american' ? '🇺🇸' : (p.type === 'euro' ? '🇪🇺' : '📦'); legendHtml += `<div class="legend-item"><span class="legend-color" style="background:${getPalletColor(i)};"></span><span>${tipoIcon} Pos ${i+1}: ${p.weight} lbs</span></div>`; } legendDiv.innerHTML = legendHtml; let stacksHtml = `<strong>📦 ORDEN DE CARGA (de adelante hacia atrás):</strong><br>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const tipoTexto = p.type === 'american' ? 'Americano' : (p.type === 'euro' ? 'Europalet' : 'Personalizado'); stacksHtml += `<span style="display:inline-block; width:12px; height:12px; background:${getPalletColor(i)}; border-radius:2px; margin-right:5px;"></span> <strong>Posición ${i+1}:</strong> ${tipoTexto} de ${p.length}"x${p.width}" | Peso ${p.weight} lbs | Altura ${p.height}" | ${p.palletCount} pallet(s)<br>`; } document.getElementById("packDetails").innerHTML = stacksHtml; let heightHtml = `<strong>📏 Altura máxima:</strong> ${lastResult.maxHeight} in / ${lastResult.trailerHeight} in (${((lastResult.maxHeight/lastResult.trailerHeight)*100).toFixed(0)}%)`; heightHtml += lastResult.maxHeight > lastResult.trailerHeight ? `<span class="danger"> ⚠️ EXCEDE - NO CARGAR</span>` : `<span class="badge"> ✅ Válido</span>`; document.getElementById("heightInfo").innerHTML = heightHtml; let axleHtml = `<h4 style="margin-bottom: 10px;">⚖️ VERIFICACIÓN DE EJES - NORMA FMCSA</h4><div class="axle-table">`; for (let i = 0; i < lastResult.axleLoads.length; i++) { const load = lastResult.axleLoads[i]; const limit = 20000; let status = "verde", statusText = "DENTRO DEL LÍMITE ✓"; if (load > limit) { status = "rojo"; statusText = "EXCEDE - PELIGRO ✗"; } else if (load > limit * 0.9) { status = "amarillo"; statusText = "CERCA DEL LÍMITE ⚠️"; } axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span style="font-size:1.3rem; font-weight:bold;">${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`; } axleHtml += `</div>`; if (lastResult.warnings.length) { axleHtml += `<div style="margin-top: 15px; background: #7f1d1d; padding: 10px; border-radius: 1rem;"><span class="danger">⚠️ ADVERTENCIAS - NO CARGAR SIN CORREGIR:</span><br>${lastResult.warnings.join("<br>")}</div>`; } else { axleHtml += `<div style="margin-top: 15px;" class="badge">✅ CARGA APROBADA - Todos los ejes dentro de límites FMCSA</div>`; } document.getElementById("axleInfoSimple").innerHTML = axleHtml; let instructionsHtml = `<div style="background: #0f172a; border-radius: 1rem; padding: 15px;"><table style="width:100%; border-collapse: collapse;"><tr style="background: #1e293b;"><th style="padding: 8px; text-align: center;">PASO</th><th style="padding: 8px; text-align: center;">UBICACIÓN</th><th style="padding: 8px; text-align: center;">PALLET</th><th style="padding: 8px; text-align: center;">PESO</th><th style="padding: 8px; text-align: center;">INSTRUCCIÓN</th></tr>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const tipoTexto = p.type === 'american' ? '🇺🇸 Americano' : (p.type === 'euro' ? '🇪🇺 Europalet' : '📦 Personalizado'); instructionsHtml += `<tr style="border-bottom: 1px solid #334155;"><td style="padding: 10px; text-align: center;"><strong>${i+1}</strong></td><td style="padding: 10px;">${i === 0 ? '⬅️ ADELANTE (cabina)' : (i === lastResult.placed.length-1 ? 'TRASERO (puertas) ➡️' : `Fila ${i+1}`)}</td><td style="padding: 10px;">${tipoTexto}<br><small>${p.length}"x${p.width}"</small></td><td style="padding: 10px;"><strong style="color: #fbbf24;">${p.weight} lbs</strong></td><td style="padding: 10px;">Colocar ${p.palletCount} pallet(s) ${p.palletCount > 1 ? 'apilados' : ''} en esta posición</td></tr>`; } instructionsHtml += `</table><div style="margin-top: 15px; padding: 10px; background: #1e293b; border-radius: 0.5rem;"><strong>📌 RECORDATORIO:</strong> Los pallets más pesados (${lastResult.placed[0]?.weight || 0} lbs) van ADELANTE. Los más livianos (${lastResult.placed[lastResult.placed.length-1]?.weight || 0} lbs) van ATRÁS.</div></div>`; document.getElementById("stepByStepInstructions").innerHTML = instructionsHtml; }
+    function draw2DView() { if (!lastResult) return; const canvas = document.getElementById("packCanvas2D"); canvas.width = 800; canvas.height = 400; const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 800, 400); const sx = (canvas.width - 60) / lastResult.trailerLength; const sy = (canvas.height - 60) / lastResult.trailerWidth; const offX = 30, offY = 30; ctx.strokeStyle = "#5b6e8c"; ctx.lineWidth = 3; ctx.strokeRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); ctx.fillStyle = "#1a2538"; ctx.fillRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy); for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const x = offX + p.startX * sx; const y = offY; const w = p.length * sx; const h = p.width * sy; ctx.fillStyle = getPalletColor(i); ctx.fillRect(x, y, w, h); ctx.strokeStyle = "white"; ctx.lineWidth = 1.5; ctx.strokeRect(x, y, w, h); ctx.fillStyle = "white"; ctx.font = "bold 11px monospace"; ctx.fillText(`${p.weight} lbs`, x + 5, y + 18); ctx.fillStyle = "#ddd"; ctx.font = "8px monospace"; ctx.fillText(`${p.length}"x${p.width}"`, x + 5, y + 32); if (p.palletCount > 1) { ctx.fillStyle = "#fbbf24"; ctx.fillText(`x${p.palletCount}`, x + 5, y + 46); } } ctx.fillStyle = "#94a3b8"; ctx.font = "10px monospace"; ctx.fillText(`Largo: ${lastResult.trailerLength}"`, offX, offY - 8); ctx.fillStyle = "#f59e0b"; ctx.fillText("⬅️ DELANTERO", offX, offY - 20); ctx.fillStyle = "#f59e0b"; ctx.fillText("TRASERO ➡️", offX + lastResult.trailerLength * sx - 80, offY - 20); }
     
-    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR CARGA' para comenzar"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("stepByStepInstructions").innerHTML = ""; document.getElementById("totalWeight").innerText = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerText = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; const canvas = document.getElementById("packCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function draw3DView() { if (!lastResult) return; const canvas = document.getElementById("packCanvas3D"); canvas.width = 800; canvas.height = 450; const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 800, 450); const centerX = 400, baseY = 380; const scale = 0.8; const angle = -0.5; const cos = Math.cos(angle), sin = Math.sin(angle); const trailerLength = lastResult.trailerLength; const trailerWidth = lastResult.trailerWidth; const maxHeight = Math.max(lastResult.maxHeight, 20); const heightScale = 1.5; function isoX(x, y) { return centerX + (x - y) * cos * scale; } function isoY(x, y, z) { return baseY + (x + y) * sin * scale - z * heightScale; } // Piso del trailer let floorPoints = [ {x:0, y:0}, {x:trailerLength, y:0}, {x:trailerLength, y:trailerWidth}, {x:0, y:trailerWidth} ]; ctx.beginPath(); let first = floorPoints[0]; ctx.moveTo(isoX(first.x, first.y), isoY(first.x, first.y, 0)); for(let i=1;i<floorPoints.length;i++) ctx.lineTo(isoX(floorPoints[i].x, floorPoints[i].y), isoY(floorPoints[i].x, floorPoints[i].y, 0)); ctx.closePath(); ctx.fillStyle = "#2a3a5e"; ctx.fill(); ctx.strokeStyle = "#5b6e8c"; ctx.stroke(); for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const x = p.startX; const z = p.width; const h = p.height * 0.8; const color = getPalletColor(i); const points = [ {x:x, y:0, z:0}, {x:x+p.length, y:0, z:0}, {x:x+p.length, y:z, z:0}, {x:x, y:z, z:0}, {x:x, y:0, z:h}, {x:x+p.length, y:0, z:h}, {x:x+p.length, y:z, z:h}, {x:x, y:z, z:h} ]; ctx.fillStyle = color; ctx.strokeStyle = "white"; ctx.lineWidth = 1; for (let face of [[0,1,2,3],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]]) { ctx.beginPath(); let pt = points[face[0]]; ctx.moveTo(isoX(pt.x, pt.z), isoY(pt.x, pt.z, pt.y)); for(let j=1;j<face.length;j++) { pt = points[face[j]]; ctx.lineTo(isoX(pt.x, pt.z), isoY(pt.x, pt.z, pt.y)); } ctx.closePath(); ctx.fillStyle = color; ctx.fill(); ctx.stroke(); } ctx.fillStyle = "white"; ctx.font = "bold 10px monospace"; const cx = x + p.length/2; const cz = z/2; ctx.fillText(`${p.weight} lbs`, isoX(cx, cz)-15, isoY(cx, cz, h+5)-10); if(p.palletCount > 1) { ctx.fillStyle = "#fbbf24"; ctx.fillText(`x${p.palletCount}`, isoX(cx, cz)+10, isoY(cx, cz, h+5)-10); } } ctx.fillStyle = "#f59e0b"; ctx.font = "bold 12px monospace"; ctx.fillText(`${lastResult.trailerIcon || "🚛"} ${lastResult.trailerName}`, 20, 40); ctx.fillStyle = "#94a3b8"; ctx.font = "10px monospace"; ctx.fillText(`Altura máxima: ${lastResult.maxHeight}"`, 20, 65); }
+    
+    function drawResults() { if (!lastResult) return; document.getElementById("totalWeight").innerText = `${lastResult.totalWeight.toFixed(0)} lbs`; document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`; document.getElementById("cog").innerText = `${lastResult.cog.toFixed(1)} in`; document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`; document.getElementById("totalPallets").innerText = `${lastResult.totalPalletUnits}`; draw2DView(); draw3DView(); const legendDiv = document.getElementById("colorLegend"); let legendHtml = `<div class="legend-item"><span class="legend-color" style="background:#1a2538;"></span><span>Fondo trailer</span></div>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const tipoIcon = p.type === 'american' ? '🇺🇸' : (p.type === 'euro' ? '🇪🇺' : '📦'); legendHtml += `<div class="legend-item"><span class="legend-color" style="background:${getPalletColor(i)};"></span><span>${tipoIcon} Pos ${i+1}: ${p.weight} lbs (${p.palletCount} pallet${p.palletCount>1?'s':''})</span></div>`; } legendDiv.innerHTML = legendHtml; let stacksHtml = `<strong>📦 ORDEN DE CARGA (de adelante hacia atrás):</strong><br>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; stacksHtml += `<span style="display:inline-block; width:12px; height:12px; background:${getPalletColor(i)}; border-radius:2px; margin-right:5px;"></span> <strong>Posición ${i+1}:</strong> ${p.weight} lbs | ${p.height}" altura | ${p.palletCount} pallet(s)<br>`; } document.getElementById("packDetails").innerHTML = stacksHtml; let heightHtml = `<strong>📏 Altura máxima:</strong> ${lastResult.maxHeight} in / ${lastResult.trailerHeight} in (${((lastResult.maxHeight/lastResult.trailerHeight)*100).toFixed(0)}%)`; heightHtml += lastResult.maxHeight > lastResult.trailerHeight ? `<span class="danger"> ⚠️ EXCEDE</span>` : `<span class="badge"> ✅ Válido</span>`; document.getElementById("heightInfo").innerHTML = heightHtml; let axleHtml = `<h4>⚖️ CARGA POR EJES - NORMA FMCSA</h4><div class="axle-table">`; for (let i = 0; i < lastResult.axleLoads.length; i++) { const load = lastResult.axleLoads[i]; const limit = 20000; let status = "verde", statusText = "DENTRO ✓"; if (load > limit) { status = "rojo"; statusText = "EXCEDE ✗"; } else if (load > limit * 0.9) { status = "amarillo"; statusText = "CERCA ⚠️"; } axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span style="font-size:1.3rem;">${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`; } axleHtml += `</div>`; if (lastResult.warnings.length) axleHtml += `<div style="margin-top:15px; background:#7f1d1d; padding:10px; border-radius:1rem;"><span class="danger">⚠️ ADVERTENCIAS:</span><br>${lastResult.warnings.join("<br>")}</div>`; else axleHtml += `<div class="badge" style="margin-top:15px;">✅ CARGA APROBADA</div>`; document.getElementById("axleInfoSimple").innerHTML = axleHtml; }
+    
+    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR CARGA'"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("totalWeight").innerText = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerText = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; document.getElementById("totalPallets").innerText = "0"; const canvas2d = document.getElementById("packCanvas2D"); const ctx2d = canvas2d.getContext("2d"); ctx2d.clearRect(0, 0, canvas2d.width, canvas2d.height); const canvas3d = document.getElementById("packCanvas3D"); const ctx3d = canvas3d.getContext("2d"); ctx3d.clearRect(0, 0, canvas3d.width, canvas3d.height); }
     function saveHistory() { if (!lastResult) return; let h = JSON.parse(localStorage.getItem("rental_history")) || []; h.unshift({ fecha: new Date().toLocaleString(), total: lastResult.totalWeight, placed: lastResult.totalPalletUnits }); if(h.length>10) h.pop(); localStorage.setItem("rental_history", JSON.stringify(h)); renderHistory(); }
-    function renderHistory() { let h = JSON.parse(localStorage.getItem("rental_history")) || []; document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item" style="justify-content:space-between;"><span>📅 ${hh.fecha}</span><span>⚖️ ${hh.total.toFixed(0)} lbs</span><span>📦 ${hh.placed} pallets</span></div>`).join("") : "<p>Sin historial</p>"; }
-    function generatePDF() { if(!lastResult) { alert("Primero optimice una carga"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME TÉCNICO", 15, 20); doc.setFontSize(10); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 32); doc.text(`Peso total: ${lastResult.totalWeight.toFixed(0)} lbs`, 15, 44); doc.text(`Altura máxima: ${lastResult.maxHeight} in`, 15, 54); doc.text(`Centro de gravedad: ${lastResult.cog.toFixed(1)} in`, 15, 64); doc.text(`Espacio utilizado: ${lastResult.spacePercent.toFixed(1)}%`, 15, 74); doc.text("Orden de carga:", 15, 86); let y = 96; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; if(y>270){ doc.addPage(); y=20; } doc.text(`${i+1}. ${p.length}x${p.width} in, ${p.weight} lbs (${p.palletCount} pcs) - Posición ${i === 0 ? 'Adelante' : (i === lastResult.placed.length-1 ? 'Atrás' : `Fila ${i+1}`)}`, 15, y); y+=6; } doc.save(`logistics_pro_${Date.now()}.pdf`); }
+    function renderHistory() { let h = JSON.parse(localStorage.getItem("rental_history")) || []; document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item"><span>📅 ${hh.fecha}</span><span>⚖️ ${hh.total.toFixed(0)} lbs</span><span>📦 ${hh.placed} pallets</span></div>`).join("") : "<p>Sin historial</p>"; }
+    function generatePDF() { if(!lastResult) { alert("Optimice primero"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME", 15, 20); doc.setFontSize(10); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 32); doc.text(`Transporte: ${lastResult.trailerName}`, 15, 44); doc.text(`Peso total: ${lastResult.totalWeight.toFixed(0)} lbs`, 15, 56); doc.text(`Altura máxima: ${lastResult.maxHeight} in`, 15, 66); doc.text(`Espacio: ${lastResult.spacePercent.toFixed(1)}%`, 15, 76); doc.text("Orden de carga:", 15, 88); let y = 98; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; if(y>270){ doc.addPage(); y=20; } doc.text(`${i+1}. ${p.weight} lbs - ${p.palletCount} pallet(s) - ${p.height}" altura`, 15, y); y+=6; } doc.save(`logistics_${Date.now()}.pdf`); }
     
     document.getElementById("addPalletBtn").onclick = () => { let type = document.getElementById("palletTypeSelect").value; let l=parseFloat(document.getElementById("palLargo").value), w=parseFloat(document.getElementById("palAncho").value), h=parseFloat(document.getElementById("palAlto").value), peso=parseFloat(document.getElementById("palPeso").value), stackable=document.getElementById("stackable").checked, maxStacks=parseInt(document.getElementById("maxStacks").value); if(isNaN(l)||isNaN(w)||isNaN(h)||isNaN(peso)) { alert("Valores válidos"); return; } pallets.push({type, length:l, width:w, height:h, weight:peso, stackable, maxStacks:stackable?maxStacks:1}); renderPallets(); clearResults(); };
     document.getElementById("clearPalletsBtn").onclick = () => { pallets=[]; renderPallets(); clearResults(); };
@@ -348,7 +406,7 @@
     document.getElementById("resetBtn").onclick = clearResults;
     document.getElementById("pdfBtn").onclick = generatePDF;
     
-    renderPallets(); renderHistory(); updateLanguage();
+    renderPallets(); renderHistory(); updateLanguage(); updateViewVisibility();
     (async () => { await checkLicense(); await updateLicenseUI(); })();
 </script>
 </body>
