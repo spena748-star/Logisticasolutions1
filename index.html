@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Logistics PRO | Calculadora de carga eficiente</title>
+    <title>Logistics PRO | Calculadora de carga</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%);
             font-family: 'Segoe UI', system-ui, sans-serif;
@@ -13,8 +18,12 @@
             padding: 16px;
             min-height: 100vh;
         }
-        .container { max-width: 1400px; margin: auto; }
-        
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
         /* Header */
         .header {
             background: rgba(2, 6, 23, 0.9);
@@ -29,350 +38,859 @@
             gap: 12px;
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
-        .logo h1 { font-size: 1.5rem; background: linear-gradient(135deg, #10b981, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .logo p { font-size: 0.7rem; color: #94a3b8; }
-        
-        .unit-selector { display: flex; gap: 6px; background: #1e293b; padding: 4px 10px; border-radius: 40px; }
-        .unit-btn { background: #334155; border: none; padding: 5px 12px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-        .unit-btn.active { background: #10b981; color: #0f172a; }
-        .lang-btn { background: #1e293b; border: 1px solid #334155; padding: 5px 12px; border-radius: 30px; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn.active { background: #10b981; color: #0f172a; border-color: #10b981; }
-        
-        /* Pestañas */
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tab-btn { background: #1e293b; border: none; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .tab-btn.active { background: #3b82f6; color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        /* Tarjetas */
-        .card { background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(8px); border-radius: 1.2rem; padding: 1.2rem; margin-bottom: 1.2rem; border: 1px solid rgba(51, 65, 85, 0.5); }
-        .license-panel { background: rgba(15, 23, 42, 0.96); border-radius: 1rem; padding: 1rem; margin-bottom: 1.2rem; border: 1px solid #f59e0b; }
-        .flex-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-        
-        .input-group { display: flex; flex-direction: column; flex: 1; min-width: 100px; }
-        .input-group label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: #9ca3af; margin-bottom: 3px; }
-        .input-group input, .input-group select { padding: 8px 12px; border-radius: 40px; border: none; background: #0f172a; color: white; border: 1px solid #334155; font-size: 0.9rem; width: 100%; }
-        .input-group small { font-size: 0.55rem; color: #6b7280; margin-top: 3px; }
-        
-        button { padding: 8px 16px; border-radius: 40px; border: none; background: #10b981; color: #0f172a; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.9rem; }
-        button:hover { background: #059669; transform: scale(0.97); }
-        .btn-outline { background: transparent; border: 1px solid #10b981; color: #10b981; }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-        
-        .result-card { background: #0f172a; border-radius: 1rem; padding: 12px; margin-top: 12px; }
-        .result-number { font-size: 1.8rem; font-weight: bold; color: #10b981; }
-        .warning { color: #f87171; }
-        .success { color: #4ade80; }
-        .badge { background: #10b981; color: #0f172a; padding: 4px 10px; border-radius: 40px; font-size: 0.7rem; display: inline-block; }
-        
-        .pallet-item { background: #0f172a; border-radius: 0.8rem; padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 0.85rem; }
-        canvas { background: #0f172a; border-radius: 1rem; width: 100%; height: auto; margin-top: 10px; border: 1px solid #3b82f6; }
-        
-        .trailer-button {
-            position: fixed; bottom: 16px; right: 16px;
-            width: 55px; height: 55px; background: #3b82f6; border-radius: 55px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: 0.2s; z-index: 999; border: 2px solid #10b981;
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .trailer-button:hover { transform: scale(1.05); background: #10b981; }
-        
-        .admin-modal {
-            position: fixed; bottom: 85px; right: 16px; width: 320px;
-            background: #1e293b; border: 2px solid #3b82f6; border-radius: 1rem;
-            padding: 1rem; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+        .logo p {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .unit-selector {
+            display: flex;
+            gap: 6px;
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 40px;
+        }
+
+        .unit-btn {
+            background: #334155;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .unit-btn.active {
+            background: #10b981;
+            color: #0f172a;
+        }
+
+        .lang-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 5px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: #10b981;
+            color: #0f172a;
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #1e293b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .tab-content {
             display: none;
         }
-        .admin-modal .close-modal {
-            position: absolute; top: 8px; right: 12px;
-            background: #ef4444; border: none; width: 24px; height: 24px;
-            border-radius: 24px; cursor: pointer; font-size: 12px;
+
+        .tab-content.active {
+            display: block;
         }
-        
-        @media (max-width: 700px) { body { padding: 10px; } .flex-row { flex-direction: column; align-items: stretch; } .admin-modal { width: 90%; right: 5%; } }
+
+        /* Tarjetas */
+        .card {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(8px);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .license-panel {
+            background: rgba(15, 23, 42, 0.96);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #f59e0b;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .input-group label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin-bottom: 3px;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 8px 12px;
+            border-radius: 40px;
+            border: none;
+            background: #0f172a;
+            color: white;
+            border: 1px solid #334155;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        button {
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: none;
+            background: #10b981;
+            color: #0f172a;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        button:hover {
+            background: #059669;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .result-card {
+            background: #0f172a;
+            border-radius: 1rem;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .result-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .warning {
+            color: #f87171;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .pallet-item {
+            background: #0f172a;
+            border-radius: 0.8rem;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        canvas {
+            background: #0f172a;
+            border-radius: 1rem;
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #3b82f6;
+        }
+
+        /* Botón administrador flotante */
+        .admin-btn {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 55px;
+            height: 55px;
+            background: #3b82f6;
+            border-radius: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: 0.2s;
+            z-index: 999;
+            border: 2px solid #10b981;
+        }
+
+        .admin-btn:hover {
+            transform: scale(1.05);
+            background: #10b981;
+        }
+
+        .admin-modal {
+            position: fixed;
+            bottom: 85px;
+            right: 16px;
+            width: 320px;
+            background: #1e293b;
+            border: 2px solid #3b82f6;
+            border-radius: 1rem;
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .admin-modal .close-modal {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #ef4444;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 10px;
+            }
+
+            .flex-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-modal {
+                width: 90%;
+                right: 5%;
+            }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo"><h1>🚛 LOGISTICS PRO</h1><p>Calculadora eficiente de carga</p></div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <div class="unit-selector">
-                <button id="unitKgBtn" class="unit-btn">kg</button>
-                <button id="unitLbsBtn" class="unit-btn active">lbs</button>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>🚛 LOGISTICS PRO</h1>
+                <p>Calculadora eficiente de carga</p>
             </div>
-            <button class="lang-btn active" data-lang="es">ES</button>
-            <button class="lang-btn" data-lang="en">EN</button>
-        </div>
-    </div>
-
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="calc">📐 Calculadora</button>
-        <button class="tab-btn" data-tab="optimizer">🧩 Optimizador</button>
-        <button class="tab-btn" data-tab="help">❓ Ayuda</button>
-    </div>
-
-    <!-- Calculadora -->
-    <div id="calcTab" class="tab-content active">
-        <div class="license-panel">
-            <div class="flex-row">
-                <div class="input-group" style="flex:2"><label>🔐 CLAVE</label><input type="text" id="rentalKey" placeholder="RENT-30-xxxxxxxx"></div>
-                <button id="activateBtn">Activar</button>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="unit-selector">
+                    <button id="unitKgBtn" class="unit-btn">kg</button>
+                    <button id="unitLbsBtn" class="unit-btn active">lbs</button>
+                </div>
+                <button class="lang-btn active" data-lang="es">ES</button>
+                <button class="lang-btn" data-lang="en">EN</button>
             </div>
-            <div id="licenseStatus" style="font-size:0.75rem; margin-top:6px;"></div>
         </div>
 
-        <div id="appContent">
-            <div class="grid-2">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="calc">📐 Calculadora</button>
+            <button class="tab-btn" data-tab="optimizer">🧩 Optimizador</button>
+            <button class="tab-btn" data-tab="help">❓ Ayuda</button>
+        </div>
+
+        <!-- Calculadora -->
+        <div id="calcTab" class="tab-content active">
+            <div class="license-panel">
+                <div class="flex-row">
+                    <div class="input-group" style="flex:2">
+                        <label>🔐 CLAVE DE LICENCIA</label>
+                        <input type="text" id="rentalKey" placeholder="RENT-30-xxxxxxxx">
+                    </div>
+                    <button id="activateBtn">Activar</button>
+                </div>
+                <div id="licenseStatus" style="font-size: 0.75rem; margin-top: 6px;"></div>
+            </div>
+
+            <div id="appContent">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>🚛 Transporte</h3>
+                        <div class="input-group">
+                            <label>TIPO</label>
+                            <select id="trailerType">
+                                <option value="dryvan">Dry Van 53' (636x102x110)</option>
+                                <option value="reefer">Reefer 53' (636x102x108)</option>
+                                <option value="flatbed">Flatbed 48' (576x102x96)</option>
+                                <option value="stepdeck">Step Deck 48' (576x102x120)</option>
+                                <option value="container20">Container 20' (232x92x96)</option>
+                                <option value="container40">Container 40' (474x92x96)</option>
+                                <option value="custom">📐 Personalizado</option>
+                            </select>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group"><label>LARGO (in)</label><input type="number" id="trailerLen" value="636" step="1"></div>
+                            <div class="input-group"><label>ANCHO (in)</label><input type="number" id="trailerWid" value="102" step="1"></div>
+                            <div class="input-group"><label>ALTO (in)</label><input type="number" id="trailerHei" value="110" step="1"></div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group"><label>CAPACIDAD (lbs)</label><input type="number" id="maxWeight" value="45000" step="1000"></div>
+                            <div class="input-group"><label>LÍMITE/EJE (lbs)</label><input type="number" id="axleLimit" value="20000" step="1000"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📦 Pallet</h3>
+                        <div class="flex-row">
+                            <div class="input-group"><label>LARGO (in)</label><input type="number" id="palletLen" value="48" step="1"></div>
+                            <div class="input-group"><label>ANCHO (in)</label><input type="number" id="palletWid" value="40" step="1"></div>
+                            <div class="input-group"><label>ALTO (in)</label><input type="number" id="palletHei" value="48" step="1"></div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group"><label>PESO (lbs)</label><input type="number" id="palletWgt" value="1500" step="100"></div>
+                            <div class="input-group"><label>APILABLE</label>
+                                <select id="stackable">
+                                    <option value="2">Sí (hasta 2)</option>
+                                    <option value="3">Sí (hasta 3)</option>
+                                    <option value="1">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="calcBtn" class="btn-primary" style="width: 100%; margin-top: 12px;">🔢 CALCULAR</button>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <h3>🚛 Transporte</h3>
+                    <h3>📊 Resultados</h3>
+                    <div id="calcResult" class="result-card">Complete los datos y presione Calcular</div>
+                    <div id="weightWarning" class="result-card" style="margin-top: 8px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optimizador -->
+        <div id="optimizerTab" class="tab-content">
+            <div class="card">
+                <h3>📦 Pallets a cargar</h3>
+                <div class="flex-row">
+                    <div class="input-group"><label>LARGO</label><input type="number" id="optLen" value="48" step="1"></div>
+                    <div class="input-group"><label>ANCHO</label><input type="number" id="optWid" value="40" step="1"></div>
+                    <div class="input-group"><label>ALTO</label><input type="number" id="optHei" value="48" step="1"></div>
+                    <div class="input-group"><label>PESO</label><input type="number" id="optWgt" value="1500" step="100"></div>
+                    <div class="input-group"><label>CANTIDAD</label><input type="number" id="optQty" value="1" min="1" step="1"></div>
+                    <button id="addOptBtn">+ Agregar</button>
+                </div>
+                <div id="optList" style="max-height: 180px; overflow-y: auto; margin-top: 10px;"></div>
+                <div class="flex-row" style="margin-top: 8px;">
+                    <button id="clearOptBtn" class="btn-outline">Vaciar</button>
+                    <button id="exampleOptBtn" class="btn-outline">Ejemplo</button>
+                </div>
+
+                <h3 style="margin-top: 15px;">🚛 Transporte</h3>
+                <div class="flex-row">
                     <div class="input-group"><label>TIPO</label>
-                        <select id="trailerType">
-                            <option value="dryvan">Dry Van 53' (636x102x110)</option>
-                            <option value="reefer">Reefer 53' (636x102x108)</option>
-                            <option value="flatbed">Flatbed 48' (576x102x96)</option>
-                            <option value="stepdeck">Step Deck 48' (576x102x120)</option>
-                            <option value="container20">Container 20' (232x92x96)</option>
-                            <option value="container40">Container 40' (474x92x96)</option>
-                            <option value="custom">📐 Personalizado</option>
+                        <select id="optTrailer">
+                            <option value="dryvan">Dry Van 53'</option>
+                            <option value="flatbed">Flatbed 48'</option>
+                            <option value="stepdeck">Step Deck 48'</option>
                         </select>
                     </div>
-                    <div class="flex-row">
-                        <div class="input-group"><label>LARGO (in)</label><input type="number" id="trailerLen" value="636" step="1"></div>
-                        <div class="input-group"><label>ANCHO (in)</label><input type="number" id="trailerWid" value="102" step="1"></div>
-                        <div class="input-group"><label>ALTO (in)</label><input type="number" id="trailerHei" value="110" step="1"></div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="input-group"><label>CAPACIDAD (lbs)</label><input type="number" id="maxWeight" value="45000" step="1000"></div>
-                        <div class="input-group"><label>LÍMITE/EJE (lbs)</label><input type="number" id="axleLimit" value="20000" step="1000"></div>
-                    </div>
+                    <div class="input-group"><label>CAP. EXTRA (lbs)</label><input type="number" id="optExtra" value="0" step="500"></div>
                 </div>
+                <button id="runOptBtn" class="btn-primary" style="width: 100%; margin-top: 12px;">🧩 OPTIMIZAR</button>
 
-                <div class="card">
-                    <h3>📦 Pallet</h3>
-                    <div class="flex-row">
-                        <div class="input-group"><label>LARGO (in)</label><input type="number" id="palletLen" value="48" step="1"></div>
-                        <div class="input-group"><label>ANCHO (in)</label><input type="number" id="palletWid" value="40" step="1"></div>
-                        <div class="input-group"><label>ALTO (in)</label><input type="number" id="palletHei" value="48" step="1"></div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="input-group"><label>PESO (lbs)</label><input type="number" id="palletWgt" value="1500" step="100"></div>
-                        <div class="input-group"><label>APILABLE</label><select id="stackable"><option value="2">Sí (hasta 2)</option><option value="3">Sí (hasta 3)</option><option value="1">No</option></select></div>
-                    </div>
-                    <button id="calcBtn" class="btn-primary" style="width:100%; margin-top:12px;">🔢 CALCULAR</button>
+                <div id="optResult" class="result-card" style="margin-top: 12px;"></div>
+                <canvas id="optCanvas" width="800" height="300" style="width: 100%; height: auto;"></canvas>
+            </div>
+        </div>
+
+        <div id="helpTab" class="tab-content">
+            <div class="card">
+                <h3>❓ Ayuda rápida</h3>
+                <p>🔐 <strong>Activar licencia:</strong> Ingrese clave RENT-30-xxxxxxxx</p>
+                <p>📐 <strong>Calculadora:</strong> Dimensiones del transporte y del pallet → cuántos caben</p>
+                <p>🧩 <strong>Optimizador:</strong> Agregue diferentes pallets y calcule la mejor disposición</p>
+                <p>🔑 <strong>Administrador:</strong> Click en 🚛 abajo derecha → contraseña <strong>admin2025</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón administrador flotante -->
+    <div id="adminBtn" class="admin-btn" title="Administrador">🚛</div>
+
+    <!-- Modal administrador -->
+    <div id="adminModal" class="admin-modal">
+        <button id="closeModal" class="close-modal">✕</button>
+        <h3>🔑 Generar licencia</h3>
+        <input type="password" id="adminPass" placeholder="Contraseña" style="width: 100%; padding: 8px; border-radius: 40px; margin-bottom: 10px;">
+        <button id="verifyAdmin" style="width: 100%;">Acceder</button>
+        <div id="adminGen" style="display: none; margin-top: 12px;">
+            <select id="licenseDays" style="width: 100%; padding: 8px; border-radius: 40px;">
+                <option value="30">30 días</option>
+                <option value="180">180 días</option>
+                <option value="365">365 días</option>
+            </select>
+            <button id="genLicenseBtn" style="width: 100%; margin-top: 8px;">Generar clave</button>
+            <div id="licenseKeyDisplay" style="margin-top: 8px; background: #0f172a; padding: 6px; border-radius: 8px; word-break: break-all;"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONVERSIONES ====================
+        let currentUnit = "lbs";
+        const KG_TO_LBS = 2.20462;
+
+        function formatWeight(lbs) {
+            if (currentUnit === "kg") return (lbs / KG_TO_LBS).toFixed(0) + " kg";
+            return lbs.toFixed(0) + " lbs";
+        }
+
+        document.getElementById("unitKgBtn").onclick = () => {
+            currentUnit = "kg";
+            document.getElementById("unitKgBtn").classList.add("active");
+            document.getElementById("unitLbsBtn").classList.remove("active");
+            if (typeof lastCalcResult !== 'undefined') doCalc();
+            if (lastOptResult) displayOptimization();
+        };
+
+        document.getElementById("unitLbsBtn").onclick = () => {
+            currentUnit = "lbs";
+            document.getElementById("unitLbsBtn").classList.add("active");
+            document.getElementById("unitKgBtn").classList.remove("active");
+            if (typeof lastCalcResult !== 'undefined') doCalc();
+            if (lastOptResult) displayOptimization();
+        };
+
+        // ==================== TRADUCCIÓN ====================
+        let currentLang = 'es';
+        document.querySelectorAll(".lang-btn").forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentLang = btn.dataset.lang;
+            };
+        });
+
+        // ==================== PESTAÑAS ====================
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+                document.getElementById(btn.dataset.tab + "Tab").classList.add("active");
+            };
+        });
+
+        // ==================== LICENCIA ====================
+        const RENTAL_SALT = "RentalLog2025SecretKey";
+        let rentalValid = false;
+
+        async function getServerTime() {
+            try {
+                const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+                const data = await res.json();
+                return new Date(data.utc_datetime);
+            } catch (e) {
+                return new Date();
+            }
+        }
+
+        function validateKey(key) {
+            const parts = key.split('-');
+            if (parts.length !== 3 || parts[0] !== 'RENT') return null;
+            const days = parseInt(parts[1]);
+            if (![30, 180, 365].includes(days)) return null;
+            const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
+            if (parts[2] !== hash) return null;
+            return { days };
+        }
+
+        async function activateLicense(key) {
+            const v = validateKey(key);
+            if (!v) return false;
+            const serverTime = await getServerTime();
+            const expiry = new Date(serverTime);
+            expiry.setDate(expiry.getDate() + v.days);
+            localStorage.setItem("rental_license", JSON.stringify({ expiry: expiry.toISOString() }));
+            return true;
+        }
+
+        async function checkLicense() {
+            const stored = localStorage.getItem("rental_license");
+            if (!stored) return false;
+            try {
+                const data = JSON.parse(stored);
+                const serverTime = await getServerTime();
+                const expiry = new Date(data.expiry);
+                if (expiry > serverTime) {
+                    rentalValid = true;
+                    return true;
+                } else {
+                    localStorage.removeItem("rental_license");
+                    rentalValid = false;
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function updateLicenseUI() {
+            const statusDiv = document.getElementById("licenseStatus");
+            if (rentalValid) {
+                statusDiv.innerHTML = '<span style="color: #10b981;">✅ Licencia activa</span>';
+            } else {
+                statusDiv.innerHTML = '<span style="color: #ef4444;">❌ Sin licencia válida</span>';
+            }
+        }
+
+        document.getElementById("activateBtn").onclick = async () => {
+            const key = document.getElementById("rentalKey").value.trim();
+            if (await activateLicense(key)) {
+                await checkLicense();
+                await updateLicenseUI();
+                alert("✅ Licencia activada correctamente");
+            } else {
+                alert("❌ Clave inválida");
+            }
+        };
+
+        // ==================== ADMINISTRADOR OCULTO ====================
+        document.getElementById("adminBtn").onclick = () => {
+            document.getElementById("adminModal").style.display = "block";
+        };
+
+        document.getElementById("closeModal").onclick = () => {
+            document.getElementById("adminModal").style.display = "none";
+            document.getElementById("adminGen").style.display = "none";
+        };
+
+        document.getElementById("verifyAdmin").onclick = () => {
+            const pass = document.getElementById("adminPass").value;
+            if (pass === "admin2025") {
+                document.getElementById("adminGen").style.display = "block";
+            } else {
+                alert("Contraseña incorrecta");
+            }
+        };
+
+        document.getElementById("genLicenseBtn").onclick = () => {
+            const days = parseInt(document.getElementById("licenseDays").value);
+            const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
+            const license = `RENT-${days}-${hash}`;
+            document.getElementById("licenseKeyDisplay").innerHTML = `<strong>Clave:</strong><br><code style="background:#000; padding:4px; display:block; border-radius:4px;">${license}</code><br><button id="copyKeyBtn" style="background:#3b82f6; margin-top:4px;">Copiar</button>`;
+            document.getElementById("copyKeyBtn").onclick = () => {
+                navigator.clipboard.writeText(license);
+                alert("¡Clave copiada!");
+            };
+        };
+
+        // ==================== TRAILERS PREDEFINIDOS ====================
+        const TRAILERS = {
+            dryvan: { len: 636, wid: 102, hei: 110, maxW: 45000 },
+            reefer: { len: 636, wid: 102, hei: 108, maxW: 44000 },
+            flatbed: { len: 576, wid: 102, hei: 96, maxW: 48000 },
+            stepdeck: { len: 576, wid: 102, hei: 120, maxW: 48000 },
+            container20: { len: 232, wid: 92, hei: 96, maxW: 40000 },
+            container40: { len: 474, wid: 92, hei: 96, maxW: 44000 }
+        };
+
+        document.getElementById("trailerType").onchange = function () {
+            const t = TRAILERS[this.value];
+            if (t) {
+                document.getElementById("trailerLen").value = t.len;
+                document.getElementById("trailerWid").value = t.wid;
+                document.getElementById("trailerHei").value = t.hei;
+                document.getElementById("maxWeight").value = t.maxW;
+            }
+        };
+
+        // ==================== CALCULADORA ====================
+        let lastCalcResult = false;
+
+        function doCalc() {
+            const tLen = parseFloat(document.getElementById("trailerLen").value);
+            const tWid = parseFloat(document.getElementById("trailerWid").value);
+            const tHei = parseFloat(document.getElementById("trailerHei").value);
+            const maxW = parseFloat(document.getElementById("maxWeight").value);
+            const axleLimit = parseFloat(document.getElementById("axleLimit").value);
+            const pLen = parseFloat(document.getElementById("palletLen").value);
+            const pWid = parseFloat(document.getElementById("palletWid").value);
+            const pHei = parseFloat(document.getElementById("palletHei").value);
+            const pWgt = parseFloat(document.getElementById("palletWgt").value);
+            const stack = parseInt(document.getElementById("stackable").value);
+
+            if (isNaN(tLen) || isNaN(tWid) || isNaN(pLen) || isNaN(pWid)) {
+                document.getElementById("calcResult").innerHTML = '<span class="warning">⚠️ Complete todos los campos</span>';
+                return;
+            }
+
+            const fitLen = Math.floor(tLen / pLen);
+            const fitWid = Math.floor(tWid / pWid);
+            const perLayer = fitLen * fitWid;
+            const maxStackByHei = Math.floor(tHei / pHei);
+            const stacks = Math.min(stack, maxStackByHei);
+            const total = perLayer * stacks;
+            const totalWeight = total * pWgt;
+            const weightOk = totalWeight <= maxW;
+            const axleOk = (totalWeight / 2) <= axleLimit;
+
+            let resultHtml = `
+                <div class="grid-3">
+                    <div>📏 Por largo: ${fitLen}</div>
+                    <div>📏 Por ancho: ${fitWid}</div>
+                    <div>📦 Por capa: ${perLayer}</div>
+                    <div>📚 Niveles: ${stacks} (máx ${maxStackByHei})</div>
+                    <div><strong>TOTAL: <span class="result-number">${total}</span> pallets</strong></div>
+                    <div>⚖️ Peso: ${formatWeight(totalWeight)} / ${formatWeight(maxW)}</div>
                 </div>
-            </div>
+            `;
 
-            <div class="card" id="resultCard">
-                <h3>📊 Resultados</h3>
-                <div id="calcResult" class="result-card">Complete los datos y presione Calcular</div>
-                <div id="weightWarning" class="result-card" style="margin-top:8px;"></div>
-            </div>
-        </div>
-    </div>
+            let warnHtml = "";
+            if (!weightOk) warnHtml += `<div class="warning">⚠️ Peso total excede capacidad (${formatWeight(totalWeight)} > ${formatWeight(maxW)})</div>`;
+            if (!axleOk) warnHtml += `<div class="warning">⚠️ Carga por eje excede límite FMCSA (${formatWeight(totalWeight / 2)} > ${formatWeight(axleLimit)})</div>`;
+            if (stacks > maxStackByHei) warnHtml += `<div class="warning">⚠️ Altura: solo caben ${maxStackByHei} niveles (${stacks} solicitados)</div>`;
 
-    <!-- Optimizador -->
-    <div id="optimizerTab" class="tab-content">
-        <div class="card">
-            <h3>📦 Pallets a cargar</h3>
-            <div class="flex-row">
-                <div class="input-group"><label>LARGO</label><input type="number" id="optLen" value="48" step="1"></div>
-                <div class="input-group"><label>ANCHO</label><input type="number" id="optWid" value="40" step="1"></div>
-                <div class="input-group"><label>ALTO</label><input type="number" id="optHei" value="48" step="1"></div>
-                <div class="input-group"><label>PESO</label><input type="number" id="optWgt" value="1500" step="100"></div>
-                <div class="input-group"><label>CANTIDAD</label><input type="number" id="optQty" value="1" min="1" step="1"></div>
-                <button id="addOptBtn">+</button>
-            </div>
-            <div id="optList" style="max-height: 180px; overflow-y: auto; margin-top: 10px;"></div>
-            <div class="flex-row" style="margin-top: 8px;">
-                <button id="clearOptBtn" class="btn-outline">Vaciar</button>
-                <button id="exampleOptBtn" class="btn-outline">Ejemplo</button>
-            </div>
-            
-            <h3 style="margin-top: 15px;">🚛 Transporte</h3>
-            <div class="flex-row">
-                <div class="input-group"><label>TIPO</label><select id="optTrailer"><option value="dryvan">Dry Van 53'</option><option value="flatbed">Flatbed 48'</option><option value="stepdeck">Step Deck 48'</option></select></div>
-                <div class="input-group"><label>CAP. EXTRA</label><input type="number" id="optExtra" value="0" step="500"></div>
-            </div>
-            <button id="runOptBtn" class="btn-primary" style="width:100%; margin-top:12px;">🧩 OPTIMIZAR</button>
-            
-            <div id="optResult" class="result-card" style="margin-top: 12px;"></div>
-            <canvas id="optCanvas" width="800" height="300" style="width:100%; height:auto;"></canvas>
-        </div>
-    </div>
-
-    <div id="helpTab" class="tab-content">
-        <div class="card"><h3>❓ Ayuda rápida</h3>
-            <p>🔐 <strong>Activar licencia:</strong> Ingrese clave RENT-30-xxxxxxxx</p>
-            <p>📐 <strong>Calculadora:</strong> Dimensiones del transporte y del pallet → cuántos caben</p>
-            <p>🧩 <strong>Optimizador:</strong> Agregue diferentes pallets y calcule la mejor disposición</p>
-            <p>🔑 <strong>Administrador:</strong> Click en 🚛 abajo derecha → contraseña <strong>admin2025</strong></p>
-        </div>
-    </div>
-</div>
-
-<div id="trailerBtn" class="trailer-button" title="Admin">🚛</div>
-<div id="adminModal" class="admin-modal">
-    <button id="closeModal" class="close-modal">✕</button>
-    <h3>🔑 Generar licencia</h3>
-    <input type="password" id="adminPass" placeholder="Contraseña" style="width:100%; padding:8px; border-radius:40px; margin-bottom:10px;">
-    <button id="verifyAdmin" style="width:100%;">Acceder</button>
-    <div id="adminGen" style="display:none; margin-top:12px;">
-        <select id="licenseDays"><option value="30">30 días</option><option value="180">180 días</option><option value="365">365 días</option></select>
-        <button id="genLicenseBtn" style="width:100%; margin-top:8px;">Generar</button>
-        <div id="licenseKeyDisplay" style="margin-top:8px; background:#0f172a; padding:6px; border-radius:8px; word-break:break-all;"></div>
-    </div>
-</div>
-
-<script>
-    // ==================== CONVERSIONES ====================
-    let currentUnit = "lbs";
-    const KG_TO_LBS = 2.20462;
-    function formatWeight(lbs) { return currentUnit === "kg" ? (lbs / KG_TO_LBS).toFixed(0) + " kg" : lbs.toFixed(0) + " lbs"; }
-    document.getElementById("unitKgBtn").onclick = () => { currentUnit = "kg"; document.getElementById("unitKgBtn").classList.add("active"); document.getElementById("unitLbsBtn").classList.remove("active"); if(lastCalc) doCalc(); if(lastOpt) displayOptimization(); };
-    document.getElementById("unitLbsBtn").onclick = () => { currentUnit = "lbs"; document.getElementById("unitLbsBtn").classList.add("active"); document.getElementById("unitKgBtn").classList.remove("active"); if(lastCalc) doCalc(); if(lastOpt) displayOptimization(); };
-    
-    // ==================== TRADUCCIÓN SIMPLE ====================
-    let currentLang = 'es';
-    document.querySelectorAll(".lang-btn").forEach(btn => btn.onclick = () => { document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); currentLang = btn.dataset.lang; });
-    
-    // ==================== LICENCIA ====================
-    const RENTAL_SALT = "RentalLog2025SecretKey";
-    let rentalValid = false;
-    async function getServerTime() { try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } catch(e) { return new Date(); } }
-    function validateKey(key) { const parts = key.split('-'); if(parts.length!==3 || parts[0]!=='RENT') return null; const days = parseInt(parts[1]); if(![30,180,365].includes(days)) return null; const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); if(parts[2] !== hash) return null; return { days }; }
-    async function activateLicense(key) { const v = validateKey(key); if(!v) return false; const serverTime = await getServerTime(); const expiry = new Date(serverTime); expiry.setDate(expiry.getDate() + v.days); localStorage.setItem("rental_license", JSON.stringify({ expiry: expiry.toISOString() })); return true; }
-    async function checkLicense() { const stored = localStorage.getItem("rental_license"); if(!stored) return false; try { const data = JSON.parse(stored); const serverTime = await getServerTime(); const expiry = new Date(data.expiry); if(expiry > serverTime) { rentalValid = true; return true; } else { localStorage.removeItem("rental_license"); rentalValid = false; return false; } } catch(e) { return false; } }
-    async function updateUI() { const status = document.getElementById("licenseStatus"); if(rentalValid) status.innerHTML = '<span style="color:#10b981;">✅ Licencia activa</span>'; else status.innerHTML = '<span style="color:#ef4444;">❌ Sin licencia válida</span>'; }
-    document.getElementById("activateBtn").onclick = async () => { const key = document.getElementById("rentalKey").value.trim(); if(await activateLicense(key)) { await checkLicense(); updateUI(); alert("Licencia activada"); } else alert("Clave inválida"); };
-    
-    // ==================== ADMIN (oculto) ====================
-    document.getElementById("trailerBtn").onclick = () => document.getElementById("adminModal").style.display = "block";
-    document.getElementById("closeModal").onclick = () => { document.getElementById("adminModal").style.display = "none"; document.getElementById("adminGen").style.display = "none"; };
-    document.getElementById("verifyAdmin").onclick = () => { if(document.getElementById("adminPass").value === "admin2025") document.getElementById("adminGen").style.display = "block"; else alert("Contraseña incorrecta"); };
-    document.getElementById("genLicenseBtn").onclick = () => { const days = parseInt(document.getElementById("licenseDays").value); const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); const license = `RENT-${days}-${hash}`; document.getElementById("licenseKeyDisplay").innerHTML = `<strong>Clave:</strong><br><code>${license}</code><br><button id="copyKey">Copiar</button>`; document.getElementById("copyKey").onclick = () => { navigator.clipboard.writeText(license); alert("Copiada!"); }; };
-    
-    // ==================== DATOS ====================
-    const TRAILERS = { dryvan: { len:636, wid:102, hei:110, maxW:45000 }, flatbed: { len:576, wid:102, hei:96, maxW:48000 }, stepdeck: { len:576, wid:102, hei:120, maxW:48000 }, container20: { len:232, wid:92, hei:96, maxW:40000 }, container40: { len:474, wid:92, hei:96, maxW:44000 }, reefer: { len:636, wid:102, hei:108, maxW:44000 } };
-    document.getElementById("trailerType").onchange = function() { const t = TRAILERS[this.value]; if(t) { document.getElementById("trailerLen").value = t.len; document.getElementById("trailerWid").value = t.wid; document.getElementById("trailerHei").value = t.hei; document.getElementById("maxWeight").value = t.maxW; } };
-    
-    let lastCalc = null;
-    function doCalc() {
-        const tLen = parseFloat(document.getElementById("trailerLen").value);
-        const tWid = parseFloat(document.getElementById("trailerWid").value);
-        const tHei = parseFloat(document.getElementById("trailerHei").value);
-        const maxW = parseFloat(document.getElementById("maxWeight").value);
-        const axleLimit = parseFloat(document.getElementById("axleLimit").value);
-        const pLen = parseFloat(document.getElementById("palletLen").value);
-        const pWid = parseFloat(document.getElementById("palletWid").value);
-        const pHei = parseFloat(document.getElementById("palletHei").value);
-        const pWgt = parseFloat(document.getElementById("palletWgt").value);
-        const stack = parseInt(document.getElementById("stackable").value);
-        if(isNaN(tLen)||isNaN(tWid)||isNaN(pLen)||isNaN(pWid)) { document.getElementById("calcResult").innerHTML = '<span class="warning">Complete todos los campos</span>'; return; }
-        const fitLen = Math.floor(tLen / pLen);
-        const fitWid = Math.floor(tWid / pWid);
-        const perLayer = fitLen * fitWid;
-        const maxStackByHei = Math.floor(tHei / pHei);
-        const stacks = Math.min(stack, maxStackByHei);
-        const total = perLayer * stacks;
-        const totalWeight = total * pWgt;
-        const weightOk = totalWeight <= maxW;
-        const axleOk = (totalWeight / 2) <= axleLimit;
-        let resultHtml = `<div class="grid-3"><div>📏 Por largo: ${fitLen}</div><div>📏 Por ancho: ${fitWid}</div><div>📦 Por capa: ${perLayer}</div><div>📚 Niveles: ${stacks} (máx ${maxStackByHei})</div><div><strong>TOTAL: <span class="result-number">${total}</span> pallets</strong></div><div>⚖️ Peso: ${formatWeight(totalWeight)} / ${formatWeight(maxW)}</div></div>`;
-        let warnHtml = "";
-        if(!weightOk) warnHtml += `<div class="warning">⚠️ Peso total excede capacidad del transporte (${formatWeight(totalWeight)} > ${formatWeight(maxW)})</div>`;
-        if(!axleOk) warnHtml += `<div class="warning">⚠️ Carga por eje excede límite FMCSA (${formatWeight(totalWeight/2)} > ${formatWeight(axleLimit)})</div>`;
-        if(stacks > maxStackByHei) warnHtml += `<div class="warning">⚠️ Altura: solo caben ${maxStackByHei} niveles (${stacks} solicitados)</div>`;
-        document.getElementById("calcResult").innerHTML = resultHtml;
-        document.getElementById("weightWarning").innerHTML = warnHtml || '<div class="success">✅ Carga dentro de límites legales</div>';
-        lastCalc = true;
-    }
-    document.getElementById("calcBtn").onclick = doCalc;
-    
-    // ==================== OPTIMIZADOR ====================
-    let optPallets = [];
-    function renderOptList() { const div = document.getElementById("optList"); if(optPallets.length===0){ div.innerHTML="<div style='padding:10px;text-align:center'>📭 Sin pallets</div>"; return; } div.innerHTML = optPallets.map((p,i)=>`<div class="pallet-item"><span>📦 ${p.len}"x${p.wid}"x${p.hei}" | ${formatWeight(p.wgt)} | x${p.qty}</span><button class="delOpt" data-idx="${i}" style="background:#ef4444; padding:2px 10px;">X</button></div>`).join(""); document.querySelectorAll(".delOpt").forEach(btn=>btn.onclick=()=>{ optPallets.splice(parseInt(btn.dataset.idx),1); renderOptList(); clearOptResults(); }); }
-    function clearOptResults() { document.getElementById("optResult").innerHTML = ""; const canvas = document.getElementById("optCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0,0,canvas.width,canvas.height); lastOpt=null; }
-    document.getElementById("addOptBtn").onclick = () => { const len=parseFloat(document.getElementById("optLen").value), wid=parseFloat(document.getElementById("optWid").value), hei=parseFloat(document.getElementById("optHei").value), wgt=parseFloat(document.getElementById("optWgt").value), qty=parseInt(document.getElementById("optQty").value); if(isNaN(len)||isNaN(wid)||isNaN(hei)||isNaN(wgt)||qty<1) return; optPallets.push({len,wid,hei,wgt,qty}); renderOptList(); clearOptResults(); };
-    document.getElementById("clearOptBtn").onclick = () => { optPallets=[]; renderOptList(); clearOptResults(); };
-    document.getElementById("exampleOptBtn").onclick = () => { optPallets = [{len:48,wid:40,hei:48,wgt:2200,qty:2},{len:48,wid:40,hei:48,wgt:1800,qty:3},{len:42,wid:42,hei:50,wgt:1500,qty:1}]; renderOptList(); clearOptResults(); };
-    
-    let lastOpt = null;
-    function optimizeLoad() {
-        if(optPallets.length===0){ alert("Agregue al menos un tipo de pallet"); return; }
-        const trailerId = document.getElementById("optTrailer").value;
-        const trailer = TRAILERS[trailerId];
-        const extra = parseFloat(document.getElementById("optExtra").value) || 0;
-        const maxWeight = trailer.maxW + extra;
-        let items = [];
-        optPallets.forEach(p => { for(let i=0;i<p.qty;i++) items.push({len:p.len, wid:p.wid, hei:p.hei, wgt:p.wgt}); });
-        items.sort((a,b)=>b.wgt - a.wgt);
-        let placed = [], x=0, totalW=0, maxH=0;
-        for(let it of items) {
-            if(x + it.len > trailer.len) break;
-            placed.push({...it, startX:x, centerX:x+it.len/2});
-            x += it.len;
-            totalW += it.wgt;
-            maxH = Math.max(maxH, it.hei);
+            document.getElementById("calcResult").innerHTML = resultHtml;
+            document.getElementById("weightWarning").innerHTML = warnHtml || '<div class="success">✅ Carga dentro de límites legales</div>';
+            lastCalcResult = true;
         }
-        const spacePct = (x/trailer.len)*100;
-        const cog = totalW>0 ? placed.reduce((s,p)=>s+p.wgt*p.centerX,0)/totalW : 0;
-        const warnings = [];
-        if(totalW > maxWeight) warnings.push(`⚠️ Peso total excede capacidad: ${formatWeight(totalW)} > ${formatWeight(maxWeight)}`);
-        if(cog < 200) warnings.push(`⚠️ Centro de gravedad muy adelante (${cog.toFixed(0)} in) - Mueva peso atrás`);
-        if(cog > 400) warnings.push(`⚠️ Centro de gravedad muy atrás (${cog.toFixed(0)} in) - Mueva peso adelante`);
-        if(maxH > trailer.hei) warnings.push(`⚠️ Altura de pallet (${maxH} in) excede altura trailer (${trailer.hei} in)`);
-        lastOpt = {placed, totalW, cog, spacePct, warnings, trailerLen:trailer.len, trailerWid:trailer.wid, maxH};
-        displayOptimization();
-    }
-    
-    function displayOptimization() {
-        if(!lastOpt) return;
-        let html = `<div class="grid-3"><div>📦 Pallets colocados: ${lastOpt.placed.length}</div><div>⚖️ Peso total: ${formatWeight(lastOpt.totalW)}</div><div>🎯 Centro gravedad: ${lastOpt.cog.toFixed(0)} in</div><div>📐 Espacio usado: ${lastOpt.spacePct.toFixed(0)}%</div></div>`;
-        if(lastOpt.warnings.length) html += `<div class="warning">${lastOpt.warnings.join("<br>")}</div>`;
-        else html += `<div class="success">✅ Optimización exitosa - Carga segura</div>`;
-        document.getElementById("optResult").innerHTML = html;
-        
-        const canvas = document.getElementById("optCanvas");
-        canvas.width = 800; canvas.height = 250;
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0,0,800,250);
-        const sx = (canvas.width-60)/lastOpt.trailerLen;
-        const sy = (canvas.height-50)/lastOpt.trailerWid;
-        const offX=30, offY=30;
-        ctx.strokeStyle = "#5b6e8c";
-        ctx.strokeRect(offX, offY, lastOpt.trailerLen*sx, lastOpt.trailerWid*sy);
-        ctx.fillStyle = "#1a2538";
-        ctx.fillRect(offX, offY, lastOpt.trailerLen*sx, lastOpt.trailerWid*sy);
-        for(let i=0;i<lastOpt.placed.length;i++) {
-            const p = lastOpt.placed[i];
-            const x = offX + p.startX*sx;
-            const y = offY;
-            const w = p.len*sx;
-            const h = p.wid*sy;
-            ctx.fillStyle = `hsl(${i*37%360}, 70%, 55%)`;
-            ctx.fillRect(x,y,w,h);
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(x,y,w,h);
-            ctx.fillStyle = "white";
-            ctx.font = "bold 10px monospace";
-            ctx.fillText(`${formatWeight(p.wgt)}`, x+4, y+16);
+
+        document.getElementById("calcBtn").onclick = doCalc;
+
+        // ==================== OPTIMIZADOR ====================
+        let optPallets = [];
+        let lastOptResult = false;
+
+        function renderOptList() {
+            const div = document.getElementById("optList");
+            if (optPallets.length === 0) {
+                div.innerHTML = "<div style='padding: 10px; text-align: center'>📭 Sin pallets</div>";
+                return;
+            }
+            div.innerHTML = optPallets.map((p, i) => `
+                <div class="pallet-item">
+                    <span>📦 ${p.len}"x${p.wid}"x${p.hei}" | ${formatWeight(p.wgt)} | x${p.qty}</span>
+                    <button class="delOpt" data-idx="${i}" style="background: #ef4444; padding: 2px 10px;">X</button>
+                </div>
+            `).join("");
+            document.querySelectorAll(".delOpt").forEach(btn => {
+                btn.onclick = () => {
+                    optPallets.splice(parseInt(btn.dataset.idx), 1);
+                    renderOptList();
+                    clearOptResults();
+                };
+            });
         }
-        ctx.fillStyle = "#f59e0b";
-        ctx.font = "bold 12px monospace";
-        ctx.fillText("⬅️ DELANTERO", offX, offY-8);
-        ctx.fillText("TRASERO ➡️", offX+lastOpt.trailerLen*sx-100, offY-8);
-    }
-    document.getElementById("runOptBtn").onclick = optimizeLoad;
-    
-    // Inicializar
-    (async () => { await checkLicense(); updateUI(); })();
-    doCalc();
-</script>
+
+        function clearOptResults() {
+            document.getElementById("optResult").innerHTML = "";
+            const canvas = document.getElementById("optCanvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            lastOptResult = false;
+        }
+
+        document.getElementById("addOptBtn").onclick = () => {
+            const len = parseFloat(document.getElementById("optLen").value);
+            const wid = parseFloat(document.getElementById("optWid").value);
+            const hei = parseFloat(document.getElementById("optHei").value);
+            const wgt = parseFloat(document.getElementById("optWgt").value);
+            const qty = parseInt(document.getElementById("optQty").value);
+            if (isNaN(len) || isNaN(wid) || isNaN(hei) || isNaN(wgt) || qty < 1) return;
+            optPallets.push({ len, wid, hei, wgt, qty });
+            renderOptList();
+            clearOptResults();
+        };
+
+        document.getElementById("clearOptBtn").onclick = () => {
+            optPallets = [];
+            renderOptList();
+            clearOptResults();
+        };
+
+        document.getElementById("exampleOptBtn").onclick = () => {
+            optPallets = [
+                { len: 48, wid: 40, hei: 48, wgt: 2200, qty: 2 },
+                { len: 48, wid: 40, hei: 48, wgt: 1800, qty: 3 },
+                { len: 42, wid: 42, hei: 50, wgt: 1500, qty: 1 }
+            ];
+            renderOptList();
+            clearOptResults();
+        };
+
+        function optimizeLoad() {
+            if (optPallets.length === 0) {
+                alert("Agregue al menos un tipo de pallet");
+                return;
+            }
+
+            const trailerId = document.getElementById("optTrailer").value;
+            const trailer = TRAILERS[trailerId];
+            const extra = parseFloat(document.getElementById("optExtra").value) || 0;
+            const maxWeight = trailer.maxW + extra;
+
+            // Expandir por cantidad
+            let items = [];
+            optPallets.forEach(p => {
+                for (let i = 0; i < p.qty; i++) {
+                    items.push({ len: p.len, wid: p.wid, hei: p.hei, wgt: p.wgt });
+                }
+            });
+
+            // Ordenar por peso descendente (más pesados adelante)
+            items.sort((a, b) => b.wgt - a.wgt);
+
+            let placed = [];
+            let currentX = 0;
+            let totalWeight = 0;
+            let maxHeight = 0;
+
+            for (let it of items) {
+                if (currentX + it.len > trailer.len) break;
+                placed.push({
+                    ...it,
+                    startX: currentX,
+                    centerX: currentX + it.len / 2
+                });
+                currentX += it.len;
+                totalWeight += it.wgt;
+                maxHeight = Math.max(maxHeight, it.hei);
+            }
+
+            const spacePercent = (currentX / trailer.len) * 100;
+            const cog = totalWeight > 0 ? placed.reduce((s, p) => s + p.wgt * p.centerX, 0) / totalWeight : 0;
+
+            let warnings = [];
+            if (totalWeight > maxWeight) warnings.push(`⚠️ Peso total excede capacidad: ${formatWeight(totalWeight)} > ${formatWeight(maxWeight)}`);
+            if (cog < 200) warnings.push(`⚠️ Centro de gravedad muy adelante (${cog.toFixed(0)} in) - Mueva peso hacia atrás`);
+            if (cog > 400) warnings.push(`⚠️ Centro de gravedad muy atrás (${cog.toFixed(0)} in) - Mueva peso hacia adelante`);
+            if (maxHeight > trailer.hei) warnings.push(`⚠️ Altura de pallet (${maxHeight} in) excede altura del trailer (${trailer.hei} in)`);
+
+            lastOptResult = { placed, totalWeight, cog, spacePercent, warnings, trailerLen: trailer.len, trailerWid: trailer.wid, maxHeight };
+            displayOptimization();
+        }
+
+        function displayOptimization() {
+            if (!lastOptResult) return;
+
+            let html = `
+                <div class="grid-3">
+                    <div>📦 Pallets colocados: ${lastOptResult.placed.length}</div>
+                    <div>⚖️ Peso total: ${formatWeight(lastOptResult.totalWeight)}</div>
+                    <div>🎯 Centro gravedad: ${lastOptResult.cog.toFixed(0)} in</div>
+                    <div>📐 Espacio usado: ${lastOptResult.spacePercent.toFixed(0)}%</div>
+                </div>
+            `;
+
+            if (lastOptResult.warnings.length) {
+                html += `<div class="warning">${lastOptResult.warnings.join("<br>")}</div>`;
+            } else {
+                html += `<div class="success">✅ Optimización exitosa - Carga segura</div>`;
+            }
+
+            document.getElementById("optResult").innerHTML = html;
+
+            // Dibujar canvas
+            const canvas = document.getElementById("optCanvas");
+            canvas.width = 800;
+            canvas.height = 250;
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, 800, 250);
+
+            const sx = (canvas.width - 60) / lastOptResult.trailerLen;
+            const sy = (canvas.height - 50) / lastOptResult.trailerWid;
+            const offX = 30, offY = 30;
+
+            ctx.strokeStyle = "#5b6e8c";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(offX, offY, lastOptResult.trailerLen * sx, lastOptResult.trailerWid * sy);
+            ctx.fillStyle = "#1a2538";
+            ctx.fillRect(offX, offY, lastOptResult.trailerLen * sx, lastOptResult.trailerWid * sy);
+
+            for (let i = 0; i < lastOptResult.placed.length; i++) {
+                const p = lastOptResult.placed[i];
+                const x = offX + p.startX * sx;
+                const y = offY;
+                const w = p.len * sx;
+                const h = p.wid * sy;
+
+                ctx.fillStyle = `hsl(${i * 37 % 360}, 70%, 55%)`;
+                ctx.fillRect(x, y, w, h);
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(x, y, w, h);
+                ctx.fillStyle = "white";
+                ctx.font = "bold 10px monospace";
+                ctx.fillText(`${formatWeight(p.wgt)}`, x + 4, y + 16);
+            }
+
+            ctx.fillStyle = "#f59e0b";
+            ctx.font = "bold 12px monospace";
+            ctx.fillText("⬅️ DELANTERO", offX, offY - 8);
+            ctx.fillText("TRASERO ➡️", offX + lastOptResult.trailerLen * sx - 100, offY - 8);
+        }
+
+        document.getElementById("runOptBtn").onclick = optimizeLoad;
+
+        // ==================== INICIALIZACIÓN ====================
+        (async () => {
+            await checkLicense();
+            await updateLicenseUI();
+            doCalc();
+        })();
+    </script>
 </body>
 </html>
