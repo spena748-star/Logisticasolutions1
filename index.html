@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Logistics PRO | Safety+ | Centro de Gravedad + Acciones correctivas</title>
+    <title>Logistics PRO | Clima+ | Análisis meteorológico para carga segura</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -60,6 +60,7 @@
         button:hover { background: #059669; transform: scale(0.98); }
         .btn-outline { background: transparent; border: 1px solid #10b981; color: #10b981; }
         .btn-danger { background: #ef4444; color: white; }
+        .btn-warning { background: #f59e0b; color: #0f172a; }
         
         .pallet-item { background: #0f172a; border-radius: 1rem; padding: 10px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
@@ -72,7 +73,6 @@
         .badge { background: #10b981; color: #0f172a; padding: 6px 14px; border-radius: 40px; font-size: 0.85rem; display: inline-block; }
         .danger { color: #f87171; font-size: 1rem; }
         .warning { color: #fbbf24; font-size: 1rem; }
-        .success { color: #4ade80; }
         .result-panel { background: #0f172a; padding: 15px; border-radius: 1rem; font-size: 1rem; margin-top: 12px; line-height: 1.5; }
         .locked { filter: blur(4px); pointer-events: none; user-select: none; opacity: 0.7; }
         
@@ -83,10 +83,6 @@
         .safety-panel { background: #1e293b; border-radius: 1rem; padding: 1.2rem; margin-top: 15px; border-left: 5px solid #f59e0b; }
         .safety-title { color: #f59e0b; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .safety-tip { background: #0f172a; padding: 12px; border-radius: 1rem; margin-bottom: 10px; font-size: 0.9rem; }
-        
-        .action-panel { background: #1e293b; border-radius: 1rem; padding: 1.2rem; margin-top: 15px; border-left: 5px solid #ef4444; }
-        .action-title { color: #ef4444; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .action-tip { background: #0f172a; padding: 12px; border-radius: 1rem; margin-bottom: 10px; font-size: 0.9rem; }
         
         .trailer-button {
             position: fixed;
@@ -157,8 +153,8 @@
 <div class="container">
     <div class="header">
         <div class="logo">
-            <h1>🚛 LOGISTICS PRO SAFETY+</h1>
-            <p id="subtitleTag">Centro de Gravedad · Acciones correctivas · Prevención de accidentes</p>
+            <h1>🚛 LOGISTICS PRO CLIMATE+</h1>
+            <p id="subtitleTag">Análisis meteorológico · Viento · Nieve · Carga segura</p>
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
             <div class="unit-selector">
@@ -175,8 +171,8 @@
 
     <div class="tabs">
         <button class="tab-btn active" data-tab="app">📊 Planificador</button>
-        <button class="tab-btn" data-tab="climate">🌦️ Clima</button>
-        <button class="tab-btn" data-tab="safety">⚠️ Seguridad</button>
+        <button class="tab-btn" data-tab="climate">🌦️ Clima & Seguridad</button>
+        <button class="tab-btn" data-tab="safety">⚠️ Manual seguridad</button>
         <button class="tab-btn" data-tab="help">❓ Ayuda</button>
     </div>
 
@@ -303,7 +299,7 @@
                         <small>Para viento fuerte (>25 mph se activan alertas)</small>
                     </div>
                     
-                    <button id="optimizeBtn" style="background:#3b82f6; margin-top: 15px; width: 100%; font-size: 1.1rem;">🧩 OPTIMIZAR + ANÁLISIS COMPLETO</button>
+                    <button id="optimizeBtn" style="background:#3b82f6; margin-top: 15px; width: 100%; font-size: 1.1rem;">🧩 OPTIMIZAR + ANÁLISIS CLIMÁTICO</button>
                 </div>
             </div>
 
@@ -316,7 +312,7 @@
                 <div class="stats">
                     <div class="stat-card"><strong>📦 Peso total</strong><br><span id="totalWeight">0 lbs</span></div>
                     <div class="stat-card"><strong>📏 Altura máxima</strong><br><span id="maxHeight">0 in</span></div>
-                    <div class="stat-card"><strong>🎯 Centro gravedad (CG)</strong><br><span id="cog">0 in</span></div>
+                    <div class="stat-card"><strong>🎯 Centro gravedad</strong><br><span id="cog">0 in</span></div>
                     <div class="stat-card"><strong>📐 Espacio usado</strong><br><span id="spaceUsed">0%</span></div>
                     <div class="stat-card"><strong>⚠️ Riesgo vuelco</strong><br><span id="rollRisk">-</span></div>
                 </div>
@@ -325,20 +321,14 @@
                 <div id="heightInfo" class="result-panel"></div>
                 <div id="axleInfoSimple" style="margin-top: 15px;"></div>
                 
-                <!-- Panel de ACCIONES CORRECTIVAS (aparece cuando hay advertencias) -->
-                <div id="actionsPanel" class="action-panel" style="display: none;">
-                    <div class="action-title">🔧 ACCIONES CORRECTIVAS - QUÉ HACER</div>
-                    <div id="actionsContent"></div>
-                </div>
-                
                 <div class="climate-panel" id="climateAnalysis">
-                    <div class="climate-title">🌦️ ANÁLISIS CLIMÁTICO</div>
-                    <div id="climateContent">Seleccione condiciones climáticas y optimice</div>
+                    <div class="climate-title">🌦️ ANÁLISIS CLIMÁTICO Y RECOMENDACIONES</div>
+                    <div id="climateContent">Seleccione condiciones climáticas y optimice para ver recomendaciones</div>
                 </div>
                 
                 <div class="safety-panel" id="safetySuggestions">
-                    <div class="safety-title">⚠️ SUGERENCIAS DE SEGURIDAD</div>
-                    <div id="safetyContent">Optimice para ver recomendaciones</div>
+                    <div class="safety-title">⚠️ SUGERENCIAS DE SEGURIDAD Y AMARRES</div>
+                    <div id="safetyContent">Realice una optimización para ver recomendaciones</div>
                 </div>
                 
                 <div class="flex-row" style="margin-top: 15px;">
@@ -356,34 +346,63 @@
     </div>
 
     <div id="climateTab" class="tab-content">
-        <div class="card"><h2>🌦️ GUÍA POR CONDICIONES CLIMÁTICAS</h2>
-            <div class="climate-panel"><div class="climate-title">💨 VIENTO >25 mph</div><div class="climate-tip">Reduzca velocidad a 45 mph. Aumente amarres 50%. Centro de gravedad ideal <350 in</div></div>
-            <div class="climate-panel"><div class="climate-title">❄️ NIEVE/HIELO</div><div class="climate-tip">Verifique techo (máx 6"). Distancia frenado x3. CG entre 280-320 in ideal</div></div>
-            <div class="climate-panel"><div class="climate-title">🌧️ LLUVIA</div><div class="climate-tip">Reduzca velocidad 20%. Carga líquida requiere reducción adicional 15%</div></div>
+        <div class="card">
+            <h2>🌦️ GUÍA DE SEGURIDAD POR CONDICIONES CLIMÁTICAS</h2>
+            
+            <div class="climate-panel" style="border-left-color: #f59e0b;">
+                <div class="climate-title">💨 VIENTO FUERTE (>25 mph)</div>
+                <div class="climate-tip">⚠️ <strong>Recomendación:</strong> Reducir velocidad máxima a 45 mph. Centrar la carga lo más bajo posible.</div>
+                <div class="climate-tip">🔧 <strong>Amarres:</strong> Aumentar número de cinchos en un 50%. Usar barras de carga adicionales.</div>
+                <div class="climate-tip">📦 <strong>Posicionamiento:</strong> Carga más pesada en la parte delantera y centro. Evitar cargas livianas en la parte trasera.</div>
+            </div>
+            
+            <div class="climate-panel" style="border-left-color: #3b82f6; margin-top: 15px;">
+                <div class="climate-title">❄️ NIEVE / HIELO</div>
+                <div class="climate-tip">⚠️ <strong>Recomendación:</strong> Verificar techo del trailer por acumulación de nieve (máximo 6 pulgadas).</div>
+                <div class="climate-tip">🔧 <strong>Amarres:</strong> Usar amarres con sistema anti-deslizamiento. Verificar tensión cada 2 horas.</div>
+                <div class="climate-tip">📦 <strong>Posicionamiento:</strong> Distribuir peso uniformemente para evitar pérdida de tracción en curvas.</div>
+            </div>
+            
+            <div class="climate-panel" style="border-left-color: #10b981; margin-top: 15px;">
+                <div class="climate-title">🌧️ LLUVIA / TORMENTA</div>
+                <div class="climate-tip">⚠️ <strong>Recomendación:</strong> Carga con alto centro de gravedad requiere reducción de velocidad del 30%.</div>
+                <div class="climate-tip">🔧 <strong>Amarres:</strong> Protección adicional para carga sensible a humedad. Cubrir con lona impermeable.</div>
+                <div class="climate-tip">📦 <strong>Posicionamiento:</strong> Carga pesada adelante para mejor adherencia. Evitar espacios vacíos.</div>
+            </div>
+            
+            <div class="climate-panel" style="border-left-color: #ef4444; margin-top: 15px;">
+                <div class="climate-title">⚠️ FACTORES CRÍTICOS COMBINADOS</div>
+                <div class="climate-tip">🔴 <strong>Viento + hielo + carga alta = RIESGO EXTREMO DE VUELCO</strong> — Considere suspender el viaje.</div>
+                <div class="climate-tip">🔴 <strong>Lluvia + carga líquida = EFECTO OLA PELIGROSO</strong> — Reducir velocidad adicional 20%.</div>
+                <div class="climate-tip">🔴 <strong>Nieve + carga mal distribuida = PÉRDIDA DE CONTROL EN CURVAS</strong> — Verificar distribución antes de salir.</div>
+            </div>
         </div>
     </div>
 
     <div id="safetyTab" class="tab-content">
-        <div class="card"><h2>⚠️ MANUAL DE SEGURIDAD</h2>
-            <div class="safety-panel"><div class="safety-title">📋 CENTRO DE GRAVEDAD (CG)</div>
-                <div class="safety-tip">✅ <strong>CG IDEAL:</strong> Entre 200 y 400 pulgadas desde el frente del trailer</div>
-                <div class="safety-tip">⚠️ <strong>CG ADELANTADO (&lt;200):</strong> Riesgo de pérdida de dirección. Mueva carga pesada hacia atrás</div>
-                <div class="safety-tip">🔴 <strong>CG ATRASADO (&gt;400):</strong> Riesgo de vuelco en curvas. Mueva carga pesada adelante</div>
-                <div class="safety-tip">📏 <strong>CG ALTO + VIENTO:</strong> Reduzca velocidad 30% mínimo</div>
+        <div class="card">
+            <h2>⚠️ MANUAL DE SEGURIDAD</h2>
+            <div class="safety-panel"><div class="safety-title">📋 TIPOS DE CARGA Y AMARRES</div>
+                <div class="safety-tip">🔘 <strong>TUBOS:</strong> Amarres cada 4 pies + topes laterales + listones entre capas</div>
+                <div class="safety-tip">💧 <strong>LÍQUIDOS:</strong> Cinchos de alta tensión + deflectores internos + velocidad reducida</div>
+                <div class="safety-tip">⚙️ <strong>METAL:</strong> Eslingas de acero + protectores de borde + calzos antideslizantes</div>
+                <div class="safety-tip">📦 <strong>CAJAS:</strong> Stretch film entre capas + barras de carga + esquineros protectores</div>
             </div>
-            <div class="safety-panel"><div class="safety-title">🔧 AMARRES POR TIPO DE CARGA</div>
-                <div class="safety-tip">🔘 TUBOS: Cinchos cada 4 pies + topes laterales + listones entre capas</div>
-                <div class="safety-tip">💧 LÍQUIDOS: Cinchos alta tensión + deflectores + velocidad reducida</div>
-                <div class="safety-tip">⚙️ METAL: Eslingas acero + protectores borde + calzos antideslizantes</div>
+            <div class="safety-panel"><div class="safety-title">📏 DISTRIBUCIÓN ÓPTIMA</div>
+                <div class="safety-tip">✅ PESOS MÁS PESADOS ADELANTE — Mejor estabilidad en frenadas</div>
+                <div class="safety-tip">✅ CENTRO DE GRAVEDAD ENTRE EJES 2 Y 4 — Riesgo mínimo de vuelco</div>
+                <div class="safety-tip">✅ ESPACIOS LLENOS — Usar inflables o madera para evitar desplazamiento</div>
             </div>
         </div>
     </div>
 
     <div id="helpTab" class="tab-content">
-        <div class="card"><h2>❓ Ayuda</h2>
-            <div class="safety-panel"><h4>🔐 Activar licencia</h4><p>Ingrese clave RENT-30-xxxxxxxx</p></div>
-            <div class="safety-panel"><h4>⚖️ Unidades</h4><p>Botones kg/lbs en esquina superior derecha</p></div>
-            <div class="safety-panel"><h4>🔑 Administrador</h4><p>Haga clic en el 🚛 abajo derecha. Contraseña: <strong>admin2025</strong></p></div>
+        <div class="card">
+            <h2>❓ Ayuda</h2>
+            <div class="safety-panel"><h4>🔐 Activar licencia</h4><p>Ingresa la clave RENT-30-xxxxxxxx</p></div>
+            <div class="safety-panel"><h4>⚖️ Unidades</h4><p>Botones kg/lbs en la esquina superior derecha</p></div>
+            <div class="safety-panel"><h4>🌦️ Clima</h4><p>Selecciona condiciones meteorológicas para recibir recomendaciones específicas</p></div>
+            <div class="safety-panel"><h4>🔑 Administrador</h4><p>Haz clic en el 🚛 abajo a la derecha. Contraseña: <strong>admin2025</strong></p></div>
         </div>
     </div>
 </div>
@@ -432,8 +451,8 @@
     
     // ==================== TRADUCCIONES ====================
     const translations = {
-        es: { subtitleTag: "Centro de Gravedad · Acciones correctivas · Prevención de accidentes", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Agregar carga", stackableLabel: "Apilable", trailerTitle: "🚛 Configuración", resultsTitle: "📊 Visualización", historyTitle: "📜 Historial" },
-        en: { subtitleTag: "Center of Gravity · Corrective Actions · Accident Prevention", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Add Cargo", stackableLabel: "Stackable", trailerTitle: "🚛 Configuration", resultsTitle: "📊 Visualization", historyTitle: "📜 History" }
+        es: { subtitleTag: "Análisis meteorológico · Viento · Nieve · Carga segura", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Agregar carga", stackableLabel: "Apilable", trailerTitle: "🚛 Configuración", resultsTitle: "📊 Visualización", historyTitle: "📜 Historial" },
+        en: { subtitleTag: "Weather analysis · Wind · Snow · Safe loading", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Add Cargo", stackableLabel: "Stackable", trailerTitle: "🚛 Configuration", resultsTitle: "📊 Visualization", historyTitle: "📜 History" }
     };
     let currentLang = 'es';
     function updateLanguage() { const t = translations[currentLang]; for(let id in t) { let el = document.getElementById(id); if(el) el.innerText = t[id]; } }
@@ -478,94 +497,48 @@
     
     function buildStacks(palletsList) { const groups = new Map(); for (let p of palletsList) { const key = `${p.length}x${p.width}_${p.stackable}_${p.maxStacks}_${p.type}_${p.cargoType}`; if (!groups.has(key)) groups.set(key, { ...p, count: 0 }); groups.get(key).count++; } let stacks = []; for (let [_, g] of groups.entries()) { const maxPerStack = g.stackable ? g.maxStacks : 1; const numStacks = Math.ceil(g.count / maxPerStack); const perStack = Math.min(maxPerStack, g.count); for (let i = 0; i < numStacks; i++) { const cnt = (i === numStacks-1) ? g.count - (i * perStack) : perStack; stacks.push({ length: g.length, width: g.width, height: cnt * g.height, weight: cnt * g.weight, palletCount: cnt, type: g.type, cargoType: g.cargoType }); } } return stacks; }
     
-    // Función para generar ACCIONES CORRECTIVAS específicas
-    function getCorrectiveActions(cog, maxHeight, trailerHeight, totalWeight, maxCapacity, cargoType, weather, windSpeed) {
-        const actions = [];
-        let hasWarning = false;
-        
-        // Acciones por Centro de Gravedad
-        if (cog < 200) {
-            hasWarning = true;
-            actions.push("🔴 <strong>CG DEMASIADO ADELANTE (&lt;200 in)</strong> - Riesgo de pérdida de dirección");
-            actions.push("✅ <strong>ACCIÓN:</strong> Mueva los pallets MÁS PESADOS hacia ATRÁS (puertas). Reubique al menos 2-3 palets pesados en la zona trasera.");
-            actions.push("✅ <strong>ACCIÓN:</strong> Si tiene palets livianos adelante, cámbielos por pesados. La carga debe distribuirse de PESADO a LIVIANO de adelante hacia atrás.");
-        } else if (cog > 400) {
-            hasWarning = true;
-            actions.push("🔴 <strong>CG DEMASIADO ATRASADO (&gt;400 in)</strong> - Alto riesgo de vuelco en curvas");
-            actions.push("✅ <strong>ACCIÓN:</strong> Mueva los pallets MÁS PESADOS hacia ADELANTE (cabina). Coloque los palets de mayor peso en las primeras posiciones.");
-            actions.push("✅ <strong>ACCIÓN:</strong> Si tiene palets muy pesados atrás, transpórtelos adelante. El CG ideal es entre 250-350 in.");
-        } else if (cog >= 200 && cog <= 400) {
-            actions.push("✅ <strong>CG CORRECTO</strong> - El centro de gravedad está dentro del rango seguro (200-400 in)");
-        }
-        
-        // Acciones por altura
-        if (maxHeight > trailerHeight) {
-            hasWarning = true;
-            actions.push("🔴 <strong>ALTURA EXCEDE EL TRAILER</strong> - No se puede cargar así");
-            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca el número de niveles apilados. Si los pallets son apilables, use menos niveles por columna.");
-            actions.push("✅ <strong>ACCIÓN:</strong> Considere usar un trailer con mayor altura interna (Step Deck: 120 in)");
-        } else if (maxHeight > trailerHeight * 0.85) {
-            hasWarning = true;
-            actions.push("⚠️ <strong>ALTURA CRÍTICA</strong> - Carga muy alta, riesgo de vuelco +45%");
-            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca la altura apilando menos niveles. Reduzca velocidad en curvas un 30%.");
-            actions.push("✅ <strong>ACCIÓN:</strong> Centre la carga lo más bajo posible. Los palets pesados deben ir abajo.");
-        }
-        
-        // Acciones por peso
-        if (totalWeight > maxCapacity) {
-            hasWarning = true;
-            actions.push("🔴 <strong>SOBREPESO</strong> - Excede la capacidad del trailer");
-            actions.push("✅ <strong>ACCIÓN:</strong> Retire al menos " + Math.ceil((totalWeight - maxCapacity) / 500) + " palets o redistribuya la carga en otro vehículo.");
-        }
-        
-        // Acciones por clima
-        if (weather === "viento" || windSpeed > 25) {
-            hasWarning = true;
-            actions.push("💨 <strong>VIENTO FUERTE</strong> - Riesgo extremo de vuelco lateral");
-            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca velocidad máxima a 45 mph. Aumente el número de amarres en un 50%.");
-            if (cog > 350) actions.push("✅ <strong>ACCIÓN:</strong> El CG está atrás (" + cog + " in). Mueva peso adelante URGENTE antes de salir.");
-        }
-        if (weather === "nieve" || weather === "hielo") {
-            hasWarning = true;
-            actions.push("❄️ <strong>NIEVE/HIELO</strong> - Condiciones peligrosas");
-            actions.push("✅ <strong>ACCIÓN:</strong> Verifique que el techo no tenga más de 6 pulgadas de nieve. Aumente distancia de frenado a 3x lo normal.");
-        }
-        
-        // Acciones por tipo de carga
-        if (cargoType === "liquido" && (weather === "lluvia" || weather === "tormenta")) {
-            hasWarning = true;
-            actions.push("💧 <strong>CARGA LÍQUIDA + LLUVIA</strong> - Efecto ola peligroso");
-            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca velocidad adicional 15%. Evite frenadas bruscas y curvas cerradas.");
-        }
-        if (cargoType === "tubos") {
-            actions.push("🔘 <strong>CARGA DE TUBOS</strong> - Riesgo de rodamiento");
-            actions.push("✅ <strong>ACCIÓN:</strong> Coloque listones de madera entre cada capa de tubos. Use amarres cada 4 pies.");
-        }
-        
-        return { actions, hasWarning };
-    }
-    
     function getWeatherRecommendations(weather, windSpeed, cargoType, cog, maxHeight, trailerHeight) {
         const tips = [];
         let riskMultiplier = 1;
-        if (weather === "viento" || windSpeed > 25) { tips.push("💨 <strong>VIENTO FUERTE:</strong> Reduzca velocidad a 45 mph. Aumente amarres 50%."); riskMultiplier = 1.5; }
-        if (weather === "nieve") { tips.push("❄️ <strong>NIEVE:</strong> Verifique techo (máx 6 pulgadas). Distancia frenado x3."); riskMultiplier = 1.3; }
-        if (weather === "hielo") { tips.push("🧊 <strong>HIELO:</strong> PELIGRO EXTREMO. Velocidad máxima 35 mph."); riskMultiplier = 1.8; }
-        if (weather === "lluvia") { tips.push("🌧️ <strong>LLUVIA:</strong> Reduzca velocidad 20%."); riskMultiplier = 1.2; }
-        if (weather === "tormenta") { tips.push("⛈️ <strong>TORMENTA:</strong> Considere suspender viaje."); riskMultiplier = 2.0; }
-        if (cog < 200 || cog > 450) tips.push("⚠️ CG CRÍTICO. Reubique carga antes de salir.");
-        if (maxHeight > trailerHeight * 0.85) tips.push("📏 ALTURA EXCESIVA. Riesgo de vuelco +45% en curvas.");
+        if (weather === "viento" || windSpeed > 25) {
+            tips.push("💨 <strong>VIENTO FUERTE:</strong> Reduzca velocidad máxima a 45 mph. Aumente amarres en 50%.");
+            tips.push("⚠️ Riesgo de vuelco lateral alto. Centrar carga lo más bajo posible.");
+            riskMultiplier = 1.5;
+            if (maxHeight > trailerHeight * 0.8) tips.push("🔴 ALTURA CRÍTICA + VIENTO = RIESGO EXTREMO. Considere suspender viaje.");
+        }
+        if (weather === "nieve") {
+            tips.push("❄️ <strong>NIEVE:</strong> Verifique techo (máx 6 pulgadas acumulación). Aumente distancia de frenado x3.");
+            tips.push("⚠️ Distribuya peso uniformemente para evitar pérdida de tracción.");
+            riskMultiplier = 1.3;
+        }
+        if (weather === "hielo") {
+            tips.push("🧊 <strong>HIELO:</strong> PELIGRO EXTREMO. Reduzca velocidad a 35 mph o menos.");
+            tips.push("⚠️ Evite frenadas bruscas. Use cadenas si es necesario.");
+            riskMultiplier = 1.8;
+        }
+        if (weather === "lluvia") {
+            tips.push("🌧️ <strong>LLUVIA:</strong> Reduzca velocidad 20%. Verifique frenos antes de salir.");
+            if (cargoType === "liquido") tips.push("💧 CARGA LÍQUIDA + LLUVIA = EFECTO OLA PELIGROSO. Reduzca velocidad adicional 15%.");
+            riskMultiplier = 1.2;
+        }
+        if (weather === "tormenta") {
+            tips.push("⛈️ <strong>TORMENTA:</strong> Considere suspender viaje hasta que pase la tormenta.");
+            tips.push("⚠️ Vientos de ráfaga + lluvia intensa = máximo riesgo de vuelco.");
+            riskMultiplier = 2.0;
+        }
+        if (cog < 200 || cog > 450) tips.push("⚠️ CENTRO DE GRAVEDAD CRÍTICO. Reubique carga para mejor estabilidad.");
+        if (maxHeight > trailerHeight * 0.85) tips.push("📏 ALTURA EXCESIVA. El riesgo de vuelco aumenta un 45% en curvas.");
         return { tips, riskMultiplier };
     }
     
     function getSafetySuggestions(cargoType, cog, maxHeight, trailerHeight, totalWeight, maxCapacity) {
         const suggestions = []; const amarres = []; let riskLevel = "BAJO";
         if(cargoType === "tubos") { suggestions.push("🔘 TUBOS: Amarres cada 4 pies + topes laterales"); amarres.push("CINCHOS CADA 4 PIES + TOPES"); riskLevel = "ALTO"; }
-        else if(cargoType === "liquido") { suggestions.push("💧 LÍQUIDOS: Efecto ola - Reduzca velocidad 30%"); amarres.push("CINCHOS ALTA TENSIÓN"); riskLevel = "MUY ALTO"; }
+        else if(cargoType === "liquido") { suggestions.push("💧 LÍQUIDOS: Efecto ola - Reduzca velocidad 30% en curvas"); amarres.push("CINCHOS ALTA TENSIÓN"); riskLevel = "MUY ALTO"; }
         else if(cargoType === "metal") { suggestions.push("⚙️ METAL: Amarres cada 3 pies, protección anti-abrasión"); amarres.push("ESLINGAS ACERO"); riskLevel = "ALTO"; }
         else { suggestions.push("📦 Distribuya pesos pesados adelante"); amarres.push("BARRAS CARGA + CINCHOS"); riskLevel = "MEDIO"; }
-        if(cog < 150) { suggestions.push("⚠️ CG MUY ADELANTE - Mueva peso atrás"); riskLevel = "ALTO"; }
-        if(cog > 450) { suggestions.push("⚠️ CG MUY ATRÁS - Mueva peso adelante"); riskLevel = "ALTO"; }
+        if(cog < 150) suggestions.push("⚠️ CENTRO GRAVEDAD MUY ADELANTE - Pérdida de dirección");
+        if(cog > 450) suggestions.push("⚠️ CENTRO GRAVEDAD MUY ATRÁS - Riesgo de vuelco");
         return { suggestions, amarres, riskLevel };
     }
     
@@ -584,29 +557,19 @@
         let mainCargo = "mixto"; let maxCount = 0; for(let c in cargoCounts) { if(cargoCounts[c] > maxCount) { maxCount = cargoCounts[c]; mainCargo = c; } }
         const safety = getSafetySuggestions(mainCargo, cog, maxHeight, trailer.height, totalWeight, maxCapacity);
         const weather = getWeatherRecommendations(currentWeather, currentWindSpeed, mainCargo, cog, maxHeight, trailer.height);
-        const corrective = getCorrectiveActions(cog, maxHeight, trailer.height, totalWeight, maxCapacity, mainCargo, currentWeather, currentWindSpeed);
-        
         let rollRisk = safety.riskLevel;
         if(weather.riskMultiplier > 1.5) rollRisk = "EXTREMO - Clima adverso";
         if(maxHeight > trailer.height * 0.85) rollRisk = "MUY ALTO - Altura crítica";
         if(cog < 150 || cog > 450) rollRisk = "EXTREMO - CG fuera de rango";
         
-        lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount, mainCargo, safetySuggestions: safety.suggestions, safetyAmarres: safety.amarres, rollRisk, weatherTips: weather.tips, correctiveActions: corrective.actions, hasWarning: corrective.hasWarning };
+        lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount, mainCargo, safetySuggestions: safety.suggestions, safetyAmarres: safety.amarres, rollRisk, weatherTips: weather.tips };
         drawResults(); saveHistory(); }
     
     function drawResults() { if (!lastResult) return;
         const displayWeight = currentUnit === "kg" ? (lastResult.totalWeight / KG_TO_LBS).toFixed(0) + " kg" : lastResult.totalWeight.toFixed(0) + " lbs";
         document.getElementById("totalWeight").innerHTML = displayWeight;
         document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`;
-        // Color del CG según valor
-        const cogSpan = document.getElementById("cog");
-        const cogValue = lastResult.cog;
-        let cogColor = "";
-        if (cogValue < 200) cogColor = "danger";
-        else if (cogValue > 400) cogColor = "danger";
-        else if (cogValue < 250 || cogValue > 350) cogColor = "warning";
-        else cogColor = "success";
-        cogSpan.innerHTML = `<span class="${cogColor}" style="font-weight:bold;">${cogValue.toFixed(1)} in</span>`;
+        document.getElementById("cog").innerText = `${lastResult.cog.toFixed(1)} in`;
         document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`;
         document.getElementById("rollRisk").innerHTML = `<span class="${lastResult.rollRisk.includes('BAJO') ? 'success' : 'danger'}">${lastResult.rollRisk}</span>`;
         
@@ -631,34 +594,22 @@
         
         let axleHtml = `<h4>⚖️ CARGA POR EJES</h4><div class="axle-table">`; for (let i = 0; i < lastResult.axleLoads.length; i++) { const load = lastResult.axleLoads[i]; const limit = 20000; let status = "verde", statusText = "DENTRO ✓"; if (load > limit) { status = "rojo"; statusText = "EXCEDE ✗"; } else if (load > limit * 0.9) { status = "amarillo"; statusText = "CERCA ⚠️"; } axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span>${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`; } axleHtml += `</div>`; if (lastResult.warnings.length) axleHtml += `<div style="margin-top:15px; background:#7f1d1d; padding:12px; border-radius:1rem;"><span class="danger">⚠️ ADVERTENCIAS:</span><br>${lastResult.warnings.join("<br>")}</div>`; else axleHtml += `<div class="badge">✅ CARGA APROBADA</div>`; document.getElementById("axleInfoSimple").innerHTML = axleHtml;
         
-        // Panel de acciones correctivas
-        const actionsPanel = document.getElementById("actionsPanel");
-        const actionsContent = document.getElementById("actionsContent");
-        if (lastResult.hasWarning) {
-            actionsPanel.style.display = "block";
-            let actionsHtml = "";
-            lastResult.correctiveActions.forEach(action => { actionsHtml += `<div class="action-tip">${action}</div>`; });
-            actionsContent.innerHTML = actionsHtml;
-        } else {
-            actionsPanel.style.display = "none";
-        }
-        
-        let climateHtml = `<div class="climate-tip"><strong>🌦️ CLIMA:</strong> ${currentWeather === "soleado" ? "☀️ Soleado" : currentWeather === "lluvia" ? "🌧️ Lluvia" : currentWeather === "nieve" ? "❄️ Nieve" : currentWeather === "viento" ? "💨 Viento" : currentWeather === "tormenta" ? "⛈️ Tormenta" : "🧊 Hielo"}</div>`;
+        let climateHtml = `<div class="climate-tip"><strong>🌦️ CLIMA ACTUAL:</strong> ${currentWeather === "soleado" ? "☀️ Soleado" : currentWeather === "lluvia" ? "🌧️ Lluvia" : currentWeather === "nieve" ? "❄️ Nieve" : currentWeather === "viento" ? "💨 Viento" : currentWeather === "tormenta" ? "⛈️ Tormenta" : "🧊 Hielo"}</div>`;
         if(currentWindSpeed > 0) climateHtml += `<div class="climate-tip"><strong>💨 Viento:</strong> ${currentWindSpeed} mph</div>`;
         lastResult.weatherTips.forEach(tip => { climateHtml += `<div class="climate-tip">${tip}</div>`; });
         document.getElementById("climateContent").innerHTML = climateHtml;
         
         let safetyHtml = `<div class="safety-tip"><strong>🔧 AMARRES:</strong> ${lastResult.safetyAmarres.join(" | ")}</div>`; lastResult.safetySuggestions.forEach(s => { safetyHtml += `<div class="safety-tip">${s}</div>`; }); document.getElementById("safetyContent").innerHTML = safetyHtml; }
     
-    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR'"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("climateContent").innerHTML = "Seleccione condiciones climáticas y optimice"; document.getElementById("safetyContent").innerHTML = "Optimice para ver recomendaciones"; document.getElementById("actionsPanel").style.display = "none"; document.getElementById("totalWeight").innerHTML = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerHTML = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; document.getElementById("rollRisk").innerText = "-"; const canvas = document.getElementById("packCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR'"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("climateContent").innerHTML = "Seleccione condiciones climáticas y optimice"; document.getElementById("safetyContent").innerHTML = "Optimice para ver recomendaciones"; document.getElementById("totalWeight").innerHTML = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerText = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; document.getElementById("rollRisk").innerText = "-"; const canvas = document.getElementById("packCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height); }
     function saveHistory() { if (!lastResult) return; let h = JSON.parse(localStorage.getItem("rental_history")) || []; h.unshift({ fecha: new Date().toLocaleString(), total: lastResult.totalWeight, placed: lastResult.totalPalletUnits }); if(h.length>10) h.pop(); localStorage.setItem("rental_history", JSON.stringify(h)); renderHistory(); }
     function renderHistory() { let h = JSON.parse(localStorage.getItem("rental_history")) || []; document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item"><span>📅 ${hh.fecha}</span><span>⚖️ ${currentUnit === "kg" ? (hh.total / KG_TO_LBS).toFixed(0) : hh.total} ${currentUnit}</span></div>`).join("") : "<p>Sin historial</p>"; }
     function clearHistory() { if(confirm("¿Borrar historial?")) { localStorage.removeItem("rental_history"); renderHistory(); alert("Historial borrado"); } }
-    function generatePDF() { if(!lastResult) { alert("Optimice primero"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME", 15, 20); doc.setFontSize(11); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 35); doc.text(`Peso: ${currentUnit === "kg" ? (lastResult.totalWeight / KG_TO_LBS).toFixed(0) : lastResult.totalWeight} ${currentUnit}`, 15, 47); doc.text(`CG: ${lastResult.cog.toFixed(0)} in`, 15, 57); doc.text(`Riesgo: ${lastResult.rollRisk}`, 15, 67); doc.text(`Clima: ${currentWeather}`, 15, 77); doc.save(`logistics_${Date.now()}.pdf`); }
+    function generatePDF() { if(!lastResult) { alert("Optimice primero"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME", 15, 20); doc.setFontSize(11); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 35); doc.text(`Peso: ${currentUnit === "kg" ? (lastResult.totalWeight / KG_TO_LBS).toFixed(0) : lastResult.totalWeight} ${currentUnit}`, 15, 47); doc.text(`Riesgo: ${lastResult.rollRisk}`, 15, 57); doc.text(`Clima: ${currentWeather}`, 15, 67); doc.save(`logistics_${Date.now()}.pdf`); }
     
     document.getElementById("addPalletBtn").onclick = () => { let type = document.getElementById("palletTypeSelect").value; let l=parseFloat(document.getElementById("palLargo").value), w=parseFloat(document.getElementById("palAncho").value), h=parseFloat(document.getElementById("palAlto").value); let pesoInput = parseFloat(document.getElementById("palPeso").value); let peso = currentUnit === "kg" ? pesoInput * KG_TO_LBS : pesoInput; let stackable=document.getElementById("stackable").checked, maxStacks=parseInt(document.getElementById("maxStacks").value), cargoType = document.getElementById("cargoType").value; if(isNaN(l)||isNaN(w)||isNaN(h)||isNaN(peso)) { alert("Valores válidos"); return; } pallets.push({type, length:l, width:w, height:h, weight:peso, stackable, maxStacks:stackable?maxStacks:1, cargoType}); renderPallets(); clearResults(); };
     document.getElementById("clearPalletsBtn").onclick = () => { pallets=[]; renderPallets(); clearResults(); };
-    document.getElementById("exampleBtn").onclick = () => { pallets = [ {type:'american', length:48, width:40, height:48, weight:2800, stackable:true, maxStacks:2, cargoType:'metal'}, {type:'american', length:48, width:40, height:48, weight:1800, stackable:true, maxStacks:2, cargoType:'cajas'}, {type:'american', length:48, width:40, height:48, weight:1200, stackable:true, maxStacks:2, cargoType:'cajas'} ]; renderPallets(); clearResults(); };
+    document.getElementById("exampleBtn").onclick = () => { pallets = [ {type:'american', length:48, width:40, height:48, weight:2200, stackable:true, maxStacks:2, cargoType:'tubos'}, {type:'american', length:48, width:40, height:48, weight:1800, stackable:true, maxStacks:2, cargoType:'cajas'}, {type:'euro', length:47, width:31.5, height:50, weight:1500, stackable:false, maxStacks:1, cargoType:'liquido'} ]; renderPallets(); clearResults(); };
     document.getElementById("optimizeBtn").onclick = optimize;
     document.getElementById("resetBtn").onclick = clearResults;
     document.getElementById("pdfBtn").onclick = generatePDF;
