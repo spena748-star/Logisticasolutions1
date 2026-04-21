@@ -3,28 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Logistics PRO | Calculadora de carga</title>
+    <title>Logistics PRO | Safety+ | Centro de Gravedad + Acciones correctivas</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            color: #e2e8f0;
-            padding: 16px;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%);
+            color: #e2e8f0;
+            padding: 20px;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: auto;
-        }
-
-        /* Header */
+        
+        .container { max-width: 1600px; margin: auto; }
+        
         .header {
             background: rgba(2, 6, 23, 0.9);
             backdrop-filter: blur(10px);
@@ -35,862 +27,645 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
-
-        .logo h1 {
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .logo p {
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-
-        .unit-selector {
-            display: flex;
-            gap: 6px;
-            background: #1e293b;
-            padding: 4px 10px;
-            border-radius: 40px;
-        }
-
-        .unit-btn {
-            background: #334155;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-            color: white;
-        }
-
-        .unit-btn.active {
-            background: #10b981;
-            color: #0f172a;
-        }
-
-        .lang-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            padding: 5px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: white;
-        }
-
-        .lang-btn.active {
-            background: #10b981;
-            color: #0f172a;
-        }
-
-        /* Pestañas */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: #1e293b;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            color: white;
-        }
-
-        .tab-btn.active {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Tarjetas */
-        .card {
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(8px);
-            border-radius: 1.2rem;
-            padding: 1.2rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid rgba(51, 65, 85, 0.5);
-        }
-
-        .license-panel {
-            background: rgba(15, 23, 42, 0.96);
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid #f59e0b;
-        }
-
-        .flex-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 16px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .input-group label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #9ca3af;
-            margin-bottom: 3px;
-        }
-
-        .input-group input,
-        .input-group select {
-            padding: 8px 12px;
-            border-radius: 40px;
-            border: none;
-            background: #0f172a;
-            color: white;
-            border: 1px solid #334155;
-            font-size: 0.9rem;
-            width: 100%;
-        }
-
-        button {
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: none;
-            background: #10b981;
-            color: #0f172a;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            font-size: 0.9rem;
-        }
-
-        button:hover {
-            background: #059669;
-            transform: scale(0.97);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #10b981;
-            color: #10b981;
-        }
-
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .result-card {
-            background: #0f172a;
-            border-radius: 1rem;
-            padding: 12px;
-            margin-top: 12px;
-        }
-
-        .result-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #10b981;
-        }
-
-        .warning {
-            color: #f87171;
-        }
-
-        .success {
-            color: #4ade80;
-        }
-
-        .pallet-item {
-            background: #0f172a;
-            border-radius: 0.8rem;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            font-size: 0.85rem;
-        }
-
-        canvas {
-            background: #0f172a;
-            border-radius: 1rem;
-            width: 100%;
-            height: auto;
-            margin-top: 10px;
-            border: 1px solid #3b82f6;
-        }
-
-        /* Botón administrador flotante */
-        .admin-btn {
+        .logo h1 { font-size: 1.8rem; background: linear-gradient(135deg, #10b981, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo p { font-size: 0.8rem; color: #94a3b8; }
+        .lang-selector { display: flex; gap: 8px; }
+        .lang-btn { background: #1e293b; border: 1px solid #334155; padding: 8px 20px; border-radius: 40px; cursor: pointer; transition: 0.2s; }
+        .lang-btn.active { background: #10b981; color: #0f172a; border-color: #10b981; }
+        
+        .unit-selector { display: flex; gap: 8px; background: #1e293b; padding: 5px 12px; border-radius: 40px; align-items: center; }
+        .unit-btn { background: #334155; border: none; padding: 5px 15px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        .unit-btn.active { background: #10b981; color: #0f172a; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: #1e293b; border: none; padding: 12px 24px; border-radius: 60px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .tab-btn.active { background: #3b82f6; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .card { background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(8px); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid rgba(51, 65, 85, 0.5); }
+        .license-panel { background: rgba(15, 23, 42, 0.96); border-radius: 1rem; padding: 1.2rem; margin-bottom: 20px; border: 1px solid #f59e0b; }
+        .flex-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+        
+        .input-group { display: flex; flex-direction: column; flex: 1; min-width: 120px; }
+        .input-group label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: #9ca3af; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .input-group input, .input-group select { padding: 12px 16px; border-radius: 60px; border: none; background: #0f172a; color: white; border: 1px solid #334155; font-size: 1rem; width: 100%; }
+        .input-group small { font-size: 0.6rem; color: #6b7280; margin-top: 4px; }
+        
+        button { padding: 12px 20px; border-radius: 60px; border: none; background: #10b981; color: #0f172a; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 1rem; }
+        button:hover { background: #059669; transform: scale(0.98); }
+        .btn-outline { background: transparent; border: 1px solid #10b981; color: #10b981; }
+        .btn-danger { background: #ef4444; color: white; }
+        
+        .pallet-item { background: #0f172a; border-radius: 1rem; padding: 10px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
+        .stat-card { background: #0f172a; padding: 15px; border-radius: 1rem; text-align: center; }
+        .stat-card strong { font-size: 0.9rem; }
+        .stat-card span { font-size: 1.6rem; font-weight: bold; display: block; margin-top: 5px; }
+        
+        canvas { background: #0f172a; border-radius: 1rem; width: 100%; height: auto; margin-top: 12px; border: 2px solid #3b82f6; }
+        
+        .badge { background: #10b981; color: #0f172a; padding: 6px 14px; border-radius: 40px; font-size: 0.85rem; display: inline-block; }
+        .danger { color: #f87171; font-size: 1rem; }
+        .warning { color: #fbbf24; font-size: 1rem; }
+        .success { color: #4ade80; }
+        .result-panel { background: #0f172a; padding: 15px; border-radius: 1rem; font-size: 1rem; margin-top: 12px; line-height: 1.5; }
+        .locked { filter: blur(4px); pointer-events: none; user-select: none; opacity: 0.7; }
+        
+        .climate-panel { background: #1e293b; border-radius: 1rem; padding: 1.2rem; margin-top: 15px; border-left: 5px solid #3b82f6; }
+        .climate-title { color: #3b82f6; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .climate-tip { background: #0f172a; padding: 12px; border-radius: 1rem; margin-bottom: 10px; font-size: 0.9rem; }
+        
+        .safety-panel { background: #1e293b; border-radius: 1rem; padding: 1.2rem; margin-top: 15px; border-left: 5px solid #f59e0b; }
+        .safety-title { color: #f59e0b; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .safety-tip { background: #0f172a; padding: 12px; border-radius: 1rem; margin-bottom: 10px; font-size: 0.9rem; }
+        
+        .action-panel { background: #1e293b; border-radius: 1rem; padding: 1.2rem; margin-top: 15px; border-left: 5px solid #ef4444; }
+        .action-title { color: #ef4444; font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .action-tip { background: #0f172a; padding: 12px; border-radius: 1rem; margin-bottom: 10px; font-size: 0.9rem; }
+        
+        .trailer-button {
             position: fixed;
-            bottom: 16px;
-            right: 16px;
-            width: 55px;
-            height: 55px;
+            bottom: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
             background: #3b82f6;
-            border-radius: 55px;
+            border-radius: 65px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 32px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: 0.2s;
             z-index: 999;
             border: 2px solid #10b981;
         }
-
-        .admin-btn:hover {
-            transform: scale(1.05);
-            background: #10b981;
-        }
-
+        .trailer-button:hover { transform: scale(1.1); background: #10b981; }
+        
         .admin-modal {
             position: fixed;
-            bottom: 85px;
-            right: 16px;
-            width: 320px;
+            bottom: 100px;
+            right: 20px;
+            width: 380px;
             background: #1e293b;
             border: 2px solid #3b82f6;
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 1.5rem;
             z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             display: none;
         }
-
         .admin-modal .close-modal {
             position: absolute;
-            top: 8px;
-            right: 12px;
+            top: 10px;
+            right: 15px;
             background: #ef4444;
             border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 24px;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 12px;
-            color: white;
+            font-size: 16px;
         }
-
-        @media (max-width: 700px) {
-            body {
-                padding: 10px;
-            }
-
-            .flex-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .admin-modal {
-                width: 90%;
-                right: 5%;
-            }
-        }
+        
+        .color-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; background: #0f172a; padding: 6px 12px; border-radius: 40px; }
+        .legend-color { width: 18px; height: 18px; border-radius: 4px; }
+        
+        .axle-table { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; justify-content: center; }
+        .axle-item { background: #0f172a; border-radius: 1rem; padding: 15px; text-align: center; min-width: 120px; }
+        .axle-item strong { font-size: 1rem; }
+        .axle-item span { font-size: 1.4rem; font-weight: bold; }
+        .axle-status { width: 24px; height: 24px; border-radius: 24px; margin: 8px auto; }
+        
+        .weather-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .weather-btn { background: #1e293b; border: 1px solid #334155; padding: 8px 16px; border-radius: 40px; cursor: pointer; transition: 0.2s; }
+        .weather-btn.active { background: #3b82f6; border-color: #3b82f6; }
+        
+        @media (max-width: 700px) { body { padding: 12px; } .flex-row { flex-direction: column; align-items: stretch; } .admin-modal { width: 90%; right: 5%; } }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <h1>🚛 LOGISTICS PRO</h1>
-                <p>Calculadora eficiente de carga</p>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <h1>🚛 LOGISTICS PRO SAFETY+</h1>
+            <p id="subtitleTag">Centro de Gravedad · Acciones correctivas · Prevención de accidentes</p>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="unit-selector">
+                <span style="font-size:0.8rem;">⚖️ Unidad:</span>
+                <button id="unitKgBtn" class="unit-btn">kg</button>
+                <button id="unitLbsBtn" class="unit-btn active">lbs</button>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <div class="unit-selector">
-                    <button id="unitKgBtn" class="unit-btn">kg</button>
-                    <button id="unitLbsBtn" class="unit-btn active">lbs</button>
-                </div>
-                <button class="lang-btn active" data-lang="es">ES</button>
-                <button class="lang-btn" data-lang="en">EN</button>
+            <div class="lang-selector">
+                <button class="lang-btn active" data-lang="es">🇪🇸 ES</button>
+                <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
             </div>
         </div>
+    </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="calc">📐 Calculadora</button>
-            <button class="tab-btn" data-tab="optimizer">🧩 Optimizador</button>
-            <button class="tab-btn" data-tab="help">❓ Ayuda</button>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="app">📊 Planificador</button>
+        <button class="tab-btn" data-tab="climate">🌦️ Clima</button>
+        <button class="tab-btn" data-tab="safety">⚠️ Seguridad</button>
+        <button class="tab-btn" data-tab="help">❓ Ayuda</button>
+    </div>
+
+    <div id="appTab" class="tab-content active">
+        <div class="license-panel">
+            <h3 id="licenseTitle">🔑 Activar licencia</h3>
+            <div class="flex-row">
+                <div class="input-group" style="flex:2">
+                    <label>🔐 CLAVE DE LICENCIA</label>
+                    <input type="text" id="rentalKey" placeholder="Ej: RENT-30-xxxxxxxx">
+                    <small>Ingrese la clave que recibió</small>
+                </div>
+                <button id="activateBtn">Activar</button>
+            </div>
+            <div id="licenseStatus" style="margin-top: 12px;"></div>
+            <div id="expiryInfo" style="margin-top: 8px;"></div>
         </div>
 
-        <!-- Calculadora -->
-        <div id="calcTab" class="tab-content active">
-            <div class="license-panel">
-                <div class="flex-row">
-                    <div class="input-group" style="flex:2">
-                        <label>🔐 CLAVE DE LICENCIA</label>
-                        <input type="text" id="rentalKey" placeholder="RENT-30-xxxxxxxx">
-                    </div>
-                    <button id="activateBtn">Activar</button>
-                </div>
-                <div id="licenseStatus" style="font-size: 0.75rem; margin-top: 6px;"></div>
-            </div>
-
-            <div id="appContent">
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>🚛 Transporte</h3>
+        <div id="appContent" class="locked">
+            <div class="grid-2">
+                <div class="card">
+                    <h3 id="palletsTitle">📦 Agregar carga</h3>
+                    <div class="flex-row">
                         <div class="input-group">
-                            <label>TIPO</label>
-                            <select id="trailerType">
-                                <option value="dryvan">Dry Van 53' (636x102x110)</option>
-                                <option value="reefer">Reefer 53' (636x102x108)</option>
-                                <option value="flatbed">Flatbed 48' (576x102x96)</option>
-                                <option value="stepdeck">Step Deck 48' (576x102x120)</option>
-                                <option value="container20">Container 20' (232x92x96)</option>
-                                <option value="container40">Container 40' (474x92x96)</option>
+                            <label>📏 TIPO DE PALLET</label>
+                            <select id="palletTypeSelect">
+                                <option value="american">🇺🇸 Americano (48x40 in)</option>
+                                <option value="euro">🇪🇺 Europalet (47x31.5 in)</option>
                                 <option value="custom">📐 Personalizado</option>
                             </select>
                         </div>
-                        <div class="flex-row">
-                            <div class="input-group"><label>LARGO (in)</label><input type="number" id="trailerLen" value="636" step="1"></div>
-                            <div class="input-group"><label>ANCHO (in)</label><input type="number" id="trailerWid" value="102" step="1"></div>
-                            <div class="input-group"><label>ALTO (in)</label><input type="number" id="trailerHei" value="110" step="1"></div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="input-group">
+                            <label>📏 LARGO (pulgadas)</label>
+                            <input type="number" id="palLargo" value="48" step="1">
+                            <small>Longitud del pallet</small>
                         </div>
-                        <div class="flex-row">
-                            <div class="input-group"><label>CAPACIDAD (lbs)</label><input type="number" id="maxWeight" value="45000" step="1000"></div>
-                            <div class="input-group"><label>LÍMITE/EJE (lbs)</label><input type="number" id="axleLimit" value="20000" step="1000"></div>
+                        <div class="input-group">
+                            <label>📏 ANCHO (pulgadas)</label>
+                            <input type="number" id="palAncho" value="40" step="1">
+                            <small>Ancho del pallet</small>
+                        </div>
+                        <div class="input-group">
+                            <label>📏 ALTO (pulgadas)</label>
+                            <input type="number" id="palAlto" value="48" step="1">
+                            <small>Altura individual</small>
                         </div>
                     </div>
-
-                    <div class="card">
-                        <h3>📦 Pallet</h3>
-                        <div class="flex-row">
-                            <div class="input-group"><label>LARGO (in)</label><input type="number" id="palletLen" value="48" step="1"></div>
-                            <div class="input-group"><label>ANCHO (in)</label><input type="number" id="palletWid" value="40" step="1"></div>
-                            <div class="input-group"><label>ALTO (in)</label><input type="number" id="palletHei" value="48" step="1"></div>
+                    <div class="flex-row">
+                        <div class="input-group">
+                            <label>⚖️ PESO</label>
+                            <input type="number" id="palPeso" value="1500" step="100">
+                            <small id="weightUnitLabel">Peso en libras (lbs)</small>
                         </div>
-                        <div class="flex-row">
-                            <div class="input-group"><label>PESO (lbs)</label><input type="number" id="palletWgt" value="1500" step="100"></div>
-                            <div class="input-group"><label>APILABLE</label>
-                                <select id="stackable">
-                                    <option value="2">Sí (hasta 2)</option>
-                                    <option value="3">Sí (hasta 3)</option>
-                                    <option value="1">No</option>
-                                </select>
-                            </div>
+                        <div class="input-group">
+                            <label>📦 TIPO DE MERCANCÍA</label>
+                            <select id="cargoType">
+                                <option value="cajas">📦 Cajas / Cartón</option>
+                                <option value="tubos">🔘 Tubos / Barras</option>
+                                <option value="tela">🧵 Tela / Rollos</option>
+                                <option value="liquido">💧 Líquido / Tanques</option>
+                                <option value="metal">⚙️ Metal / Acero</option>
+                                <option value="palets">📦 Palets estándar</option>
+                                <option value="maquinaria">🏗️ Maquinaria pesada</option>
+                            </select>
+                            <small>Para sugerencias de seguridad</small>
                         </div>
-                        <button id="calcBtn" class="btn-primary" style="width: 100%; margin-top: 12px;">🔢 CALCULAR</button>
+                    </div>
+                    <div class="flex-row">
+                        <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 5px;"><input type="checkbox" id="stackable" checked> <span id="stackableLabel">Apilable</span></label>
+                        </div>
+                        <div class="input-group">
+                            <label>📚 MÁXIMO POR COLUMNA</label>
+                            <input type="number" id="maxStacks" value="2" min="1" max="10">
+                            <small>Número máximo de pallets apilables</small>
+                        </div>
+                        <button id="addPalletBtn">+ Agregar</button>
+                    </div>
+                    <div id="palletsList" style="max-height: 250px; overflow-y: auto; margin-top: 15px;"></div>
+                    <div class="flex-row" style="margin-top: 10px;">
+                        <button id="clearPalletsBtn" class="btn-outline">Vaciar todo</button>
+                        <button id="exampleBtn" class="btn-outline">📦 Ejemplo mixto</button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3>📊 Resultados</h3>
-                    <div id="calcResult" class="result-card">Complete los datos y presione Calcular</div>
-                    <div id="weightWarning" class="result-card" style="margin-top: 8px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Optimizador -->
-        <div id="optimizerTab" class="tab-content">
-            <div class="card">
-                <h3>📦 Pallets a cargar</h3>
-                <div class="flex-row">
-                    <div class="input-group"><label>LARGO</label><input type="number" id="optLen" value="48" step="1"></div>
-                    <div class="input-group"><label>ANCHO</label><input type="number" id="optWid" value="40" step="1"></div>
-                    <div class="input-group"><label>ALTO</label><input type="number" id="optHei" value="48" step="1"></div>
-                    <div class="input-group"><label>PESO</label><input type="number" id="optWgt" value="1500" step="100"></div>
-                    <div class="input-group"><label>CANTIDAD</label><input type="number" id="optQty" value="1" min="1" step="1"></div>
-                    <button id="addOptBtn">+ Agregar</button>
-                </div>
-                <div id="optList" style="max-height: 180px; overflow-y: auto; margin-top: 10px;"></div>
-                <div class="flex-row" style="margin-top: 8px;">
-                    <button id="clearOptBtn" class="btn-outline">Vaciar</button>
-                    <button id="exampleOptBtn" class="btn-outline">Ejemplo</button>
-                </div>
-
-                <h3 style="margin-top: 15px;">🚛 Transporte</h3>
-                <div class="flex-row">
-                    <div class="input-group"><label>TIPO</label>
-                        <select id="optTrailer">
-                            <option value="dryvan">Dry Van 53'</option>
-                            <option value="flatbed">Flatbed 48'</option>
-                            <option value="stepdeck">Step Deck 48'</option>
+                    <h3 id="trailerTitle">🚛 Configuración</h3>
+                    <div class="input-group">
+                        <label>🚛 TIPO DE REMOLQUE</label>
+                        <select id="trailerSelect">
+                            <option value="dryvan">Dry Van 53' (636x102x110 in)</option>
+                            <option value="reefer">Reefer 53' (636x102x108 in)</option>
+                            <option value="flatbed">Flatbed 48' (576x102x96 in)</option>
+                            <option value="stepdeck">Step Deck 48' (576x102x120 in)</option>
+                            <option value="container20">Container 20' (232x92x96 in)</option>
+                            <option value="container40">Container 40' (474x92x96 in)</option>
                         </select>
                     </div>
-                    <div class="input-group"><label>CAP. EXTRA (lbs)</label><input type="number" id="optExtra" value="0" step="500"></div>
+                    <div class="flex-row">
+                        <div class="input-group">
+                            <label>➕ CAPACIDAD EXTRA (lbs)</label>
+                            <input type="number" id="extraCap" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label>🔢 NÚMERO DE EJES</label>
+                            <input type="number" id="axlesCount" value="5" min="2" max="9">
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-top: 15px; margin-bottom: 10px;">🌦️ CONDICIONES CLIMÁTICAS</h4>
+                    <div class="weather-selector" id="weatherSelector">
+                        <button class="weather-btn active" data-weather="soleado">☀️ Soleado</button>
+                        <button class="weather-btn" data-weather="lluvia">🌧️ Lluvia</button>
+                        <button class="weather-btn" data-weather="nieve">❄️ Nieve</button>
+                        <button class="weather-btn" data-weather="viento">💨 Viento fuerte</button>
+                        <button class="weather-btn" data-weather="tormenta">⛈️ Tormenta</button>
+                        <button class="weather-btn" data-weather="hielo">🧊 Hielo</button>
+                    </div>
+                    <div class="input-group">
+                        <label>💨 VELOCIDAD DEL VIENTO (mph)</label>
+                        <input type="number" id="windSpeed" value="0" step="5">
+                        <small>Para viento fuerte (>25 mph se activan alertas)</small>
+                    </div>
+                    
+                    <button id="optimizeBtn" style="background:#3b82f6; margin-top: 15px; width: 100%; font-size: 1.1rem;">🧩 OPTIMIZAR + ANÁLISIS COMPLETO</button>
                 </div>
-                <button id="runOptBtn" class="btn-primary" style="width: 100%; margin-top: 12px;">🧩 OPTIMIZAR</button>
-
-                <div id="optResult" class="result-card" style="margin-top: 12px;"></div>
-                <canvas id="optCanvas" width="800" height="300" style="width: 100%; height: auto;"></canvas>
             </div>
-        </div>
 
-        <div id="helpTab" class="tab-content">
             <div class="card">
-                <h3>❓ Ayuda rápida</h3>
-                <p>🔐 <strong>Activar licencia:</strong> Ingrese clave RENT-30-xxxxxxxx</p>
-                <p>📐 <strong>Calculadora:</strong> Dimensiones del transporte y del pallet → cuántos caben</p>
-                <p>🧩 <strong>Optimizador:</strong> Agregue diferentes pallets y calcule la mejor disposición</p>
-                <p>🔑 <strong>Administrador:</strong> Click en 🚛 abajo derecha → contraseña <strong>admin2025</strong></p>
+                <h3 id="resultsTitle">📊 Visualización del remolque</h3>
+                <canvas id="packCanvas" width="900" height="450" style="width:100%; height:auto; background:#0f172a;"></canvas>
+                
+                <div class="color-legend" id="colorLegend"></div>
+                
+                <div class="stats">
+                    <div class="stat-card"><strong>📦 Peso total</strong><br><span id="totalWeight">0 lbs</span></div>
+                    <div class="stat-card"><strong>📏 Altura máxima</strong><br><span id="maxHeight">0 in</span></div>
+                    <div class="stat-card"><strong>🎯 Centro gravedad (CG)</strong><br><span id="cog">0 in</span></div>
+                    <div class="stat-card"><strong>📐 Espacio usado</strong><br><span id="spaceUsed">0%</span></div>
+                    <div class="stat-card"><strong>⚠️ Riesgo vuelco</strong><br><span id="rollRisk">-</span></div>
+                </div>
+                
+                <div id="packDetails" class="result-panel"></div>
+                <div id="heightInfo" class="result-panel"></div>
+                <div id="axleInfoSimple" style="margin-top: 15px;"></div>
+                
+                <!-- Panel de ACCIONES CORRECTIVAS (aparece cuando hay advertencias) -->
+                <div id="actionsPanel" class="action-panel" style="display: none;">
+                    <div class="action-title">🔧 ACCIONES CORRECTIVAS - QUÉ HACER</div>
+                    <div id="actionsContent"></div>
+                </div>
+                
+                <div class="climate-panel" id="climateAnalysis">
+                    <div class="climate-title">🌦️ ANÁLISIS CLIMÁTICO</div>
+                    <div id="climateContent">Seleccione condiciones climáticas y optimice</div>
+                </div>
+                
+                <div class="safety-panel" id="safetySuggestions">
+                    <div class="safety-title">⚠️ SUGERENCIAS DE SEGURIDAD</div>
+                    <div id="safetyContent">Optimice para ver recomendaciones</div>
+                </div>
+                
+                <div class="flex-row" style="margin-top: 15px;">
+                    <button id="pdfBtn">📄 Descargar PDF</button>
+                    <button id="resetBtn" class="btn-outline">Limpiar resultados</button>
+                    <button id="clearHistoryBtn" class="btn-danger" style="display: none;">🗑️ Borrar historial</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 id="historyTitle">📜 Historial</h3>
+                <div id="historyList"></div>
             </div>
         </div>
     </div>
 
-    <!-- Botón administrador flotante -->
-    <div id="adminBtn" class="admin-btn" title="Administrador">🚛</div>
-
-    <!-- Modal administrador -->
-    <div id="adminModal" class="admin-modal">
-        <button id="closeModal" class="close-modal">✕</button>
-        <h3>🔑 Generar licencia</h3>
-        <input type="password" id="adminPass" placeholder="Contraseña" style="width: 100%; padding: 8px; border-radius: 40px; margin-bottom: 10px;">
-        <button id="verifyAdmin" style="width: 100%;">Acceder</button>
-        <div id="adminGen" style="display: none; margin-top: 12px;">
-            <select id="licenseDays" style="width: 100%; padding: 8px; border-radius: 40px;">
-                <option value="30">30 días</option>
-                <option value="180">180 días</option>
-                <option value="365">365 días</option>
-            </select>
-            <button id="genLicenseBtn" style="width: 100%; margin-top: 8px;">Generar clave</button>
-            <div id="licenseKeyDisplay" style="margin-top: 8px; background: #0f172a; padding: 6px; border-radius: 8px; word-break: break-all;"></div>
+    <div id="climateTab" class="tab-content">
+        <div class="card"><h2>🌦️ GUÍA POR CONDICIONES CLIMÁTICAS</h2>
+            <div class="climate-panel"><div class="climate-title">💨 VIENTO >25 mph</div><div class="climate-tip">Reduzca velocidad a 45 mph. Aumente amarres 50%. Centro de gravedad ideal <350 in</div></div>
+            <div class="climate-panel"><div class="climate-title">❄️ NIEVE/HIELO</div><div class="climate-tip">Verifique techo (máx 6"). Distancia frenado x3. CG entre 280-320 in ideal</div></div>
+            <div class="climate-panel"><div class="climate-title">🌧️ LLUVIA</div><div class="climate-tip">Reduzca velocidad 20%. Carga líquida requiere reducción adicional 15%</div></div>
         </div>
     </div>
 
-    <script>
-        // ==================== CONVERSIONES ====================
-        let currentUnit = "lbs";
-        const KG_TO_LBS = 2.20462;
+    <div id="safetyTab" class="tab-content">
+        <div class="card"><h2>⚠️ MANUAL DE SEGURIDAD</h2>
+            <div class="safety-panel"><div class="safety-title">📋 CENTRO DE GRAVEDAD (CG)</div>
+                <div class="safety-tip">✅ <strong>CG IDEAL:</strong> Entre 200 y 400 pulgadas desde el frente del trailer</div>
+                <div class="safety-tip">⚠️ <strong>CG ADELANTADO (&lt;200):</strong> Riesgo de pérdida de dirección. Mueva carga pesada hacia atrás</div>
+                <div class="safety-tip">🔴 <strong>CG ATRASADO (&gt;400):</strong> Riesgo de vuelco en curvas. Mueva carga pesada adelante</div>
+                <div class="safety-tip">📏 <strong>CG ALTO + VIENTO:</strong> Reduzca velocidad 30% mínimo</div>
+            </div>
+            <div class="safety-panel"><div class="safety-title">🔧 AMARRES POR TIPO DE CARGA</div>
+                <div class="safety-tip">🔘 TUBOS: Cinchos cada 4 pies + topes laterales + listones entre capas</div>
+                <div class="safety-tip">💧 LÍQUIDOS: Cinchos alta tensión + deflectores + velocidad reducida</div>
+                <div class="safety-tip">⚙️ METAL: Eslingas acero + protectores borde + calzos antideslizantes</div>
+            </div>
+        </div>
+    </div>
 
-        function formatWeight(lbs) {
-            if (currentUnit === "kg") return (lbs / KG_TO_LBS).toFixed(0) + " kg";
-            return lbs.toFixed(0) + " lbs";
+    <div id="helpTab" class="tab-content">
+        <div class="card"><h2>❓ Ayuda</h2>
+            <div class="safety-panel"><h4>🔐 Activar licencia</h4><p>Ingrese clave RENT-30-xxxxxxxx</p></div>
+            <div class="safety-panel"><h4>⚖️ Unidades</h4><p>Botones kg/lbs en esquina superior derecha</p></div>
+            <div class="safety-panel"><h4>🔑 Administrador</h4><p>Haga clic en el 🚛 abajo derecha. Contraseña: <strong>admin2025</strong></p></div>
+        </div>
+    </div>
+</div>
+
+<div id="trailerAdminBtn" class="trailer-button" title="Generador de licencias">🚛</div>
+
+<div id="adminModal" class="admin-modal">
+    <button id="closeModalBtn" class="close-modal">✕</button>
+    <h3>🛠️ Generador de licencias</h3>
+    <div class="input-group"><label>🔐 CONTRASEÑA</label><input type="password" id="adminPasswordInput"></div>
+    <button id="verifyAdminBtn">Acceder</button>
+    <div id="adminGeneratorPanel" style="display: none; margin-top: 15px;">
+        <div class="input-group"><label>📅 DÍAS</label><select id="adminDaysSelect"><option value="30">30 días</option><option value="180">180 días</option><option value="365">365 días</option></select></div>
+        <button id="generateLicenseBtn" style="margin-top: 10px; width: 100%;">Generar clave</button>
+        <div id="generatedKeyDisplay" style="margin-top: 12px; background: #0f172a; padding: 10px; border-radius: 1rem;"></div>
+    </div>
+</div>
+
+<script>
+    // ==================== UNIDADES ====================
+    let currentUnit = "lbs";
+    const KG_TO_LBS = 2.20462;
+    let currentWeather = "soleado";
+    let currentWindSpeed = 0;
+    
+    function updateWeightUnitLabels() {
+        const label = document.getElementById("weightUnitLabel");
+        if (currentUnit === "lbs") label.innerText = "Peso en libras (lbs)";
+        else label.innerText = "Peso en kilogramos (kg)";
+        if (lastResult) drawResults();
+    }
+    
+    document.getElementById("unitKgBtn").onclick = () => { currentUnit = "kg"; document.getElementById("unitKgBtn").classList.add("active"); document.getElementById("unitLbsBtn").classList.remove("active"); updateWeightUnitLabels(); };
+    document.getElementById("unitLbsBtn").onclick = () => { currentUnit = "lbs"; document.getElementById("unitLbsBtn").classList.add("active"); document.getElementById("unitKgBtn").classList.remove("active"); updateWeightUnitLabels(); };
+    
+    // Clima
+    document.querySelectorAll(".weather-btn").forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll(".weather-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentWeather = btn.dataset.weather;
+            if (lastResult) drawResults();
+        };
+    });
+    document.getElementById("windSpeed").oninput = (e) => { currentWindSpeed = parseInt(e.target.value) || 0; if (lastResult) drawResults(); };
+    
+    // ==================== TRADUCCIONES ====================
+    const translations = {
+        es: { subtitleTag: "Centro de Gravedad · Acciones correctivas · Prevención de accidentes", licenseTitle: "🔑 Activar licencia", palletsTitle: "📦 Agregar carga", stackableLabel: "Apilable", trailerTitle: "🚛 Configuración", resultsTitle: "📊 Visualización", historyTitle: "📜 Historial" },
+        en: { subtitleTag: "Center of Gravity · Corrective Actions · Accident Prevention", licenseTitle: "🔑 Activate License", palletsTitle: "📦 Add Cargo", stackableLabel: "Stackable", trailerTitle: "🚛 Configuration", resultsTitle: "📊 Visualization", historyTitle: "📜 History" }
+    };
+    let currentLang = 'es';
+    function updateLanguage() { const t = translations[currentLang]; for(let id in t) { let el = document.getElementById(id); if(el) el.innerText = t[id]; } }
+    document.querySelectorAll(".lang-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentLang = btn.dataset.lang; updateLanguage(); }); });
+    document.querySelectorAll(".tab-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active")); document.getElementById(btn.dataset.tab + "Tab").classList.add("active"); }); });
+    
+    // ==================== LICENCIA ====================
+    const RENTAL_SALT = "RentalLog2025SecretKey";
+    let rentalValid = false, rentalExpiry = null;
+    async function getServerTime() { try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } catch(e) { return new Date(); } }
+    function validateRentalKey(key) { const parts = key.split('-'); if (parts.length !== 3 || parts[0] !== 'RENT') return null; const days = parseInt(parts[1]); if (![30,180,365].includes(days)) return null; const expectedHash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); if (parts[2] !== expectedHash) return null; return { days }; }
+    async function activateLicense(key) { const validation = validateRentalKey(key); if (!validation) return { success: false, reason: "Clave inválida" }; const serverTime = await getServerTime(); const expiry = new Date(serverTime); expiry.setDate(expiry.getDate() + validation.days); localStorage.setItem("rental_license", JSON.stringify({ key, expiry: expiry.toISOString(), days: validation.days })); return { success: true, expiry }; }
+    async function checkLicense() { const stored = localStorage.getItem("rental_license"); if (!stored) return false; try { const data = JSON.parse(stored); const serverTime = await getServerTime(); const expiry = new Date(data.expiry); if (expiry > serverTime) { rentalValid = true; rentalExpiry = expiry; return true; } else { localStorage.removeItem("rental_license"); rentalValid = false; return false; } } catch(e) { return false; } }
+    async function updateLicenseUI() { const statusDiv = document.getElementById("licenseStatus"); const expiryDiv = document.getElementById("expiryInfo"); const appDiv = document.getElementById("appContent"); const clearHistoryBtn = document.getElementById("clearHistoryBtn"); if (rentalValid && rentalExpiry) { const serverTime = await getServerTime(); const daysLeft = Math.ceil((rentalExpiry - serverTime) / (1000*3600*24)); statusDiv.innerHTML = `<span style="color:#10b981;">✅ Licencia activa hasta ${rentalExpiry.toLocaleDateString()}</span>`; expiryDiv.innerHTML = `⏳ Días restantes: ${daysLeft}`; appDiv.classList.remove("locked"); if(clearHistoryBtn) clearHistoryBtn.style.display = "inline-block"; } else { statusDiv.innerHTML = `<span style="color:#ef4444;">❌ Sin licencia válida</span>`; expiryDiv.innerHTML = ""; appDiv.classList.add("locked"); if(clearHistoryBtn) clearHistoryBtn.style.display = "none"; } }
+    document.getElementById("activateBtn").onclick = async () => { const key = document.getElementById("rentalKey").value.trim(); const result = await activateLicense(key); if (result.success) { alert(`¡Activada! Válida hasta ${result.expiry.toLocaleDateString()}`); await checkLicense(); await updateLicenseUI(); } else { alert("Error: " + result.reason); } };
+    
+    // ==================== ADMIN ====================
+    const ADMIN_PASSWORD = "admin2025";
+    function generateLicense(days) { const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); return `RENT-${days}-${hash}`; }
+    const trailerBtn = document.getElementById("trailerAdminBtn");
+    const adminModal = document.getElementById("adminModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const verifyAdminBtn = document.getElementById("verifyAdminBtn");
+    const adminPasswordInput = document.getElementById("adminPasswordInput");
+    const adminGeneratorPanel = document.getElementById("adminGeneratorPanel");
+    const generateLicenseBtn = document.getElementById("generateLicenseBtn");
+    const adminDaysSelect = document.getElementById("adminDaysSelect");
+    const generatedKeyDisplay = document.getElementById("generatedKeyDisplay");
+    trailerBtn.onclick = () => { adminModal.style.display = "block"; };
+    closeModalBtn.onclick = () => { adminModal.style.display = "none"; adminPasswordInput.value = ""; adminGeneratorPanel.style.display = "none"; generatedKeyDisplay.innerHTML = ""; };
+    verifyAdminBtn.onclick = () => { if(adminPasswordInput.value === ADMIN_PASSWORD) { adminGeneratorPanel.style.display = "block"; } else { alert("Contraseña incorrecta"); } };
+    generateLicenseBtn.onclick = () => { const days = parseInt(adminDaysSelect.value); const license = generateLicense(days); generatedKeyDisplay.innerHTML = `<strong>Clave:</strong><br><code style="background:#000; padding:8px; display:block; border-radius:8px;">${license}</code><br><button id="copyLicenseBtn" style="background:#3b82f6;">Copiar</button>`; document.getElementById("copyLicenseBtn").onclick = () => { navigator.clipboard.writeText(license); alert("¡Copiada!"); }; };
+    
+    // ==================== OPTIMIZACIÓN ====================
+    const TRAILERS = { dryvan: { name: "Dry Van", length: 636, width: 102, height: 110, maxWeight: 45000 }, reefer: { name: "Reefer", length: 636, width: 102, height: 108, maxWeight: 44000 }, flatbed: { name: "Flatbed", length: 576, width: 102, height: 96, maxWeight: 48000 }, stepdeck: { name: "Step Deck", length: 576, width: 102, height: 120, maxWeight: 48000 }, container20: { name: "Container 20'", length: 232, width: 92, height: 96, maxWeight: 40000 }, container40: { name: "Container 40'", length: 474, width: 92, height: 96, maxWeight: 44000 } };
+    let pallets = []; let lastResult = null;
+    
+    function getPalletColor(index) { const hue = (index * 37) % 360; return `hsl(${hue}, 70%, 55%)`; }
+    document.getElementById("palletTypeSelect").onchange = function() { const type = this.value; if (type === 'american') { document.getElementById("palLargo").value = 48; document.getElementById("palAncho").value = 40; } else if (type === 'euro') { document.getElementById("palLargo").value = 47; document.getElementById("palAncho").value = 31.5; } };
+    
+    function renderPallets() { const div = document.getElementById("palletsList"); if (pallets.length === 0) { div.innerHTML = "<div style='padding:20px;text-align:center'>📭 No hay pallets</div>"; return; } div.innerHTML = pallets.map((p, i) => `<div class="pallet-item"><span style="display:flex; align-items:center; gap:8px;"><span style="display:inline-block; width:20px; height:20px; border-radius:4px; background:${getPalletColor(i)};"></span>${p.type === 'american' ? '🇺🇸' : (p.type === 'euro' ? '🇪🇺' : '📦')} ${p.length}"x${p.width}"x${p.height}" | ${p.weight} lbs | ${p.cargoType}</span><button class="delPallet" data-idx="${i}" style="background:#ef4444; padding:5px 12px;">X</button></div>`).join(""); document.querySelectorAll(".delPallet").forEach(btn => { btn.addEventListener("click", (e) => { pallets.splice(parseInt(btn.dataset.idx), 1); renderPallets(); clearResults(); }); }); }
+    
+    function buildStacks(palletsList) { const groups = new Map(); for (let p of palletsList) { const key = `${p.length}x${p.width}_${p.stackable}_${p.maxStacks}_${p.type}_${p.cargoType}`; if (!groups.has(key)) groups.set(key, { ...p, count: 0 }); groups.get(key).count++; } let stacks = []; for (let [_, g] of groups.entries()) { const maxPerStack = g.stackable ? g.maxStacks : 1; const numStacks = Math.ceil(g.count / maxPerStack); const perStack = Math.min(maxPerStack, g.count); for (let i = 0; i < numStacks; i++) { const cnt = (i === numStacks-1) ? g.count - (i * perStack) : perStack; stacks.push({ length: g.length, width: g.width, height: cnt * g.height, weight: cnt * g.weight, palletCount: cnt, type: g.type, cargoType: g.cargoType }); } } return stacks; }
+    
+    // Función para generar ACCIONES CORRECTIVAS específicas
+    function getCorrectiveActions(cog, maxHeight, trailerHeight, totalWeight, maxCapacity, cargoType, weather, windSpeed) {
+        const actions = [];
+        let hasWarning = false;
+        
+        // Acciones por Centro de Gravedad
+        if (cog < 200) {
+            hasWarning = true;
+            actions.push("🔴 <strong>CG DEMASIADO ADELANTE (&lt;200 in)</strong> - Riesgo de pérdida de dirección");
+            actions.push("✅ <strong>ACCIÓN:</strong> Mueva los pallets MÁS PESADOS hacia ATRÁS (puertas). Reubique al menos 2-3 palets pesados en la zona trasera.");
+            actions.push("✅ <strong>ACCIÓN:</strong> Si tiene palets livianos adelante, cámbielos por pesados. La carga debe distribuirse de PESADO a LIVIANO de adelante hacia atrás.");
+        } else if (cog > 400) {
+            hasWarning = true;
+            actions.push("🔴 <strong>CG DEMASIADO ATRASADO (&gt;400 in)</strong> - Alto riesgo de vuelco en curvas");
+            actions.push("✅ <strong>ACCIÓN:</strong> Mueva los pallets MÁS PESADOS hacia ADELANTE (cabina). Coloque los palets de mayor peso en las primeras posiciones.");
+            actions.push("✅ <strong>ACCIÓN:</strong> Si tiene palets muy pesados atrás, transpórtelos adelante. El CG ideal es entre 250-350 in.");
+        } else if (cog >= 200 && cog <= 400) {
+            actions.push("✅ <strong>CG CORRECTO</strong> - El centro de gravedad está dentro del rango seguro (200-400 in)");
         }
-
-        document.getElementById("unitKgBtn").onclick = () => {
-            currentUnit = "kg";
-            document.getElementById("unitKgBtn").classList.add("active");
-            document.getElementById("unitLbsBtn").classList.remove("active");
-            if (typeof lastCalcResult !== 'undefined') doCalc();
-            if (lastOptResult) displayOptimization();
-        };
-
-        document.getElementById("unitLbsBtn").onclick = () => {
-            currentUnit = "lbs";
-            document.getElementById("unitLbsBtn").classList.add("active");
-            document.getElementById("unitKgBtn").classList.remove("active");
-            if (typeof lastCalcResult !== 'undefined') doCalc();
-            if (lastOptResult) displayOptimization();
-        };
-
-        // ==================== TRADUCCIÓN ====================
-        let currentLang = 'es';
-        document.querySelectorAll(".lang-btn").forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                currentLang = btn.dataset.lang;
-            };
-        });
-
-        // ==================== PESTAÑAS ====================
-        document.querySelectorAll(".tab-btn").forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-                document.getElementById(btn.dataset.tab + "Tab").classList.add("active");
-            };
-        });
-
-        // ==================== LICENCIA ====================
-        const RENTAL_SALT = "RentalLog2025SecretKey";
-        let rentalValid = false;
-
-        async function getServerTime() {
-            try {
-                const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
-                const data = await res.json();
-                return new Date(data.utc_datetime);
-            } catch (e) {
-                return new Date();
-            }
+        
+        // Acciones por altura
+        if (maxHeight > trailerHeight) {
+            hasWarning = true;
+            actions.push("🔴 <strong>ALTURA EXCEDE EL TRAILER</strong> - No se puede cargar así");
+            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca el número de niveles apilados. Si los pallets son apilables, use menos niveles por columna.");
+            actions.push("✅ <strong>ACCIÓN:</strong> Considere usar un trailer con mayor altura interna (Step Deck: 120 in)");
+        } else if (maxHeight > trailerHeight * 0.85) {
+            hasWarning = true;
+            actions.push("⚠️ <strong>ALTURA CRÍTICA</strong> - Carga muy alta, riesgo de vuelco +45%");
+            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca la altura apilando menos niveles. Reduzca velocidad en curvas un 30%.");
+            actions.push("✅ <strong>ACCIÓN:</strong> Centre la carga lo más bajo posible. Los palets pesados deben ir abajo.");
         }
-
-        function validateKey(key) {
-            const parts = key.split('-');
-            if (parts.length !== 3 || parts[0] !== 'RENT') return null;
-            const days = parseInt(parts[1]);
-            if (![30, 180, 365].includes(days)) return null;
-            const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
-            if (parts[2] !== hash) return null;
-            return { days };
+        
+        // Acciones por peso
+        if (totalWeight > maxCapacity) {
+            hasWarning = true;
+            actions.push("🔴 <strong>SOBREPESO</strong> - Excede la capacidad del trailer");
+            actions.push("✅ <strong>ACCIÓN:</strong> Retire al menos " + Math.ceil((totalWeight - maxCapacity) / 500) + " palets o redistribuya la carga en otro vehículo.");
         }
-
-        async function activateLicense(key) {
-            const v = validateKey(key);
-            if (!v) return false;
-            const serverTime = await getServerTime();
-            const expiry = new Date(serverTime);
-            expiry.setDate(expiry.getDate() + v.days);
-            localStorage.setItem("rental_license", JSON.stringify({ expiry: expiry.toISOString() }));
-            return true;
+        
+        // Acciones por clima
+        if (weather === "viento" || windSpeed > 25) {
+            hasWarning = true;
+            actions.push("💨 <strong>VIENTO FUERTE</strong> - Riesgo extremo de vuelco lateral");
+            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca velocidad máxima a 45 mph. Aumente el número de amarres en un 50%.");
+            if (cog > 350) actions.push("✅ <strong>ACCIÓN:</strong> El CG está atrás (" + cog + " in). Mueva peso adelante URGENTE antes de salir.");
         }
-
-        async function checkLicense() {
-            const stored = localStorage.getItem("rental_license");
-            if (!stored) return false;
-            try {
-                const data = JSON.parse(stored);
-                const serverTime = await getServerTime();
-                const expiry = new Date(data.expiry);
-                if (expiry > serverTime) {
-                    rentalValid = true;
-                    return true;
-                } else {
-                    localStorage.removeItem("rental_license");
-                    rentalValid = false;
-                    return false;
-                }
-            } catch (e) {
-                return false;
-            }
+        if (weather === "nieve" || weather === "hielo") {
+            hasWarning = true;
+            actions.push("❄️ <strong>NIEVE/HIELO</strong> - Condiciones peligrosas");
+            actions.push("✅ <strong>ACCIÓN:</strong> Verifique que el techo no tenga más de 6 pulgadas de nieve. Aumente distancia de frenado a 3x lo normal.");
         }
-
-        async function updateLicenseUI() {
-            const statusDiv = document.getElementById("licenseStatus");
-            if (rentalValid) {
-                statusDiv.innerHTML = '<span style="color: #10b981;">✅ Licencia activa</span>';
-            } else {
-                statusDiv.innerHTML = '<span style="color: #ef4444;">❌ Sin licencia válida</span>';
-            }
+        
+        // Acciones por tipo de carga
+        if (cargoType === "liquido" && (weather === "lluvia" || weather === "tormenta")) {
+            hasWarning = true;
+            actions.push("💧 <strong>CARGA LÍQUIDA + LLUVIA</strong> - Efecto ola peligroso");
+            actions.push("✅ <strong>ACCIÓN:</strong> Reduzca velocidad adicional 15%. Evite frenadas bruscas y curvas cerradas.");
         }
-
-        document.getElementById("activateBtn").onclick = async () => {
-            const key = document.getElementById("rentalKey").value.trim();
-            if (await activateLicense(key)) {
-                await checkLicense();
-                await updateLicenseUI();
-                alert("✅ Licencia activada correctamente");
-            } else {
-                alert("❌ Clave inválida");
-            }
-        };
-
-        // ==================== ADMINISTRADOR OCULTO ====================
-        document.getElementById("adminBtn").onclick = () => {
-            document.getElementById("adminModal").style.display = "block";
-        };
-
-        document.getElementById("closeModal").onclick = () => {
-            document.getElementById("adminModal").style.display = "none";
-            document.getElementById("adminGen").style.display = "none";
-        };
-
-        document.getElementById("verifyAdmin").onclick = () => {
-            const pass = document.getElementById("adminPass").value;
-            if (pass === "admin2025") {
-                document.getElementById("adminGen").style.display = "block";
-            } else {
-                alert("Contraseña incorrecta");
-            }
-        };
-
-        document.getElementById("genLicenseBtn").onclick = () => {
-            const days = parseInt(document.getElementById("licenseDays").value);
-            const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0, 16);
-            const license = `RENT-${days}-${hash}`;
-            document.getElementById("licenseKeyDisplay").innerHTML = `<strong>Clave:</strong><br><code style="background:#000; padding:4px; display:block; border-radius:4px;">${license}</code><br><button id="copyKeyBtn" style="background:#3b82f6; margin-top:4px;">Copiar</button>`;
-            document.getElementById("copyKeyBtn").onclick = () => {
-                navigator.clipboard.writeText(license);
-                alert("¡Clave copiada!");
-            };
-        };
-
-        // ==================== TRAILERS PREDEFINIDOS ====================
-        const TRAILERS = {
-            dryvan: { len: 636, wid: 102, hei: 110, maxW: 45000 },
-            reefer: { len: 636, wid: 102, hei: 108, maxW: 44000 },
-            flatbed: { len: 576, wid: 102, hei: 96, maxW: 48000 },
-            stepdeck: { len: 576, wid: 102, hei: 120, maxW: 48000 },
-            container20: { len: 232, wid: 92, hei: 96, maxW: 40000 },
-            container40: { len: 474, wid: 92, hei: 96, maxW: 44000 }
-        };
-
-        document.getElementById("trailerType").onchange = function () {
-            const t = TRAILERS[this.value];
-            if (t) {
-                document.getElementById("trailerLen").value = t.len;
-                document.getElementById("trailerWid").value = t.wid;
-                document.getElementById("trailerHei").value = t.hei;
-                document.getElementById("maxWeight").value = t.maxW;
-            }
-        };
-
-        // ==================== CALCULADORA ====================
-        let lastCalcResult = false;
-
-        function doCalc() {
-            const tLen = parseFloat(document.getElementById("trailerLen").value);
-            const tWid = parseFloat(document.getElementById("trailerWid").value);
-            const tHei = parseFloat(document.getElementById("trailerHei").value);
-            const maxW = parseFloat(document.getElementById("maxWeight").value);
-            const axleLimit = parseFloat(document.getElementById("axleLimit").value);
-            const pLen = parseFloat(document.getElementById("palletLen").value);
-            const pWid = parseFloat(document.getElementById("palletWid").value);
-            const pHei = parseFloat(document.getElementById("palletHei").value);
-            const pWgt = parseFloat(document.getElementById("palletWgt").value);
-            const stack = parseInt(document.getElementById("stackable").value);
-
-            if (isNaN(tLen) || isNaN(tWid) || isNaN(pLen) || isNaN(pWid)) {
-                document.getElementById("calcResult").innerHTML = '<span class="warning">⚠️ Complete todos los campos</span>';
-                return;
-            }
-
-            const fitLen = Math.floor(tLen / pLen);
-            const fitWid = Math.floor(tWid / pWid);
-            const perLayer = fitLen * fitWid;
-            const maxStackByHei = Math.floor(tHei / pHei);
-            const stacks = Math.min(stack, maxStackByHei);
-            const total = perLayer * stacks;
-            const totalWeight = total * pWgt;
-            const weightOk = totalWeight <= maxW;
-            const axleOk = (totalWeight / 2) <= axleLimit;
-
-            let resultHtml = `
-                <div class="grid-3">
-                    <div>📏 Por largo: ${fitLen}</div>
-                    <div>📏 Por ancho: ${fitWid}</div>
-                    <div>📦 Por capa: ${perLayer}</div>
-                    <div>📚 Niveles: ${stacks} (máx ${maxStackByHei})</div>
-                    <div><strong>TOTAL: <span class="result-number">${total}</span> pallets</strong></div>
-                    <div>⚖️ Peso: ${formatWeight(totalWeight)} / ${formatWeight(maxW)}</div>
-                </div>
-            `;
-
-            let warnHtml = "";
-            if (!weightOk) warnHtml += `<div class="warning">⚠️ Peso total excede capacidad (${formatWeight(totalWeight)} > ${formatWeight(maxW)})</div>`;
-            if (!axleOk) warnHtml += `<div class="warning">⚠️ Carga por eje excede límite FMCSA (${formatWeight(totalWeight / 2)} > ${formatWeight(axleLimit)})</div>`;
-            if (stacks > maxStackByHei) warnHtml += `<div class="warning">⚠️ Altura: solo caben ${maxStackByHei} niveles (${stacks} solicitados)</div>`;
-
-            document.getElementById("calcResult").innerHTML = resultHtml;
-            document.getElementById("weightWarning").innerHTML = warnHtml || '<div class="success">✅ Carga dentro de límites legales</div>';
-            lastCalcResult = true;
+        if (cargoType === "tubos") {
+            actions.push("🔘 <strong>CARGA DE TUBOS</strong> - Riesgo de rodamiento");
+            actions.push("✅ <strong>ACCIÓN:</strong> Coloque listones de madera entre cada capa de tubos. Use amarres cada 4 pies.");
         }
-
-        document.getElementById("calcBtn").onclick = doCalc;
-
-        // ==================== OPTIMIZADOR ====================
-        let optPallets = [];
-        let lastOptResult = false;
-
-        function renderOptList() {
-            const div = document.getElementById("optList");
-            if (optPallets.length === 0) {
-                div.innerHTML = "<div style='padding: 10px; text-align: center'>📭 Sin pallets</div>";
-                return;
-            }
-            div.innerHTML = optPallets.map((p, i) => `
-                <div class="pallet-item">
-                    <span>📦 ${p.len}"x${p.wid}"x${p.hei}" | ${formatWeight(p.wgt)} | x${p.qty}</span>
-                    <button class="delOpt" data-idx="${i}" style="background: #ef4444; padding: 2px 10px;">X</button>
-                </div>
-            `).join("");
-            document.querySelectorAll(".delOpt").forEach(btn => {
-                btn.onclick = () => {
-                    optPallets.splice(parseInt(btn.dataset.idx), 1);
-                    renderOptList();
-                    clearOptResults();
-                };
-            });
+        
+        return { actions, hasWarning };
+    }
+    
+    function getWeatherRecommendations(weather, windSpeed, cargoType, cog, maxHeight, trailerHeight) {
+        const tips = [];
+        let riskMultiplier = 1;
+        if (weather === "viento" || windSpeed > 25) { tips.push("💨 <strong>VIENTO FUERTE:</strong> Reduzca velocidad a 45 mph. Aumente amarres 50%."); riskMultiplier = 1.5; }
+        if (weather === "nieve") { tips.push("❄️ <strong>NIEVE:</strong> Verifique techo (máx 6 pulgadas). Distancia frenado x3."); riskMultiplier = 1.3; }
+        if (weather === "hielo") { tips.push("🧊 <strong>HIELO:</strong> PELIGRO EXTREMO. Velocidad máxima 35 mph."); riskMultiplier = 1.8; }
+        if (weather === "lluvia") { tips.push("🌧️ <strong>LLUVIA:</strong> Reduzca velocidad 20%."); riskMultiplier = 1.2; }
+        if (weather === "tormenta") { tips.push("⛈️ <strong>TORMENTA:</strong> Considere suspender viaje."); riskMultiplier = 2.0; }
+        if (cog < 200 || cog > 450) tips.push("⚠️ CG CRÍTICO. Reubique carga antes de salir.");
+        if (maxHeight > trailerHeight * 0.85) tips.push("📏 ALTURA EXCESIVA. Riesgo de vuelco +45% en curvas.");
+        return { tips, riskMultiplier };
+    }
+    
+    function getSafetySuggestions(cargoType, cog, maxHeight, trailerHeight, totalWeight, maxCapacity) {
+        const suggestions = []; const amarres = []; let riskLevel = "BAJO";
+        if(cargoType === "tubos") { suggestions.push("🔘 TUBOS: Amarres cada 4 pies + topes laterales"); amarres.push("CINCHOS CADA 4 PIES + TOPES"); riskLevel = "ALTO"; }
+        else if(cargoType === "liquido") { suggestions.push("💧 LÍQUIDOS: Efecto ola - Reduzca velocidad 30%"); amarres.push("CINCHOS ALTA TENSIÓN"); riskLevel = "MUY ALTO"; }
+        else if(cargoType === "metal") { suggestions.push("⚙️ METAL: Amarres cada 3 pies, protección anti-abrasión"); amarres.push("ESLINGAS ACERO"); riskLevel = "ALTO"; }
+        else { suggestions.push("📦 Distribuya pesos pesados adelante"); amarres.push("BARRAS CARGA + CINCHOS"); riskLevel = "MEDIO"; }
+        if(cog < 150) { suggestions.push("⚠️ CG MUY ADELANTE - Mueva peso atrás"); riskLevel = "ALTO"; }
+        if(cog > 450) { suggestions.push("⚠️ CG MUY ATRÁS - Mueva peso adelante"); riskLevel = "ALTO"; }
+        return { suggestions, amarres, riskLevel };
+    }
+    
+    function optimize() { if (pallets.length === 0) { alert("Agregue al menos un pallet"); return; } 
+        const trailerId = document.getElementById("trailerSelect").value; const trailer = TRAILERS[trailerId]; const extraCap = parseFloat(document.getElementById("extraCap").value) || 0; const axlesCount = parseInt(document.getElementById("axlesCount").value) || 5; const maxCapacity = trailer.maxWeight + extraCap; 
+        let stacks = buildStacks(pallets).filter(s => s.height <= trailer.height); if (stacks.length === 0) { document.getElementById("packDetails").innerHTML = "❌ Todos los stacks exceden altura"; return; } 
+        stacks.sort((a, b) => b.weight - a.weight); let placed = [], currentX = 0; for (let s of stacks) { if (currentX + s.length > trailer.length) break; placed.push({ ...s, startX: currentX, centerX: currentX + s.length/2 }); currentX += s.length; } 
+        const totalWeight = placed.reduce((s,p) => s + p.weight, 0); const totalPalletUnits = placed.reduce((s,p) => s + p.palletCount, 0); const cog = totalWeight > 0 ? placed.reduce((s,p) => s + p.weight * p.centerX, 0) / totalWeight : 0; const maxHeight = Math.max(...placed.map(p => p.height), 0); const spacePercent = (currentX / trailer.length) * 100; 
+        let axlePositions = []; for (let i = 0; i < axlesCount; i++) { let pos = trailer.length - (i+1) * (trailer.length / (axlesCount+1)); axlePositions.push(Math.max(0, Math.min(trailer.length, pos))); } 
+        let axleLoads = new Array(axlesCount).fill(0); for (let p of placed) { for (let a = 0; a < axlesCount; a++) { axleLoads[a] += p.weight / (Math.abs(p.centerX - axlePositions[a]) + 20); } } 
+        let sumInv = axleLoads.reduce((a,b) => a+b, 0); if (sumInv > 0) axleLoads = axleLoads.map(v => (v / sumInv) * totalWeight); 
+        const SIMPLE_LIMIT = 20000, TANDEM_LIMIT = 34000; let warnings = []; for (let i = 0; i < axlesCount; i++) if (axleLoads[i] > SIMPLE_LIMIT) warnings.push(`Eje ${i+1}: ${axleLoads[i].toFixed(0)} lbs > 20,000 lbs`); for (let i = 0; i < axlesCount-1; i+=2) { let tandem = axleLoads[i] + (axleLoads[i+1]||0); if (tandem > TANDEM_LIMIT) warnings.push(`Tándem ${i+1}-${i+2}: ${tandem.toFixed(0)} lbs > 34,000 lbs`); } 
+        if (maxHeight > trailer.height) warnings.push(`Altura ${maxHeight} in > trailer ${trailer.height} in`); if (totalWeight > maxCapacity) warnings.push(`Peso ${totalWeight.toFixed(0)} lbs > capacidad ${maxCapacity} lbs`);
+        
+        const cargoCounts = {}; placed.forEach(p => { cargoCounts[p.cargoType] = (cargoCounts[p.cargoType] || 0) + 1; });
+        let mainCargo = "mixto"; let maxCount = 0; for(let c in cargoCounts) { if(cargoCounts[c] > maxCount) { maxCount = cargoCounts[c]; mainCargo = c; } }
+        const safety = getSafetySuggestions(mainCargo, cog, maxHeight, trailer.height, totalWeight, maxCapacity);
+        const weather = getWeatherRecommendations(currentWeather, currentWindSpeed, mainCargo, cog, maxHeight, trailer.height);
+        const corrective = getCorrectiveActions(cog, maxHeight, trailer.height, totalWeight, maxCapacity, mainCargo, currentWeather, currentWindSpeed);
+        
+        let rollRisk = safety.riskLevel;
+        if(weather.riskMultiplier > 1.5) rollRisk = "EXTREMO - Clima adverso";
+        if(maxHeight > trailer.height * 0.85) rollRisk = "MUY ALTO - Altura crítica";
+        if(cog < 150 || cog > 450) rollRisk = "EXTREMO - CG fuera de rango";
+        
+        lastResult = { placed, totalWeight, totalPalletUnits, cog, maxHeight, axleLoads, warnings, trailerLength: trailer.length, trailerWidth: trailer.width, trailerHeight: trailer.height, spacePercent, axlesCount, mainCargo, safetySuggestions: safety.suggestions, safetyAmarres: safety.amarres, rollRisk, weatherTips: weather.tips, correctiveActions: corrective.actions, hasWarning: corrective.hasWarning };
+        drawResults(); saveHistory(); }
+    
+    function drawResults() { if (!lastResult) return;
+        const displayWeight = currentUnit === "kg" ? (lastResult.totalWeight / KG_TO_LBS).toFixed(0) + " kg" : lastResult.totalWeight.toFixed(0) + " lbs";
+        document.getElementById("totalWeight").innerHTML = displayWeight;
+        document.getElementById("maxHeight").innerText = `${lastResult.maxHeight} in`;
+        // Color del CG según valor
+        const cogSpan = document.getElementById("cog");
+        const cogValue = lastResult.cog;
+        let cogColor = "";
+        if (cogValue < 200) cogColor = "danger";
+        else if (cogValue > 400) cogColor = "danger";
+        else if (cogValue < 250 || cogValue > 350) cogColor = "warning";
+        else cogColor = "success";
+        cogSpan.innerHTML = `<span class="${cogColor}" style="font-weight:bold;">${cogValue.toFixed(1)} in</span>`;
+        document.getElementById("spaceUsed").innerText = `${lastResult.spacePercent.toFixed(1)}%`;
+        document.getElementById("rollRisk").innerHTML = `<span class="${lastResult.rollRisk.includes('BAJO') ? 'success' : 'danger'}">${lastResult.rollRisk}</span>`;
+        
+        const canvas = document.getElementById("packCanvas"); canvas.width = 900; canvas.height = 450; const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 900, 450);
+        const sx = (canvas.width - 80) / lastResult.trailerLength; const sy = (canvas.height - 100) / lastResult.trailerWidth; const offX = 40, offY = 50;
+        ctx.strokeStyle = "#5b6e8c"; ctx.lineWidth = 3; ctx.strokeRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy);
+        ctx.fillStyle = "#1a2538"; ctx.fillRect(offX, offY, lastResult.trailerLength * sx, lastResult.trailerWidth * sy);
+        for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; const x = offX + p.startX * sx; const y = offY; const w = p.length * sx; const h = p.width * sy; ctx.fillStyle = getPalletColor(i); ctx.fillRect(x, y, w, h); ctx.strokeStyle = "white"; ctx.lineWidth = 1.5; ctx.strokeRect(x, y, w, h); ctx.fillStyle = "white"; ctx.font = "bold 14px monospace"; ctx.fillText(`${currentUnit === "kg" ? (p.weight / KG_TO_LBS).toFixed(0) : p.weight} ${currentUnit}`, x + 8, y + 24); ctx.fillStyle = "#ddd"; ctx.font = "12px monospace"; ctx.fillText(`${p.length}"x${p.width}"`, x + 8, y + 44); if (p.palletCount > 1) { ctx.fillStyle = "#fbbf24"; ctx.font = "bold 14px monospace"; ctx.fillText(`x${p.palletCount}`, x + 8, y + 64); } }
+        ctx.fillStyle = "#94a3b8"; ctx.font = "bold 12px monospace"; ctx.fillText(`Largo: ${lastResult.trailerLength}"`, offX, offY - 12);
+        ctx.fillStyle = "#f59e0b"; ctx.font = "bold 14px monospace"; ctx.fillText("⬅️ DELANTERO", offX, offY - 28);
+        ctx.fillStyle = "#f59e0b"; ctx.font = "bold 14px monospace"; ctx.fillText("TRASERO ➡️", offX + lastResult.trailerLength * sx - 140, offY - 28);
+        
+        const legendDiv = document.getElementById("colorLegend"); let legendHtml = `<div class="legend-item"><span class="legend-color" style="background:#1a2538;"></span><span>Trailer</span></div>`;
+        for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; legendHtml += `<div class="legend-item"><span class="legend-color" style="background:${getPalletColor(i)};"></span><span>${i+1}: ${currentUnit === "kg" ? (p.weight / KG_TO_LBS).toFixed(0) : p.weight} ${currentUnit}</span></div>`; }
+        legendDiv.innerHTML = legendHtml;
+        
+        let stacksHtml = `<strong>📦 ORDEN DE CARGA:</strong><br>`; for (let i = 0; i < lastResult.placed.length; i++) { const p = lastResult.placed[i]; stacksHtml += `<span style="display:inline-block; width:14px; height:14px; background:${getPalletColor(i)}; border-radius:2px; margin-right:6px;"></span> <strong>${i+1}:</strong> ${currentUnit === "kg" ? (p.weight / KG_TO_LBS).toFixed(0) : p.weight} ${currentUnit} | ${p.height}" altura<br>`; }
+        document.getElementById("packDetails").innerHTML = stacksHtml;
+        
+        let heightHtml = `<strong>📏 Altura máxima:</strong> ${lastResult.maxHeight} in / ${lastResult.trailerHeight} in (${((lastResult.maxHeight/lastResult.trailerHeight)*100).toFixed(0)}%)`; heightHtml += lastResult.maxHeight > lastResult.trailerHeight ? `<span class="danger"> ⚠️ EXCEDE</span>` : `<span class="badge"> ✅ Válido</span>`;
+        document.getElementById("heightInfo").innerHTML = heightHtml;
+        
+        let axleHtml = `<h4>⚖️ CARGA POR EJES</h4><div class="axle-table">`; for (let i = 0; i < lastResult.axleLoads.length; i++) { const load = lastResult.axleLoads[i]; const limit = 20000; let status = "verde", statusText = "DENTRO ✓"; if (load > limit) { status = "rojo"; statusText = "EXCEDE ✗"; } else if (load > limit * 0.9) { status = "amarillo"; statusText = "CERCA ⚠️"; } axleHtml += `<div class="axle-item"><strong>Eje ${i+1}</strong><br><span>${load.toFixed(0)} lbs</span><div class="axle-status ${status}"></div><small>${statusText}</small></div>`; } axleHtml += `</div>`; if (lastResult.warnings.length) axleHtml += `<div style="margin-top:15px; background:#7f1d1d; padding:12px; border-radius:1rem;"><span class="danger">⚠️ ADVERTENCIAS:</span><br>${lastResult.warnings.join("<br>")}</div>`; else axleHtml += `<div class="badge">✅ CARGA APROBADA</div>`; document.getElementById("axleInfoSimple").innerHTML = axleHtml;
+        
+        // Panel de acciones correctivas
+        const actionsPanel = document.getElementById("actionsPanel");
+        const actionsContent = document.getElementById("actionsContent");
+        if (lastResult.hasWarning) {
+            actionsPanel.style.display = "block";
+            let actionsHtml = "";
+            lastResult.correctiveActions.forEach(action => { actionsHtml += `<div class="action-tip">${action}</div>`; });
+            actionsContent.innerHTML = actionsHtml;
+        } else {
+            actionsPanel.style.display = "none";
         }
-
-        function clearOptResults() {
-            document.getElementById("optResult").innerHTML = "";
-            const canvas = document.getElementById("optCanvas");
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            lastOptResult = false;
-        }
-
-        document.getElementById("addOptBtn").onclick = () => {
-            const len = parseFloat(document.getElementById("optLen").value);
-            const wid = parseFloat(document.getElementById("optWid").value);
-            const hei = parseFloat(document.getElementById("optHei").value);
-            const wgt = parseFloat(document.getElementById("optWgt").value);
-            const qty = parseInt(document.getElementById("optQty").value);
-            if (isNaN(len) || isNaN(wid) || isNaN(hei) || isNaN(wgt) || qty < 1) return;
-            optPallets.push({ len, wid, hei, wgt, qty });
-            renderOptList();
-            clearOptResults();
-        };
-
-        document.getElementById("clearOptBtn").onclick = () => {
-            optPallets = [];
-            renderOptList();
-            clearOptResults();
-        };
-
-        document.getElementById("exampleOptBtn").onclick = () => {
-            optPallets = [
-                { len: 48, wid: 40, hei: 48, wgt: 2200, qty: 2 },
-                { len: 48, wid: 40, hei: 48, wgt: 1800, qty: 3 },
-                { len: 42, wid: 42, hei: 50, wgt: 1500, qty: 1 }
-            ];
-            renderOptList();
-            clearOptResults();
-        };
-
-        function optimizeLoad() {
-            if (optPallets.length === 0) {
-                alert("Agregue al menos un tipo de pallet");
-                return;
-            }
-
-            const trailerId = document.getElementById("optTrailer").value;
-            const trailer = TRAILERS[trailerId];
-            const extra = parseFloat(document.getElementById("optExtra").value) || 0;
-            const maxWeight = trailer.maxW + extra;
-
-            // Expandir por cantidad
-            let items = [];
-            optPallets.forEach(p => {
-                for (let i = 0; i < p.qty; i++) {
-                    items.push({ len: p.len, wid: p.wid, hei: p.hei, wgt: p.wgt });
-                }
-            });
-
-            // Ordenar por peso descendente (más pesados adelante)
-            items.sort((a, b) => b.wgt - a.wgt);
-
-            let placed = [];
-            let currentX = 0;
-            let totalWeight = 0;
-            let maxHeight = 0;
-
-            for (let it of items) {
-                if (currentX + it.len > trailer.len) break;
-                placed.push({
-                    ...it,
-                    startX: currentX,
-                    centerX: currentX + it.len / 2
-                });
-                currentX += it.len;
-                totalWeight += it.wgt;
-                maxHeight = Math.max(maxHeight, it.hei);
-            }
-
-            const spacePercent = (currentX / trailer.len) * 100;
-            const cog = totalWeight > 0 ? placed.reduce((s, p) => s + p.wgt * p.centerX, 0) / totalWeight : 0;
-
-            let warnings = [];
-            if (totalWeight > maxWeight) warnings.push(`⚠️ Peso total excede capacidad: ${formatWeight(totalWeight)} > ${formatWeight(maxWeight)}`);
-            if (cog < 200) warnings.push(`⚠️ Centro de gravedad muy adelante (${cog.toFixed(0)} in) - Mueva peso hacia atrás`);
-            if (cog > 400) warnings.push(`⚠️ Centro de gravedad muy atrás (${cog.toFixed(0)} in) - Mueva peso hacia adelante`);
-            if (maxHeight > trailer.hei) warnings.push(`⚠️ Altura de pallet (${maxHeight} in) excede altura del trailer (${trailer.hei} in)`);
-
-            lastOptResult = { placed, totalWeight, cog, spacePercent, warnings, trailerLen: trailer.len, trailerWid: trailer.wid, maxHeight };
-            displayOptimization();
-        }
-
-        function displayOptimization() {
-            if (!lastOptResult) return;
-
-            let html = `
-                <div class="grid-3">
-                    <div>📦 Pallets colocados: ${lastOptResult.placed.length}</div>
-                    <div>⚖️ Peso total: ${formatWeight(lastOptResult.totalWeight)}</div>
-                    <div>🎯 Centro gravedad: ${lastOptResult.cog.toFixed(0)} in</div>
-                    <div>📐 Espacio usado: ${lastOptResult.spacePercent.toFixed(0)}%</div>
-                </div>
-            `;
-
-            if (lastOptResult.warnings.length) {
-                html += `<div class="warning">${lastOptResult.warnings.join("<br>")}</div>`;
-            } else {
-                html += `<div class="success">✅ Optimización exitosa - Carga segura</div>`;
-            }
-
-            document.getElementById("optResult").innerHTML = html;
-
-            // Dibujar canvas
-            const canvas = document.getElementById("optCanvas");
-            canvas.width = 800;
-            canvas.height = 250;
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, 800, 250);
-
-            const sx = (canvas.width - 60) / lastOptResult.trailerLen;
-            const sy = (canvas.height - 50) / lastOptResult.trailerWid;
-            const offX = 30, offY = 30;
-
-            ctx.strokeStyle = "#5b6e8c";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(offX, offY, lastOptResult.trailerLen * sx, lastOptResult.trailerWid * sy);
-            ctx.fillStyle = "#1a2538";
-            ctx.fillRect(offX, offY, lastOptResult.trailerLen * sx, lastOptResult.trailerWid * sy);
-
-            for (let i = 0; i < lastOptResult.placed.length; i++) {
-                const p = lastOptResult.placed[i];
-                const x = offX + p.startX * sx;
-                const y = offY;
-                const w = p.len * sx;
-                const h = p.wid * sy;
-
-                ctx.fillStyle = `hsl(${i * 37 % 360}, 70%, 55%)`;
-                ctx.fillRect(x, y, w, h);
-                ctx.strokeStyle = "white";
-                ctx.strokeRect(x, y, w, h);
-                ctx.fillStyle = "white";
-                ctx.font = "bold 10px monospace";
-                ctx.fillText(`${formatWeight(p.wgt)}`, x + 4, y + 16);
-            }
-
-            ctx.fillStyle = "#f59e0b";
-            ctx.font = "bold 12px monospace";
-            ctx.fillText("⬅️ DELANTERO", offX, offY - 8);
-            ctx.fillText("TRASERO ➡️", offX + lastOptResult.trailerLen * sx - 100, offY - 8);
-        }
-
-        document.getElementById("runOptBtn").onclick = optimizeLoad;
-
-        // ==================== INICIALIZACIÓN ====================
-        (async () => {
-            await checkLicense();
-            await updateLicenseUI();
-            doCalc();
-        })();
-    </script>
+        
+        let climateHtml = `<div class="climate-tip"><strong>🌦️ CLIMA:</strong> ${currentWeather === "soleado" ? "☀️ Soleado" : currentWeather === "lluvia" ? "🌧️ Lluvia" : currentWeather === "nieve" ? "❄️ Nieve" : currentWeather === "viento" ? "💨 Viento" : currentWeather === "tormenta" ? "⛈️ Tormenta" : "🧊 Hielo"}</div>`;
+        if(currentWindSpeed > 0) climateHtml += `<div class="climate-tip"><strong>💨 Viento:</strong> ${currentWindSpeed} mph</div>`;
+        lastResult.weatherTips.forEach(tip => { climateHtml += `<div class="climate-tip">${tip}</div>`; });
+        document.getElementById("climateContent").innerHTML = climateHtml;
+        
+        let safetyHtml = `<div class="safety-tip"><strong>🔧 AMARRES:</strong> ${lastResult.safetyAmarres.join(" | ")}</div>`; lastResult.safetySuggestions.forEach(s => { safetyHtml += `<div class="safety-tip">${s}</div>`; }); document.getElementById("safetyContent").innerHTML = safetyHtml; }
+    
+    function clearResults() { lastResult = null; document.getElementById("packDetails").innerHTML = "Presione 'OPTIMIZAR'"; document.getElementById("heightInfo").innerHTML = ""; document.getElementById("axleInfoSimple").innerHTML = ""; document.getElementById("colorLegend").innerHTML = ""; document.getElementById("climateContent").innerHTML = "Seleccione condiciones climáticas y optimice"; document.getElementById("safetyContent").innerHTML = "Optimice para ver recomendaciones"; document.getElementById("actionsPanel").style.display = "none"; document.getElementById("totalWeight").innerHTML = "0 lbs"; document.getElementById("maxHeight").innerText = "0 in"; document.getElementById("cog").innerHTML = "0 in"; document.getElementById("spaceUsed").innerText = "0%"; document.getElementById("rollRisk").innerText = "-"; const canvas = document.getElementById("packCanvas"); const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function saveHistory() { if (!lastResult) return; let h = JSON.parse(localStorage.getItem("rental_history")) || []; h.unshift({ fecha: new Date().toLocaleString(), total: lastResult.totalWeight, placed: lastResult.totalPalletUnits }); if(h.length>10) h.pop(); localStorage.setItem("rental_history", JSON.stringify(h)); renderHistory(); }
+    function renderHistory() { let h = JSON.parse(localStorage.getItem("rental_history")) || []; document.getElementById("historyList").innerHTML = h.length ? h.map(hh=>`<div class="pallet-item"><span>📅 ${hh.fecha}</span><span>⚖️ ${currentUnit === "kg" ? (hh.total / KG_TO_LBS).toFixed(0) : hh.total} ${currentUnit}</span></div>`).join("") : "<p>Sin historial</p>"; }
+    function clearHistory() { if(confirm("¿Borrar historial?")) { localStorage.removeItem("rental_history"); renderHistory(); alert("Historial borrado"); } }
+    function generatePDF() { if(!lastResult) { alert("Optimice primero"); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("LOGISTICS PRO - INFORME", 15, 20); doc.setFontSize(11); doc.text(`Fecha: ${new Date().toLocaleString()}`, 15, 35); doc.text(`Peso: ${currentUnit === "kg" ? (lastResult.totalWeight / KG_TO_LBS).toFixed(0) : lastResult.totalWeight} ${currentUnit}`, 15, 47); doc.text(`CG: ${lastResult.cog.toFixed(0)} in`, 15, 57); doc.text(`Riesgo: ${lastResult.rollRisk}`, 15, 67); doc.text(`Clima: ${currentWeather}`, 15, 77); doc.save(`logistics_${Date.now()}.pdf`); }
+    
+    document.getElementById("addPalletBtn").onclick = () => { let type = document.getElementById("palletTypeSelect").value; let l=parseFloat(document.getElementById("palLargo").value), w=parseFloat(document.getElementById("palAncho").value), h=parseFloat(document.getElementById("palAlto").value); let pesoInput = parseFloat(document.getElementById("palPeso").value); let peso = currentUnit === "kg" ? pesoInput * KG_TO_LBS : pesoInput; let stackable=document.getElementById("stackable").checked, maxStacks=parseInt(document.getElementById("maxStacks").value), cargoType = document.getElementById("cargoType").value; if(isNaN(l)||isNaN(w)||isNaN(h)||isNaN(peso)) { alert("Valores válidos"); return; } pallets.push({type, length:l, width:w, height:h, weight:peso, stackable, maxStacks:stackable?maxStacks:1, cargoType}); renderPallets(); clearResults(); };
+    document.getElementById("clearPalletsBtn").onclick = () => { pallets=[]; renderPallets(); clearResults(); };
+    document.getElementById("exampleBtn").onclick = () => { pallets = [ {type:'american', length:48, width:40, height:48, weight:2800, stackable:true, maxStacks:2, cargoType:'metal'}, {type:'american', length:48, width:40, height:48, weight:1800, stackable:true, maxStacks:2, cargoType:'cajas'}, {type:'american', length:48, width:40, height:48, weight:1200, stackable:true, maxStacks:2, cargoType:'cajas'} ]; renderPallets(); clearResults(); };
+    document.getElementById("optimizeBtn").onclick = optimize;
+    document.getElementById("resetBtn").onclick = clearResults;
+    document.getElementById("pdfBtn").onclick = generatePDF;
+    document.getElementById("clearHistoryBtn").onclick = clearHistory;
+    
+    renderPallets(); renderHistory(); updateLanguage(); updateWeightUnitLabels();
+    (async () => { await checkLicense(); await updateLicenseUI(); })();
+</script>
 </body>
 </html>
