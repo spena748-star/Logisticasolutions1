@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Logistics PRO | 3D + GPS + CSV + PDF profesional</title>
+    <title>Logistics PRO | Prueba 5 días | Optimización 3D + GPS + CSV</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -73,6 +73,7 @@
         .admin-btn:hover { transform: scale(1.05); background: #10b981; }
         .admin-modal { position: fixed; bottom: 95px; right: 20px; width: 340px; background: #1e293b; border: 2px solid #3b82f6; border-radius: 1rem; padding: 1rem; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; }
         .admin-modal .close-modal { position: absolute; top: 8px; right: 12px; background: #ef4444; border: none; width: 26px; height: 26px; border-radius: 26px; cursor: pointer; font-size: 12px; color: white; }
+        .locked { filter: blur(4px); pointer-events: none; user-select: none; opacity: 0.6; }
         @media (max-width: 700px) { body { padding: 12px; } .flex-row { flex-direction: column; align-items: stretch; } .admin-modal { width: 90%; right: 5%; } .tab-btn { padding: 8px 16px; } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -81,7 +82,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <div class="logo"><h1>🚛 LOGISTICS PRO</h1><p>3D · GPS · CSV · PDF profesional</p></div>
+        <div class="logo"><h1>🚛 LOGISTICS PRO</h1><p>Prueba gratuita 5 días · 3D · GPS · CSV · PDF</p></div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <div class="unit-selector"><span style="font-size:0.8rem;">⚖️</span><button id="unitKgBtn" class="unit-btn">kg</button><button id="unitLbsBtn" class="unit-btn active">lbs</button></div>
             <div class="lang-selector"><button class="lang-btn active" data-lang="es">ES</button><button class="lang-btn" data-lang="en">EN</button></div>
@@ -98,8 +99,12 @@
     <!-- Calculadora simple -->
     <div id="calcTab" class="tab-content active">
         <div class="license-panel">
-            <div class="flex-row"><div class="input-group" style="flex:2"><label>🔐 CLAVE LICENCIA</label><input type="text" id="rentalKey" placeholder="RENT-30-xxxxxxxx"></div><button id="activateBtn">Activar</button></div>
+            <div class="flex-row">
+                <div class="input-group" style="flex:2"><label>🔐 CLAVE DE LICENCIA</label><input type="text" id="rentalKey" placeholder="RENT-5-xxxxxxxx / RENT-30-xxxxxxxx"></div>
+                <button id="activateBtn">Activar</button>
+            </div>
             <div id="licenseStatus" style="font-size:0.75rem; margin-top:6px;"></div>
+            <div id="trialInfo" style="font-size:0.8rem; margin-top:6px; color:#f59e0b;"></div>
         </div>
         <div class="grid-2">
             <div class="card"><h3>🚛 Transporte</h3>
@@ -133,7 +138,6 @@
             <div class="input-group"><label>💨 VIENTO (mph)</label><input type="number" id="windSpeed" value="0" step="5"></div>
             <button id="runOptBtn" class="btn-primary" style="width:100%; margin-top:12px;">🧩 OPTIMIZAR (3D + rotación)</button>
             
-            <!-- Alertas en tiempo real -->
             <div class="stats" id="liveStats" style="margin-top:12px;">
                 <div class="stat-card"><strong>📦 Pallets totales</strong><span id="liveTotalPallets">0</span></div>
                 <div class="stat-card"><strong>⚖️ Peso total</strong><span id="liveTotalWeight">0 lbs</span></div>
@@ -151,39 +155,127 @@
     </div>
 
     <div id="safetyTab" class="tab-content"><div class="card"><h2>⚠️ Guía de seguridad</h2><div class="safety-panel"><strong>📏 CG IDEAL:</strong> 200-400 in. Si está fuera, mueva carga pesada adelante/atrás.</div><div class="safety-panel"><strong>🔧 AMARRES:</strong> Tubos → cinchos cada 4 pies; Líquidos → alta tensión; Metal → eslingas acero; Cajas → barras de carga.</div><div class="safety-panel"><strong>🌦️ Clima adverso:</strong> Viento >25 mph → reducir velocidad a 45 mph; Nieve/hielo → distancia frenado x3.</div></div></div>
-    <div id="helpTab" class="tab-content"><div class="card"><h2>❓ Ayuda</h2><p>🔐 Activar licencia: clave RENT-30-xxxxxxxx</p><p>📂 Importar CSV: columnas: length,width,height,weight,qty (opcional stackable)</p><p>🗺️ Ruta segura: abre Google Maps con parámetros de camión (altura, peso)</p><p>📄 PDF: captura el plano de carga y lo descarga</p><p>💾 Perfiles: guarda configuración de remolque</p><p>🔑 Administrador: click en 🚛 abajo derecha → admin2025</p></div></div>
+    <div id="helpTab" class="tab-content"><div class="card"><h2>❓ Ayuda</h2><p>🔐 <strong>Prueba gratuita de 5 días</strong> al primer uso. Después, active con clave RENT-5-xxxx, RENT-30-xxxx, etc.</p><p>📂 Importar CSV: columnas: length,width,height,weight,qty</p><p>🗺️ Ruta segura: abre Google Maps con parámetros de camión</p><p>📄 PDF: captura el plano de carga y lo descarga</p><p>💾 Perfiles: guarda configuración de remolque</p><p>🔑 Administrador: click en 🚛 abajo derecha → contraseña <strong>admin2025</strong></p></div></div>
 </div>
 
 <div id="adminBtn" class="admin-btn">🚛</div>
-<div id="adminModal" class="admin-modal"><button id="closeModal" class="close-modal">✕</button><h3>🔑 Generar licencia</h3><input type="password" id="adminPass" placeholder="Contraseña" style="width:100%; padding:8px; border-radius:40px; margin-bottom:10px;"><button id="verifyAdmin" style="width:100%;">Acceder</button><div id="adminGen" style="display:none; margin-top:12px;"><select id="licenseDays"><option value="30">30 días</option><option value="180">180 días</option><option value="365">365 días</option></select><button id="genLicenseBtn" style="width:100%; margin-top:8px;">Generar</button><div id="licenseKeyDisplay" style="margin-top:8px; background:#0f172a; padding:6px; border-radius:8px;"></div></div></div>
+<div id="adminModal" class="admin-modal"><button id="closeModal" class="close-modal">✕</button><h3>🔑 Generador de licencias</h3><input type="password" id="adminPass" placeholder="Contraseña" style="width:100%; padding:8px; border-radius:40px; margin-bottom:10px;"><button id="verifyAdmin" style="width:100%;">Acceder</button><div id="adminGen" style="display:none; margin-top:12px;"><select id="licenseDays"><option value="5">5 días (prueba)</option><option value="30">30 días</option><option value="180">180 días</option><option value="365">365 días</option></select><button id="genLicenseBtn" style="width:100%; margin-top:8px;">Generar clave</button><div id="licenseKeyDisplay" style="margin-top:8px; background:#0f172a; padding:6px; border-radius:8px;"></div></div></div>
 
 <script>
-    // ==================== CONVERSIONES Y UNIDADES ====================
+    // ==================== UNIDADES ====================
     let currentUnit = "lbs";
     const KG_TO_LBS = 2.20462;
     function formatWeight(lbs) { return currentUnit === "kg" ? (lbs / KG_TO_LBS).toFixed(0) + " kg" : lbs.toFixed(0) + " lbs"; }
-    function lbsToUnit(lbs) { return currentUnit === "kg" ? lbs / KG_TO_LBS : lbs; }
     document.getElementById("unitKgBtn").onclick = () => { currentUnit = "kg"; document.getElementById("unitKgBtn").classList.add("active"); document.getElementById("unitLbsBtn").classList.remove("active"); updateAllDisplays(); };
     document.getElementById("unitLbsBtn").onclick = () => { currentUnit = "lbs"; document.getElementById("unitLbsBtn").classList.add("active"); document.getElementById("unitKgBtn").classList.remove("active"); updateAllDisplays(); };
     let currentLang = 'es';
     document.querySelectorAll(".lang-btn").forEach(btn => btn.onclick = () => { document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); currentLang = btn.dataset.lang; });
     document.querySelectorAll(".tab-btn").forEach(btn => btn.onclick = () => { document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active")); document.getElementById(btn.dataset.tab+"Tab").classList.add("active"); });
     
-    // ==================== LICENCIA ====================
+    // ==================== LICENCIA CON PRUEBA DE 5 DÍAS ====================
     const RENTAL_SALT = "RentalLog2025SecretKey";
     let rentalValid = false;
-    async function getServerTime() { try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } catch(e) { return new Date(); } }
-    function validateKey(key) { const parts = key.split('-'); if(parts.length!==3 || parts[0]!=='RENT') return null; const days = parseInt(parts[1]); if(![30,180,365].includes(days)) return null; const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); if(parts[2] !== hash) return null; return { days }; }
-    async function activateLicense(key) { const v = validateKey(key); if(!v) return false; const serverTime = await getServerTime(); const expiry = new Date(serverTime); expiry.setDate(expiry.getDate() + v.days); localStorage.setItem("rental_license", JSON.stringify({ expiry: expiry.toISOString() })); return true; }
-    async function checkLicense() { const stored = localStorage.getItem("rental_license"); if(!stored) return false; try { const data = JSON.parse(stored); const serverTime = await getServerTime(); const expiry = new Date(data.expiry); if(expiry > serverTime) { rentalValid = true; return true; } else { localStorage.removeItem("rental_license"); rentalValid = false; return false; } } catch(e) { return false; } }
-    async function updateLicenseUI() { document.getElementById("licenseStatus").innerHTML = rentalValid ? '<span style="color:#10b981;">✅ Licencia activa</span>' : '<span style="color:#ef4444;">❌ Sin licencia</span>'; }
-    document.getElementById("activateBtn").onclick = async () => { const key = document.getElementById("rentalKey").value.trim(); if(await activateLicense(key)) { await checkLicense(); updateLicenseUI(); alert("Licencia activada"); } else alert("Clave inválida"); };
-    
-    // ==================== ADMIN ====================
-    document.getElementById("adminBtn").onclick = () => document.getElementById("adminModal").style.display = "block";
+    let expiryDate = null;
+    let trialMode = false;
+
+    async function getServerTime() { 
+        try { const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const data = await res.json(); return new Date(data.utc_datetime); } 
+        catch(e) { console.warn("Usando hora local"); return new Date(); } 
+    }
+
+    function validateKey(key) {
+        const parts = key.split('-');
+        if(parts.length!==3 || parts[0]!=='RENT') return null;
+        const days = parseInt(parts[1]);
+        if(![5,30,180,365].includes(days)) return null;
+        const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16);
+        if(parts[2] !== hash) return null;
+        return { days };
+    }
+
+    async function activateLicense(key) {
+        const v = validateKey(key);
+        if(!v) return false;
+        const serverTime = await getServerTime();
+        const expiry = new Date(serverTime);
+        expiry.setDate(expiry.getDate() + v.days);
+        localStorage.setItem("rental_license", JSON.stringify({ key, expiry: expiry.toISOString(), days: v.days, trial: false }));
+        return true;
+    }
+
+    async function startTrial() {
+        const serverTime = await getServerTime();
+        const expiry = new Date(serverTime);
+        expiry.setDate(expiry.getDate() + 5);
+        localStorage.setItem("rental_license", JSON.stringify({ key: "TRIAL", expiry: expiry.toISOString(), days: 5, trial: true }));
+        return true;
+    }
+
+    async function checkLicense() {
+        const stored = localStorage.getItem("rental_license");
+        if(!stored) {
+            // Primera vez: iniciar prueba de 5 días
+            await startTrial();
+            return await checkLicense();
+        }
+        try {
+            const data = JSON.parse(stored);
+            const serverTime = await getServerTime();
+            const expiry = new Date(data.expiry);
+            if(expiry > serverTime) {
+                rentalValid = true;
+                expiryDate = expiry;
+                trialMode = data.trial || false;
+                return true;
+            } else {
+                localStorage.removeItem("rental_license");
+                rentalValid = false;
+                return false;
+            }
+        } catch(e) { return false; }
+    }
+
+    async function updateLicenseUI() {
+        const statusDiv = document.getElementById("licenseStatus");
+        const trialInfoDiv = document.getElementById("trialInfo");
+        const appContentDivs = document.querySelectorAll(".tab-content"); // bloquearemos los tabs si no hay licencia
+        if(rentalValid && expiryDate) {
+            const serverTime = await getServerTime();
+            const daysLeft = Math.ceil((expiryDate - serverTime) / (1000*3600*24));
+            if(trialMode) {
+                statusDiv.innerHTML = `<span style="color:#f59e0b;">🔓 Modo prueba: ${daysLeft} días restantes</span>`;
+                trialInfoDiv.innerHTML = `✅ Prueba gratuita activa por ${daysLeft} días. Adquiera licencia para uso continuo.`;
+            } else {
+                statusDiv.innerHTML = `<span style="color:#10b981;">✅ Licencia activa (${Math.round((expiryDate - serverTime)/(1000*3600*24))} días restantes)</span>`;
+                trialInfoDiv.innerHTML = "";
+            }
+            // Desbloquear todo
+            document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("locked"));
+        } else {
+            statusDiv.innerHTML = `<span style="color:#ef4444;">⛔ Licencia expirada o no válida. Active una clave para continuar.</span>`;
+            trialInfoDiv.innerHTML = `⏰ Su período de prueba ha terminado. Ingrese una clave de licencia para seguir usando el software.`;
+            // Bloquear contenido
+            document.querySelectorAll(".tab-content").forEach(tab => tab.classList.add("locked"));
+        }
+    }
+
+    document.getElementById("activateBtn").onclick = async () => {
+        const key = document.getElementById("rentalKey").value.trim();
+        if(await activateLicense(key)) {
+            await checkLicense();
+            await updateLicenseUI();
+            alert("Licencia activada correctamente");
+        } else {
+            alert("Clave inválida");
+        }
+    };
+
+    // ==================== ADMIN (generador de claves) ====================
+    function generateLicense(days) { const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); return `RENT-${days}-${hash}`; }
+    document.getElementById("adminBtn").onclick = () => { document.getElementById("adminModal").style.display = "block"; };
     document.getElementById("closeModal").onclick = () => { document.getElementById("adminModal").style.display = "none"; document.getElementById("adminGen").style.display = "none"; };
     document.getElementById("verifyAdmin").onclick = () => { if(document.getElementById("adminPass").value === "admin2025") document.getElementById("adminGen").style.display = "block"; else alert("Contraseña incorrecta"); };
-    document.getElementById("genLicenseBtn").onclick = () => { const days = parseInt(document.getElementById("licenseDays").value); const hash = CryptoJS.SHA256(days + RENTAL_SALT).toString().substring(0,16); const license = `RENT-${days}-${hash}`; document.getElementById("licenseKeyDisplay").innerHTML = `<strong>Clave:</strong><br><code>${license}</code><br><button id="copyKey">Copiar</button>`; document.getElementById("copyKey").onclick = () => { navigator.clipboard.writeText(license); alert("Copiada!"); }; };
+    document.getElementById("genLicenseBtn").onclick = () => { const days = parseInt(document.getElementById("licenseDays").value); const license = generateLicense(days); document.getElementById("licenseKeyDisplay").innerHTML = `<strong>Clave generada:</strong><br><code style="background:#000; padding:6px; display:block; border-radius:6px;">${license}</code><br><button id="copyKeyBtn" style="margin-top:5px; background:#3b82f6;">Copiar</button>`; document.getElementById("copyKeyBtn").onclick = () => { navigator.clipboard.writeText(license); alert("¡Clave copiada!"); }; };
     
     // ==================== PERFILES ====================
     function saveProfile() { const name = prompt("Nombre del perfil (ej. Trailer A)"); if(!name) return; const profile = { len: parseFloat(document.getElementById("trailerLen").value), wid: parseFloat(document.getElementById("trailerWid").value), hei: parseFloat(document.getElementById("trailerHei").value), maxW: parseFloat(document.getElementById("maxWeight").value) }; let profiles = JSON.parse(localStorage.getItem("trailer_profiles") || "{}"); profiles[name] = profile; localStorage.setItem("trailer_profiles", JSON.stringify(profiles)); loadProfileSelect(); alert("Perfil guardado"); }
@@ -217,19 +309,17 @@
     document.getElementById("windSpeed").oninput = (e) => { currentWind = parseInt(e.target.value)||0; if(window.lastOptDone) runOptimizer(); };
     
     function renderOptList() { const div = document.getElementById("optList"); if(optPallets.length===0){ div.innerHTML="<div style='padding:10px;text-align:center'>📭 Sin pallets</div>"; updateLiveStats(); return; } div.innerHTML = optPallets.map((p,i)=>`<div class="pallet-item"><span>📦 ${p.len}"x${p.wid}"x${p.hei}" | ${formatWeight(p.wgt)} | x${p.qty}</span><button class="delOpt" data-idx="${i}" style="background:#ef4444; padding:2px 10px;">X</button></div>`).join(""); document.querySelectorAll(".delOpt").forEach(btn=>btn.onclick=()=>{ optPallets.splice(parseInt(btn.dataset.idx),1); renderOptList(); clearOptResults(); updateLiveStats(); }); updateLiveStats(); }
-    function updateLiveStats() { let totalPcs = optPallets.reduce((s,p)=>s+p.qty,0); let totalW = optPallets.reduce((s,p)=>s+p.wgt*p.qty,0); let maxH = Math.max(...optPallets.map(p=>p.hei),0); let cogEst = 300; // estimación simple if(totalW>0){ let moment = 0; optPallets.forEach(p=>{ for(let i=0;i<p.qty;i++) moment += p.wgt * (200 + i*20); }); cogEst = moment/totalW; } document.getElementById("liveTotalPallets").innerText = totalPcs; document.getElementById("liveTotalWeight").innerHTML = formatWeight(totalW); document.getElementById("liveCG").innerHTML = cogEst.toFixed(0); document.getElementById("liveMaxHeight").innerHTML = maxH+" in"; }
+    function updateLiveStats() { let totalPcs = optPallets.reduce((s,p)=>s+p.qty,0); let totalW = optPallets.reduce((s,p)=>s+p.wgt*p.qty,0); let maxH = Math.max(...optPallets.map(p=>p.hei),0); let cogEst = 300; if(totalW>0){ let moment = 0; optPallets.forEach(p=>{ for(let i=0;i<p.qty;i++) moment += p.wgt * (200 + i*20); }); cogEst = moment/totalW; } document.getElementById("liveTotalPallets").innerText = totalPcs; document.getElementById("liveTotalWeight").innerHTML = formatWeight(totalW); document.getElementById("liveCG").innerHTML = cogEst.toFixed(0); document.getElementById("liveMaxHeight").innerHTML = maxH+" in"; }
     function clearOptResults() { document.getElementById("optResult").innerHTML = ""; document.getElementById("optClimate").innerHTML = ""; document.getElementById("optSafety").innerHTML = ""; document.getElementById("optActions").style.display = "none"; const canvas = document.getElementById("optCanvas3D"); const ctx = canvas.getContext("2d"); ctx.clearRect(0,0,canvas.width,canvas.height); window.lastOptDone = false; }
     document.getElementById("addOptBtn").onclick = () => { const len=parseFloat(document.getElementById("optLen").value), wid=parseFloat(document.getElementById("optWid").value), hei=parseFloat(document.getElementById("optHei").value), wgt=parseFloat(document.getElementById("optWgt").value), qty=parseInt(document.getElementById("optQty").value); if(isNaN(len)||isNaN(wid)||isNaN(hei)||isNaN(wgt)||qty<1) return; optPallets.push({len,wid,hei,wgt,qty}); renderOptList(); clearOptResults(); };
     document.getElementById("clearOptBtn").onclick = () => { optPallets=[]; renderOptList(); clearOptResults(); };
     document.getElementById("exampleOptBtn").onclick = () => { optPallets = [{len:48,wid:40,hei:48,wgt:2200,qty:2},{len:48,wid:40,hei:48,wgt:1800,qty:3},{len:42,wid:42,hei:50,wgt:1500,qty:1}]; renderOptList(); clearOptResults(); };
     
-    // Algoritmo avanzado con rotación y mejor empaque (shelf + best fit)
     function packPallets(items, trailerLen, trailerWid) {
         let copies = [];
         items.forEach(p => { for(let i=0;i<p.qty;i++) copies.push({len:p.len, wid:p.wid, hei:p.hei, wgt:p.wgt}); });
         copies.sort((a,b)=> (b.len*b.wid) - (a.len*a.wid));
-        let shelves = []; // {y, remainingWidth, depth}
-        let placed = [];
+        let shelves = []; let placed = [];
         for(let item of copies) {
             let bestIdx = -1, bestSlack = Infinity, bestRot = false, bestW, bestD;
             for(let rot=0;rot<2;rot++) {
@@ -239,9 +329,7 @@
                 for(let i=0;i<shelves.length;i++) {
                     if(shelves[i].remainingWidth >= w) {
                         let slack = shelves[i].remainingWidth - w;
-                        if(slack < bestSlack) {
-                            bestSlack = slack; bestIdx = i; bestRot = rot; bestW = w; bestD = d;
-                        }
+                        if(slack < bestSlack) { bestSlack = slack; bestIdx = i; bestRot = rot; bestW = w; bestD = d; }
                     }
                 }
             }
@@ -254,7 +342,6 @@
             } else {
                 let y = shelves.reduce((max,s)=>Math.max(max, s.y + s.depth), 0);
                 if(y + bestD > trailerLen) continue;
-                let x = 0;
                 placed.push({len:bestD, wid:bestW, hei:item.hei, wgt:item.wgt, startX:y, centerX:y+bestD/2, rotated:bestRot});
                 shelves.push({y:y, remainingWidth:trailerWid - bestW, depth:bestD});
             }
@@ -286,13 +373,10 @@
         else html += `<div class="success">✅ Optimización exitosa</div>`;
         document.getElementById("optResult").innerHTML = html;
         
-        // Dibujo 3D isométrico
         const canvas = document.getElementById("optCanvas3D"); canvas.width=800; canvas.height=450; const ctx=canvas.getContext("2d"); ctx.clearRect(0,0,800,450);
-        const isoScale = 0.7;
-        const centerX = 400, baseY = 380;
+        const isoScale = 0.7, centerX = 400, baseY = 380;
         function isoX(x,z){ return centerX + (x - z) * isoScale; }
         function isoY(x,z,y){ return baseY + (x + z) * 0.35 * isoScale - y * 1.2; }
-        // piso
         ctx.beginPath(); ctx.moveTo(isoX(0,0), isoY(0,0,0)); ctx.lineTo(isoX(trailer.len,0), isoY(trailer.len,0,0)); ctx.lineTo(isoX(trailer.len,trailer.wid), isoY(trailer.len,trailer.wid,0)); ctx.lineTo(isoX(0,trailer.wid), isoY(0,trailer.wid,0)); ctx.closePath(); ctx.fillStyle="#1a2538"; ctx.fill(); ctx.strokeStyle="#5b6e8c"; ctx.stroke();
         for(let p of placed){
             const x=p.startX, z=0, w=p.wid, d=p.len, h=p.hei*0.5;
@@ -305,7 +389,6 @@
         }
         ctx.fillStyle="#f59e0b"; ctx.font="bold 14px monospace"; ctx.fillText("⬅️ DELANTERO", 50, 80); ctx.fillText("TRASERO ➡️", 650, 80);
         
-        // Clima
         let climateHtml = `<strong>🌦️ CLIMA: ${currentWeather}</strong><br>`;
         if(currentWeather==="viento" || currentWind>25) climateHtml += "💨 Viento fuerte: reduzca velocidad a 45 mph, aumente amarres 50%<br>";
         if(currentWeather==="nieve") climateHtml += "❄️ Nieve: verifique techo, distancia frenado x3<br>";
@@ -325,17 +408,14 @@
     }
     document.getElementById("runOptBtn").onclick = runOptimizer;
     
-    // GPS: abrir Google Maps con parámetros de camión
     document.getElementById("gpsRouteBtn").onclick = () => {
         const trailer = TRAILERS[document.getElementById("optTrailer").value];
         const totalHeight = Math.max(...optPallets.map(p=>p.hei),0);
         const totalWeight = optPallets.reduce((s,p)=>s+p.wgt*p.qty,0);
-        let url = `https://www.google.com/maps/search/?api=1&query=rutas+para+camiones&travelmode=driving`;
-        url += `&avoid=tolls&vehicle=bus&height_limit=${(totalHeight/12).toFixed(1)}ft&weight_limit=${(totalWeight/2000).toFixed(1)}t`;
+        let url = `https://www.google.com/maps/search/?api=1&query=rutas+para+camiones&travelmode=driving&avoid=tolls&vehicle=bus&height_limit=${(totalHeight/12).toFixed(1)}ft&weight_limit=${(totalWeight/2000).toFixed(1)}t`;
         window.open(url, '_blank');
     };
     
-    // Importar CSV
     document.getElementById("importCsvBtn").onclick = () => {
         const file = document.getElementById("csvFile").files[0];
         if(!file){ alert("Seleccione un archivo CSV"); return; }
@@ -365,7 +445,6 @@
         reader.readAsText(file);
     };
     
-    // PDF con captura del canvas
     document.getElementById("pdfReportBtn").onclick = async () => {
         if(!window.lastOptDone){ alert("Primero optimice la carga"); return; }
         const canvas = document.getElementById("optCanvas3D");
@@ -382,7 +461,7 @@
     
     function updateAllDisplays() { doCalc(); renderOptList(); if(window.lastOptDone) runOptimizer(); }
     loadProfileSelect(); doCalc(); renderOptList(); updateLiveStats();
-    (async () => { await checkLicense(); updateLicenseUI(); })();
+    (async () => { await checkLicense(); await updateLicenseUI(); })();
 </script>
 </body>
 </html>
